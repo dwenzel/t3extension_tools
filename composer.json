@@ -1,0 +1,43 @@
+{
+  "name": "dwenzel/t3extension-service",
+  "description": "Tools for TYPO3 CMS extensions",
+  "type": "typo3-cms-extension",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Dirk Wenzel",
+      "email": "t3events@gmx.de",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "typo3/cms-core": "^8.7 || ^ 9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "DWenzel\\T3extensionService\\": "Classes/"
+    }
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "nimut/testing-framework": "^3.0",
+    "phpunit/phpunit": "^5.6 || ^6.0"
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin"
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "mkdir -p .Build/Web/typo3conf/ext/",
+      "mkdir -p .Build/log/coverage/",
+      "[ -L .Build/Web/typo3conf/ext/t3extension_service ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3extension_service"
+    ]
+  },
+  "extra": {
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
+  }
+}
