@@ -1,5 +1,5 @@
 {
-  "name": "dwenzel/t3extension-service",
+  "name": "dwenzel/t3extension-tools",
   "description": "Tools for TYPO3 CMS extensions",
   "type": "typo3-cms-extension",
   "license": "GPL-2.0+",
@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "DWenzel\\T3extensionService\\": "Classes/"
+      "DWenzel\\T3extensionTools\\": "Classes/"
     }
   },
   "require-dev": {
@@ -31,7 +31,7 @@
     "post-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "mkdir -p .Build/log/coverage/",
-      "[ -L .Build/Web/typo3conf/ext/t3extension_service ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3extension_service"
+      "[ -L .Build/Web/typo3conf/ext/t3extension_tools ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3extension_tools"
     ]
   },
   "extra": {

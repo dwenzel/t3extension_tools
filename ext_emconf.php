@@ -11,7 +11,7 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array (
-	'title' => 'Extension Service',
+	'title' => 'Extension Tools',
 	'description' => 'Provides tools for extensions',
 	'category' => 'misc',
 	'author' => 'Dirk Wenzel',
