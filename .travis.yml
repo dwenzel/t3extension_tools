@@ -6,11 +6,11 @@ matrix:
   fast_finish: true
   include:
     - php: '7.1'
-      env: TYPO3_VERSION=^8
+      env: TYPO3_VERSION=^8.7
     - php: '7.2'
-      env: TYPO3_VERSION=^9 COVERAGE=1
+      env: TYPO3_VERSION=^9.5 COVERAGE=1
     - php: '7.3'
-      env: TYPO3_VERSION=^9
+      env: TYPO3_VERSION=^9.5
   allow_failures:
     - php: '7.3'
 
