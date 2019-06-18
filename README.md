@@ -6,11 +6,9 @@ Provides tools for extensions of the TYPO3 CMS
 ```
 composer require dwenzel/t3extension-tools
 ```
-**Note**: This extension will be updated in TYPO3 Extension Repository sporadically only.
-Use latest composer version instead.
+**Note**: This extension will be updated in TYPO3 Extension Repository sporadically only.  
+Use the latest composer version instead.
 
-### Configuration
+### Features
 
-* [switchable caching for plugin]()
-
-
+* [switchable caching for plugin](docs/PluginCache.md)
