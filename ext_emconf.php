@@ -16,16 +16,16 @@ $EM_CONF[$_EXTKEY] = array (
 	'category' => 'misc',
 	'author' => 'Dirk Wenzel',
 	'author_email' => 't3events@gmx.de',
-	'state' => 'beta',
+	'state' => 'stable',
 	'uploadfolder' => '0',
 	'createDirs' => '',
 	'clearCacheOnLoad' => 0,
-	'version' => '0.1.0',
+	'version' => '1.0.0',
 	'constraints' =>
 	array (
 		'depends' =>
 		array (
-			'typo3' => '8.7.99-8.99.99'
+			'typo3' => '8.7.99-9.99.99'
 		),
 		'conflicts' =>
 		array (
