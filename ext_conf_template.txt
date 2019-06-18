@@ -1,2 +1,2 @@
 # cat=basic/enable; type=boolean; label= ExtensionService: Use alternative implementation of Extbase ExtensionService
-enableExtendedExtensionService = false
+extensionServiceEnabled = false

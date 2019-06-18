@@ -1,7 +1,6 @@
 ####################
 # use a different implementation of ExtensionService class
 config.tx_extbase.objects {
-    # overwrite class to allow USER_INT from flexform
     TYPO3\CMS\Extbase\Service\ExtensionService {
         className = DWenzel\T3extensionTools\Service\ExtensionService
     }

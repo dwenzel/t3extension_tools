@@ -30,13 +30,13 @@ class EmConfiguration
     /**
      * @var bool
      */
-    protected $extendedExtensionServiceEnabled;
+    protected $extensionServiceEnabled = false;
 
     /**
      * Constructor
      * @param array $configuration
      */
-    public function __construct(array $configuration)
+    public function __construct(array $configuration = [])
     {
         foreach ($configuration as $key => $value) {
             if (property_exists(__CLASS__, $key)) {
@@ -48,16 +48,18 @@ class EmConfiguration
     /**
      * @return boolean
      */
-    public function isExtendedExtensionServiceEnabled()
+    public function extensionServiceEnabled(): bool
     {
-        return $this->extendedExtensionServiceEnabled;
+        return $this->extensionServiceEnabled;
     }
 
-    /**
-     * @param boolean $enabled
-     */
-    public function setEnableExtensionService(bool $enabled)
+    public function enableExtensionService(): void
     {
-        $this->extendedExtensionServiceEnabled = $enabled;
+        $this->extensionServiceEnabled = true;
+    }
+
+    public function disableExtensionService()
+    {
+        $this->extensionServiceEnabled = false;
     }
 }
