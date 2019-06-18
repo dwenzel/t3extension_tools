@@ -1,0 +1,14 @@
+2019-06-18         [RELEASE] Release of t3extension_tools 1.0.0 (Dirk Wenzel)
+2019-06-18 1d8f037 [BUGFIX] fixed error caused by invalid use statement (Dirk Wenzel)
+2019-06-18 4b9e826 [TASK] documentation updated (Dirk Wenzel)
+2019-06-18 49e6fa5 [CI] dependencies fixed (Dirk Wenzel)
+2019-06-18 3799397 [CI] build matrix updated (Dirk Wenzel)
+2019-06-18 504b89e [CI] build matrix updated (Dirk Wenzel)
+2019-06-18 5e2bf93 [TASK] - read extension manager configuration - unit tests added - configuration for Travis CI added (Dirk Wenzel)
+2019-06-17 7aa195e [BUGFIX] fixed typo in TypoScript (Dirk Wenzel)
+2019-06-17 02a13c4 [TASK] allow switching of extended ExtensionService (Dirk Wenzel)
+2019-06-17 7afa7c9 [BUGFIX] fixed typo in composer.json (Dirk Wenzel)
+2019-06-17 61d234c [TASK] extension renamed (Dirk Wenzel)
+2019-06-17 1edb124 [TASK] extension setup (Dirk Wenzel)
+
+
