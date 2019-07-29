@@ -28,7 +28,7 @@ class ExtensionService extends FrameworkExtensionService
 
     /**
      * Checks if the given action is cacheable or not.
-     * Method from parent class overwritten to allow evaluation of plugin setting 'makeNonCachable'.
+     * Method from parent class overwritten to allow evaluation of plugin setting 'notCacheable'.
      * Thus an editor is able to force an non caching behavior of the plugin.
      *
      * @param string $extensionName Name of the target extension, without underscores
@@ -40,7 +40,7 @@ class ExtensionService extends FrameworkExtensionService
     public function isActionCacheable($extensionName, $pluginName, $controllerName, $actionName)
     {
         if (!parent::isActionCacheable($extensionName, $pluginName, $controllerName, $actionName)) {
-            return true;
+            return false;
         }
 
         $frameworkConfiguration = $this->configurationManager->getConfiguration(
