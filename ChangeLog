@@ -1,3 +1,6 @@
+2019-07-29         [RELEASE] Release of t3extension_tools 1.0.2 (Dirk Wenzel)
+2019-07-29 cbda84b [BUGFIX] fixed error where plugins were cached unintentionally (Dirk Wenzel)
+
 2019-06-28         [RELEASE] Release of t3extension_tools 1.0.1 (Dirk Wenzel)
 2019-06-28 3da315d [BUGFIX] remove invalide requirement for typo3/minimal (Dirk Wenzel)
 
