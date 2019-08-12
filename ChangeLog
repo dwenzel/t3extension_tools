@@ -1,3 +1,7 @@
+2019-08-12         [RELEASE] Release of t3extension_tools 1.1.0 (Dirk Wenzel)
+2019-08-12 0404616 [TASK]  ExtensionConfiguration, ModuleRegistrationInterface and ModuleRegistrationTrait implemented (Dirk Wenzel)
+2019-08-12 e810ad6 [TASK] ExtensionConfiguration implemented (Dirk Wenzel)
+
 2019-07-29         [RELEASE] Release of t3extension_tools 1.0.2 (Dirk Wenzel)
 2019-07-29 cbda84b [BUGFIX] fixed error where plugins were cached unintentionally (Dirk Wenzel)
 
