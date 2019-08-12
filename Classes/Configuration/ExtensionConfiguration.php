@@ -2,6 +2,8 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,6 +25,12 @@ class ExtensionConfiguration
     public const EXTENSION_KEY = 't3extension_tools';
     public const UPDATE_WIZARDS = [];
 
+    /**
+     * Configuration class names for module registration
+     * Class must implement ModuleRegistrationInterface
+     */
+    protected const MODULES_TO_REGISTER = [];
+
     public static function registerUpdateWizards(): void
     {
         foreach (static::UPDATE_WIZARDS as $class) {
@@ -35,12 +43,29 @@ class ExtensionConfiguration
     /**
      * Register custom modules or reconfigure existing modules
      * for the backend
-     * Overwrite
+     * Overwrite this method if necessary
      */
     public static function registerAndConfigureModules()
     {
+        foreach (static::MODULES_TO_REGISTER as $module) {
+            if (!in_array(ModuleRegistrationInterface::class, class_implements($module), true)) {
+                echo $module . ' wrong instance';
+                continue;
+            }
+            ExtensionUtility::registerModule(
+                $module::getVendorExtensionName(),
+                $module::getMainModuleName(),
+                $module::getSubmoduleName(),
+                $module::getPosition(),
+                $module::getControllerActions(),
+                $module::getModuleConfiguration()
+            );
+        }
     }
 
+    /**
+     * override in order to reconfigure tables
+     */
     public static function reconfigureTables()
     {
     }
