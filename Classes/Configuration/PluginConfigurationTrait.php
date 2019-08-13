@@ -2,6 +2,8 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
+use DWenzel\T3extensionTools\Traits\PropertyAccess;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -18,9 +20,7 @@ namespace DWenzel\T3extensionTools\Configuration;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use DWenzel\T3extensionTools\Configuration\ModuleRegistrationInterface as MCI;
-
-trait ModuleRegistrationTrait
+trait PluginConfigurationTrait
 {
     use ControllerActionsTrait;
 
@@ -28,36 +28,17 @@ trait ModuleRegistrationTrait
      * @return string
      * @throws InvalidConfigurationException
      */
-    public static function getSubmoduleName(): string
+    public static function getPluginName(): string
     {
-        return self::getStaticProperty(MCI::SUB_MODULE_NAME);
-    }
-
-    /**
-     * @return string
-     * @throws InvalidConfigurationException
-     */
-    public static function getMainModuleName(): string
-    {
-        return self::getStaticProperty(MCI::MAIN_MODULE_NAME);
+        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_NAME);
     }
 
     /**
      * @return array
      * @throws InvalidConfigurationException
      */
-    public static function getModuleConfiguration(): array
+    public static function getNonCacheableControllerActions(): array
     {
-        return self::getStaticProperty(MCI::MODULE_CONFIGURATION);
+        return self::getStaticProperty(PluginConfigurationInterface::NON_CACHEABLE_CONTROLLER_ACTIONS);
     }
-
-    /**
-     * @return string
-     * @throws InvalidConfigurationException
-     */
-    public static function getPosition(): string
-    {
-        return self::getStaticProperty(MCI::POSITION);
-    }
-
 }

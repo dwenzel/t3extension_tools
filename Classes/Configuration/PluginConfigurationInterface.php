@@ -18,46 +18,34 @@ namespace DWenzel\T3extensionTools\Configuration;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use DWenzel\T3extensionTools\Configuration\ModuleRegistrationInterface as MCI;
-
-trait ModuleRegistrationTrait
+interface PluginConfigurationInterface extends ControllerRegistrationInterface
 {
-    use ControllerActionsTrait;
-
     /**
-     * @return string
-     * @throws InvalidConfigurationException
+     * Name of the property holding the plugin name
      */
-    public static function getSubmoduleName(): string
-    {
-        return self::getStaticProperty(MCI::SUB_MODULE_NAME);
-    }
+    public const PLUGIN_NAME = 'pluginName';
+
 
     /**
-     * @return string
-     * @throws InvalidConfigurationException
+     * Name of the property holding the non-cacheable Controller Actions
      */
-    public static function getMainModuleName(): string
-    {
-        return self::getStaticProperty(MCI::MAIN_MODULE_NAME);
-    }
+    public const NON_CACHEABLE_CONTROLLER_ACTIONS = 'nonCacheableControllerActions';
 
     /**
+     * Get then name of the plugin to register
+     *
+     * @return string
+     */
+    public static function getPluginName(): string;
+
+    /**
+     * Get the Controller/Actions which shall not be cached
+     * [
+     *  <ControllerName> => <actionName>
+     * ]
+     * Omit the 'Action' part form action methods
+     *
      * @return array
-     * @throws InvalidConfigurationException
      */
-    public static function getModuleConfiguration(): array
-    {
-        return self::getStaticProperty(MCI::MODULE_CONFIGURATION);
-    }
-
-    /**
-     * @return string
-     * @throws InvalidConfigurationException
-     */
-    public static function getPosition(): string
-    {
-        return self::getStaticProperty(MCI::POSITION);
-    }
-
+    public static function getNonCacheableControllerActions(): array;
 }
