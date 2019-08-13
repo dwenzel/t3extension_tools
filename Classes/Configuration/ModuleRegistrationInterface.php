@@ -18,10 +18,8 @@ namespace DWenzel\T3extensionTools\Configuration;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ModuleRegistrationInterface
+interface ModuleRegistrationInterface extends ControllerRegistrationInterface
 {
-    public const VENDOR_EXTENSION_NAME = 'vendorExtensionName';
-    public const CONTROLLER_ACTIONS = 'controllerActions';
     public const MAIN_MODULE_NAME = 'mainModuleName';
     public const MODULE_CONFIGURATION = 'moduleConfiguration';
     public const POSITION = 'position';
@@ -33,18 +31,6 @@ interface ModuleRegistrationInterface
      * @return string
      */
     public static function getSubmoduleName(): string;
-
-    /**
-     * Get an array of controller action combinations in the
-     * form:
-     * [
-     *   <ControllerName> => '<actionName>,<otherActionName>'
-     * ]
-     * (omit the 'Action' part from the method name)
-     *
-     * @return array
-     */
-    public static function getControllerActions(): array;
 
     /**
      * Get the name of the main module in
@@ -69,11 +55,4 @@ interface ModuleRegistrationInterface
      */
     public static function getModuleConfiguration(): array;
 
-    /**
-     * Get a key for registration in the form of
-     * <VendorName>.<extensionKey>
-     *
-     * @return string
-     */
-    public static function getVendorExtensionName(): string;
 }
