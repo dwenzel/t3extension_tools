@@ -1,3 +1,6 @@
+2019-08-13         [RELEASE] Release of t3extension_tools 1.2.0 (Dirk Wenzel)
+2019-08-13 2b286ec [TASK] ExtensionConfiguration extended can now be used to * register Bitmap and SVG Icons * register Plugins * allow tables on standard pages * add localized tabel description (context sensitive help) (Dirk Wenzel)
+
 2019-08-12         [RELEASE] Release of t3extension_tools 1.1.0 (Dirk Wenzel)
 2019-08-12 0404616 [TASK]  ExtensionConfiguration, ModuleRegistrationInterface and ModuleRegistrationTrait implemented (Dirk Wenzel)
 2019-08-12 e810ad6 [TASK] ExtensionConfiguration implemented (Dirk Wenzel)
