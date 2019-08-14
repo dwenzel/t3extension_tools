@@ -80,13 +80,46 @@ class ExtensionConfiguration
 
     }
 
-    public static function configurePlugins()
+    /**
+     * Register all plugins
+     * To be used in ext_tables.php
+     */
+    public static function registerPlugins()
     {
+        /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_REGISTER as $configuration) {
             if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
                 continue;
             }
-            /** PluginConfigurationInterface $configuration */
+
+            ExtensionUtility::registerPlugin(
+                $configuration::getVendorExtensionName(),
+                $configuration::getPluginName(),
+                $configuration::getPluginTitle()
+            );
+
+            $pluginSignature = $configuration::getPluginSignature();
+            $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature] = 'layout,select_key,pages,recursive';
+            $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
+
+            if (!empty($flexForm = $configuration::getFlexForm())) {
+                ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, $flexForm);
+            }
+        }
+    }
+
+    /**
+     * Configure all plugins
+     * To be used in ext_localconf.php
+     */
+    public static function configurePlugins()
+    {
+        /** @var PluginConfigurationInterface $configuration */
+        foreach (static::PLUGINS_TO_REGISTER as $configuration) {
+            if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
+                continue;
+            }
+
             ExtensionUtility::configurePlugin(
                 $configuration::getVendorExtensionName(),
                 $configuration::getPluginName(),
@@ -170,7 +203,7 @@ class ExtensionConfiguration
         if (empty($icons)) {
             return;
         }
-        if (!$iconProviderClass instanceof IconProviderInterface) {
+        if (!in_array(IconProviderInterface::class, class_implements($iconProviderClass), true)) {
             throw new InvalidConfigurationException(
                 "Invalid IconProvider '$iconProviderClass'. Provider class must implement " .
                 IconProviderInterface::class,
@@ -182,7 +215,7 @@ class ExtensionConfiguration
             $registry->registerIcon(
                 $identifier,
                 $iconProviderClass,
-                $path
+                ['source' => $path]
             );
         }
     }

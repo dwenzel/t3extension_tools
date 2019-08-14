@@ -25,6 +25,20 @@ interface PluginConfigurationInterface extends ControllerRegistrationInterface
      */
     public const PLUGIN_NAME = 'pluginName';
 
+    /**
+     * Name of the property holding the plugin signature
+     */
+    public const PLUGIN_SIGNATURE = 'pluginSignature';
+
+    /**
+     * Name of the property holding the plugin title
+     */
+    public const PLUGIN_TITLE = 'pluginTitle';
+
+    /**
+     * Name of the property holding the flex form
+     */
+    public const FLEX_FORM = 'flexForm';
 
     /**
      * Name of the property holding the non-cacheable Controller Actions
@@ -32,11 +46,30 @@ interface PluginConfigurationInterface extends ControllerRegistrationInterface
     public const NON_CACHEABLE_CONTROLLER_ACTIONS = 'nonCacheableControllerActions';
 
     /**
-     * Get then name of the plugin to register
+     * Get the name of the plugin to register
      *
      * @return string
      */
     public static function getPluginName(): string;
+
+    /**
+     * Get the title of the plugin to register
+     * This can be a localized string reference
+     * @return string
+     */
+    public static function getPluginTitle(): string;
+
+    /**
+     * Get the signature of the plugin to register
+     * @return string
+     */
+    public static function getPluginSignature(): string;
+
+    /**
+     * Get the flex form configuration for the plugin to register
+     * @return string
+     */
+    public static function getFlexForm(): string;
 
     /**
      * Get the Controller/Actions which shall not be cached
