@@ -34,6 +34,33 @@ trait PluginConfigurationTrait
     }
 
     /**
+     * @return string
+     * @throws InvalidConfigurationException
+     */
+    public static function getPluginSignature(): string
+    {
+        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_SIGNATURE);
+    }
+
+    /**
+     * @return string
+     * @throws InvalidConfigurationException
+     */
+    public static function getFlexForm(): string
+    {
+        return self::getStaticProperty(PluginConfigurationInterface::FLEX_FORM);
+    }
+
+    /**
+     * @return string
+     * @throws InvalidConfigurationException
+     */
+    public static function getPluginTitle(): string
+    {
+        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_TITLE);
+    }
+
+    /**
      * @return array
      * @throws InvalidConfigurationException
      */

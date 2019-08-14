@@ -12,7 +12,12 @@ Use the latest composer version instead.
 ### Features
 
 * [switchable caching for plugin](docs/PluginCache.md)
-
+* register plugins
+* register modules
+* configure tables
+  * allow tables on standard pages
+  * add localized description for tables (context sensitive help)
+* register bitmap and SVG icons
 
 ### Caveats
 
