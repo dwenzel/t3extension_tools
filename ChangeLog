@@ -1,3 +1,6 @@
+2021-04-22         [RELEASE] Release of t3extension_tools 1.3.1 (Dirk Wenzel)
+2021-04-22 20503e9 [BUGFIX] allow TYPO3 versions above 9.x in extension configuration (Dirk Wenzel)
+
 2019-08-14         [RELEASE] Release of t3extension_tools 1.3.0 (Dirk Wenzel)
 2019-08-14 18d4d62 [TASK] ExtensionConfiguration extended - register plugins too - fixed error in icon registration (Dirk Wenzel)
 2019-08-13 82eb448 [DOC] new features listed (Dirk Wenzel)
