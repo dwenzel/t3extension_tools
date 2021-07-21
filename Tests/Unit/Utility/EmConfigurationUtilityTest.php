@@ -5,6 +5,9 @@ use DWenzel\T3extensionTools\Utility\EmConfigurationUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use DWenzel\T3extensionTools\Configuration\EmConfiguration;
 use DWenzel\T3extensionTools\Configuration\SettingsInterface as SI;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /***************************************************************
  *
@@ -32,7 +35,6 @@ use DWenzel\T3extensionTools\Configuration\SettingsInterface as SI;
  ***************************************************************/
 class EmConfigurationUtilityTest extends UnitTestCase
 {
-
     /**
      * @test
      */
@@ -52,7 +54,7 @@ class EmConfigurationUtilityTest extends UnitTestCase
         $emSettings = [
             'extendedExtensionServiceEnabled' => true
         ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][SI::EXTENSION_KEY] = serialize($emSettings);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'][SI::EXTENSION_KEY] = $emSettings;
 
         $expectedEmConfiguration = new EmConfiguration($emSettings);
 

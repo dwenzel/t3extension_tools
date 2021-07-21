@@ -47,7 +47,7 @@ class ObjectManagerTraitTest extends UnitTestCase
     public function objectManagerCanBeInjected()
     {
         /** @var ObjectManager|MockObject $objectManager */
-        $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
+        $objectManager = $this->getMockBuilder(ObjectManager::class)->disableOriginalConstructor()->getMock();
 
         $this->subject->injectObjectManager($objectManager);
 

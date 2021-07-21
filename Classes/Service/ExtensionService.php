@@ -14,7 +14,6 @@ namespace DWenzel\T3extensionTools\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use DWenzel\T3extensionTools\Configuration\ConfigurationManagerTrait;
 use DWenzel\T3extensionTools\Configuration\SettingsInterface as SI;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService as FrameworkExtensionService;
@@ -24,8 +23,6 @@ use TYPO3\CMS\Extbase\Service\ExtensionService as FrameworkExtensionService;
  */
 class ExtensionService extends FrameworkExtensionService
 {
-    use ConfigurationManagerTrait;
-
     /**
      * Checks if the given action is cacheable or not.
      * Method from parent class overwritten to allow evaluation of plugin setting 'notCacheable'.

@@ -31,12 +31,10 @@ class EmConfigurationUtility
      */
     public static function parseSettings()
     {
-        $settings = [];
-
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][SI::EXTENSION_KEY])) {
-            $settings = (array)unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][SI::EXTENSION_KEY], ['allowed_classes' => false]);
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'][SI::EXTENSION_KEY])) {
+            return $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'][SI::EXTENSION_KEY];
         }
 
-        return $settings;
+        return [];
     }
 }

@@ -93,7 +93,7 @@ class ExtensionConfiguration
             }
 
             ExtensionUtility::registerPlugin(
-                $configuration::getVendorExtensionName(),
+                $configuration::getExtensionName(),
                 $configuration::getPluginName(),
                 $configuration::getPluginTitle()
             );
@@ -121,7 +121,7 @@ class ExtensionConfiguration
             }
 
             ExtensionUtility::configurePlugin(
-                $configuration::getVendorExtensionName(),
+                $configuration::getExtensionName(),
                 $configuration::getPluginName(),
                 $configuration::getControllerActions(),
                 $configuration::getNonCacheableControllerActions()
@@ -141,7 +141,7 @@ class ExtensionConfiguration
                 continue;
             }
             ExtensionUtility::registerModule(
-                $module::getVendorExtensionName(),
+                $module::getExtensionName(),
                 $module::getMainModuleName(),
                 $module::getSubmoduleName(),
                 $module::getPosition(),

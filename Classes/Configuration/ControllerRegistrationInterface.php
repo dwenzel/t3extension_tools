@@ -39,6 +39,7 @@ interface ControllerRegistrationInterface
 {
     public const CONTROLLER_ACTIONS = 'controllerActions';
     public const VENDOR_EXTENSION_NAME = 'vendorExtensionName';
+    public const EXTENSION_NAME = 'extensionName';
 
     /**
      * Get an array of controller action combinations in the
@@ -59,4 +60,12 @@ interface ControllerRegistrationInterface
      * @return string
      */
     public static function getVendorExtensionName(): string;
+
+    /**
+     * Get a key for registration in the form of
+     * <ExtensionKey>
+     *
+     * @return string
+     */
+    public static function getExtensionName(): string;
 }

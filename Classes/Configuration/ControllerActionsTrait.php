@@ -42,4 +42,13 @@ trait ControllerActionsTrait
     {
         return self::getStaticProperty(MCI::VENDOR_EXTENSION_NAME);
     }
+
+    /**
+     * @return string
+     * @throws InvalidConfigurationException
+     */
+    public static function getExtensionName(): string
+    {
+        return self::getStaticProperty(MCI::EXTENSION_NAME);
+    }
 }
