@@ -211,7 +211,7 @@ class ExtensionConfiguration
             );
         }
         $registry = GeneralUtility::makeInstance(IconRegistry::class);
-        foreach (static::SVG_ICONS_TO_REGISTER as $identifier => $path) {
+        foreach ($icons as $identifier => $path) {
             $registry->registerIcon(
                 $identifier,
                 $iconProviderClass,
