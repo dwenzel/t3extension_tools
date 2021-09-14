@@ -1,3 +1,7 @@
+2021-09-14         [RELEASE] Release of t3extension_tools 1.5.0 (Vladimir Falcon)
+2021-09-14 57ecbd5 Fixed  package requirements  in composer.json file. (Vladimir Falcon Piva)
+2019-08-13 213c4f9 [!!!][BUGFIX] Define correct boolean value in extension configuration (Elias Häußler)
+
 2021-06-08         [RELEASE] Release of t3extension_tools 1.4.0 (Dirk Wenzel)
 2021-06-08 b737ba1 [TASK] Traits for update wizards added (Dirk Wenzel)
 2021-04-22 4c28f10 [TASK] composer.json now complies with TYPO3 extension spec (Dirk Wenzel)
