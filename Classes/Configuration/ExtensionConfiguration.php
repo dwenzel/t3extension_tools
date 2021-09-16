@@ -69,6 +69,24 @@ class ExtensionConfiguration
     protected const SVG_ICONS_TO_REGISTER = [];
 
     /**
+     * Array of strings to add as TSconfig content.
+     * [
+     *  <Page TsConfig string to add>
+     * ]
+     * @var string[]
+     */
+    protected const ADD_PAGE_TSCONFIG = [];
+
+    /**
+     * TsConfig files to register with registerPageTSConfigFile IconRegistry
+     * [
+     *  <pathToTsConfigFile> => <label>
+     * ]
+     * @var string[]
+     */
+    protected const REGISTER_PAGE_TSCONFIG_FILES = [];
+
+    /**
      * Register update wizards
      */
     public static function registerUpdateWizards(): void
@@ -217,6 +235,26 @@ class ExtensionConfiguration
                 $iconProviderClass,
                 ['source' => $path]
             );
+        }
+    }
+
+    /**
+     * Add page TSconfig content
+     */
+    public static function addPageTSconfig(): void
+    {
+        foreach (static::ADD_PAGE_TSCONFIG as $TsConfig) {
+            ExtensionManagementUtility::addPageTSConfig($TsConfig);
+        }
+    }
+
+    /**
+     * Register TsConfig files
+     */
+    public static function registerPageTSConfigFiles(): void
+    {
+        foreach (static::REGISTER_PAGE_TSCONFIG_FILES as $TsConfigFile => $label) {
+            ExtensionManagementUtility::registerPageTSConfigFile(static::KEY, $TsConfigFile, $label);
         }
     }
 }
