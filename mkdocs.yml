@@ -1,0 +1,11 @@
+site_name: t3extension_tools
+repo_url: https://github.com/dwenzel/t3extension_tools
+repo_name: t3extension_tools
+site_url: https://0.0.0.0:8000
+dev_addr: 0.0.0.0:8000
+
+pages:
+    - Home: README.md
+    - PluginCache: PluginCache.md
+    - Interfaces: Interfaces.md
+theme: readthedocs

@@ -1,6 +1,5 @@
 # Extension Tools
-Provides tools for extensions of the TYPO3 CMS
-
+Provide tools for extensions of the TYPO3 CMS
 
 ### Installation
 ```
@@ -18,7 +17,8 @@ Use the latest composer version instead.
   * allow tables on standard pages
   * add localized description for tables (context sensitive help)
 * register bitmap and SVG icons
-
+* load TypoScript and PageTS config
+* use traits for console commands (see `Classes/)
 ### Caveats
 
 Make sure, no other extension is extending `TYPO3\CMS\Extbase\Service\ExtensionService`.  
