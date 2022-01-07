@@ -1,6 +1,5 @@
 # Extension Tools
-Provides tools for extensions of the TYPO3 CMS
-
+Provide tools for extensions of the TYPO3 CMS
 
 ### Installation
 ```
@@ -18,6 +17,8 @@ Use the latest composer version instead.
   * allow tables on standard pages
   * add localized description for tables (context sensitive help)
 * register bitmap and SVG icons
+* load TypoScript and PageTS config
+* use interfaces and traits for console commands
 
 ### Caveats
 
