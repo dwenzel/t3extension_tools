@@ -18,7 +18,8 @@ Use the latest composer version instead.
   * add localized description for tables (context sensitive help)
 * register bitmap and SVG icons
 * load TypoScript and PageTS config
-* use traits for console commands (see `Classes/)
+* use interfaces and traits for console commands
+
 ### Caveats
 
 Make sure, no other extension is extending `TYPO3\CMS\Extbase\Service\ExtensionService`.  
