@@ -2,8 +2,10 @@
 
 namespace DWenzel\T3extensionTools\Command;
 
+use DWenzel\T3extensionTools\Command\Argument\ExampleArgument;
 use DWenzel\T3extensionTools\Command\Option\ConnectionOption;
 use DWenzel\T3extensionTools\Command\Option\ExampleOption;
+use DWenzel\T3extensionTools\Traits\Command\ArgumentAwareTrait;
 use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
 use DWenzel\T3extensionTools\Traits\Command\ExecuteSqlTrait;
 use DWenzel\T3extensionTools\Traits\Command\InitializeTrait;
@@ -26,9 +28,10 @@ use Symfony\Component\Console\Command\Command;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ExampleCommand extends Command implements OptionAwareInterface
+class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAwareInterface
 {
-    use ConfigureTrait,
+    use ArgumentAwareTrait,
+        ConfigureTrait,
         InitializeTrait,
         OptionAwareTrait,
         ExecuteSqlTrait;
@@ -57,5 +60,10 @@ class ExampleCommand extends Command implements OptionAwareInterface
         ConnectionOption::class
     ];
 
+    protected const ARGUMENTS = [
+        ExampleArgument::class
+    ];
+
     protected static array $optionsToConfigure = self::OPTIONS;
+    protected static array $argumentsToConfigure = self::ARGUMENTS;
 }

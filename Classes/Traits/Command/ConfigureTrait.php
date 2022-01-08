@@ -2,7 +2,9 @@
 
 namespace DWenzel\T3extensionTools\Traits\Command;
 
-use DWenzel\T3extensionTools\Command\Option\CommandOptionInterface;
+use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
+use DWenzel\T3extensionTools\Command\ArgumentAwareInterface;
+use DWenzel\T3extensionTools\Command\Option\InputOptionInterface;
 use DWenzel\T3extensionTools\Command\OptionAwareInterface;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -33,9 +35,23 @@ trait ConfigureTrait
         $this->setDescription(self::MESSAGE_DESCRIPTION_COMMAND);
         $this->setHelp(self::MESSAGE_HELP_COMMAND);
 
+        if ($this instanceof ArgumentAwareInterface) {
+            foreach ($this->getArguments() as $argument) {
+                if(!in_array(InputArgumentInterface::class, class_implements($argument), true))
+                {
+                    continue;
+                }
+                $this->addArgument(
+                    $argument::name(),
+                    $argument::mode(),
+                    $argument::description(),
+                    $argument::defaultValue()
+                );
+            }
+        }
         if ($this instanceof OptionAwareInterface) {
             foreach ($this->getOptions() as $option) {
-                if (!in_array(CommandOptionInterface::class, class_implements($option), true)) {
+                if (!in_array(InputOptionInterface::class, class_implements($option), true)) {
                     continue;
                 }
                 $this->addOption(

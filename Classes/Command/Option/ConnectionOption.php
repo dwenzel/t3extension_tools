@@ -2,7 +2,7 @@
 
 namespace DWenzel\T3extensionTools\Command\Option;
 
-use DWenzel\T3extensionTools\Traits\Command\Option\CommandOptionTrait;
+use DWenzel\T3extensionTools\Traits\Command\Option\InputOptionTrait;
 use Symfony\Component\Console\Input\InputOption;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
@@ -22,9 +22,9 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ConnectionOption implements CommandOptionInterface
+class ConnectionOption implements InputOptionInterface
 {
-    use CommandOptionTrait;
+    use InputOptionTrait;
 
     public const NAME = 'connection';
     public const HELP = 'Identifier of the database connection which shall be used. Defaults to default TYPO3 connection';

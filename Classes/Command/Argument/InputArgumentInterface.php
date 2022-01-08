@@ -1,8 +1,5 @@
 <?php
-
-namespace DWenzel\T3extensionTools\Command\Option;
-
-use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
+namespace DWenzel\T3extensionTools\Command\Argument;
 
 /***************************************************************
  *  Copyright notice
@@ -21,18 +18,10 @@ use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * Interface CommandOptionInterface
- *
- * Describes command options for registration.
- * @see ExampleOption for usage
- * @see ConfigureTrait::configure() for implementation
- */
-interface CommandOptionInterface
+interface InputArgumentInterface
 {
     public static function name(): string;
     public static function description(): string;
-    public static function shortCut(): string;
-    public static function mode(): ? int;
+    public static function mode(): ?int;
     public static function defaultValue();
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace DWenzel\T3extensionTools\Traits\Command\Option;
+namespace DWenzel\T3extensionTools\Traits\Command;
 
 /***************************************************************
  *  Copyright notice
@@ -18,31 +18,10 @@ namespace DWenzel\T3extensionTools\Traits\Command\Option;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-trait CommandOptionTrait
+trait ArgumentAwareTrait
 {
-
-    public static function defaultValue(): ?string
+    public function getArguments(): array
     {
-        return static::DEFAULT;
-    }
-
-    public static function name(): string
-    {
-        return static::NAME;
-    }
-
-    public static function description(): string
-    {
-        return static::DESCRIPTION;
-    }
-
-    public static function mode(): ?int
-    {
-        return static::MODE;
-    }
-
-    public static function shortCut(): string
-    {
-        return static::SHORTCUT;
+        return static::$argumentsToConfigure;
     }
 }

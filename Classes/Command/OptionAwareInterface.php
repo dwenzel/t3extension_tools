@@ -2,7 +2,7 @@
 
 namespace DWenzel\T3extensionTools\Command;
 
-use DWenzel\T3extensionTools\Command\Option\CommandOptionInterface;
+use DWenzel\T3extensionTools\Command\Option\InputOptionInterface;
 use DWenzel\T3extensionTools\Traits\Command\OptionAwareTrait;
 
 /***************************************************************
@@ -24,12 +24,12 @@ use DWenzel\T3extensionTools\Traits\Command\OptionAwareTrait;
 interface OptionAwareInterface
 {
     /**
-     * Returns an array of items implementing CommandOptionInterface
+     * Returns an array of items implementing InputOptionInterface
      * Those are use to describe command options.
      *
+     * @return array<InputOptionInterface>
+     *@see ExampleCommand for usage
      * @see OptionAwareTrait for implementation
-     * @see ExampleCommand for usage
-     * @return array<CommandOptionInterface>
      */
     public function getOptions(): array;
 }

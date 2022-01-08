@@ -1,9 +1,6 @@
 <?php
 
-namespace DWenzel\T3extensionTools\Command\Option;
-
-use DWenzel\T3extensionTools\Traits\Command\Option\InputOptionTrait;
-use Symfony\Component\Console\Input\InputOption;
+namespace DWenzel\T3extensionTools\Traits\Command;
 
 /***************************************************************
  *  Copyright notice
@@ -21,19 +18,26 @@ use Symfony\Component\Console\Input\InputOption;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * Class Example
- */
-class ExampleOption implements InputOptionInterface
+trait InputPropertiesTrait
 {
-    use InputOptionTrait;
 
-    public const NAME = 'exampleOption';
-    public const HELP = 'an example option for an example command';
-    public const MODE = InputOption::VALUE_REQUIRED;
-    public const DESCRIPTION = 'example option';
-    public const SHORTCUT = 'eOpt';
-    public const DEFAULT = null;
+    public static function defaultValue(): ?string
+    {
+        return static::DEFAULT;
+    }
 
+    public static function name(): string
+    {
+        return static::NAME;
+    }
+
+    public static function description(): string
+    {
+        return static::DESCRIPTION;
+    }
+
+    public static function mode(): ?int
+    {
+        return static::MODE;
+    }
 }

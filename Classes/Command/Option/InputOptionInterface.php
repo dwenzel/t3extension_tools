@@ -2,8 +2,7 @@
 
 namespace DWenzel\T3extensionTools\Command\Option;
 
-use DWenzel\T3extensionTools\Traits\Command\Option\InputOptionTrait;
-use Symfony\Component\Console\Input\InputOption;
+use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
 
 /***************************************************************
  *  Copyright notice
@@ -23,17 +22,17 @@ use Symfony\Component\Console\Input\InputOption;
  ***************************************************************/
 
 /**
- * Class Example
+ * Interface InputOptionInterface
+ *
+ * Describes command options for registration.
+ * @see ExampleOption for usage
+ * @see ConfigureTrait::configure() for implementation
  */
-class ExampleOption implements InputOptionInterface
+interface InputOptionInterface
 {
-    use InputOptionTrait;
-
-    public const NAME = 'exampleOption';
-    public const HELP = 'an example option for an example command';
-    public const MODE = InputOption::VALUE_REQUIRED;
-    public const DESCRIPTION = 'example option';
-    public const SHORTCUT = 'eOpt';
-    public const DEFAULT = null;
-
+    public static function name(): string;
+    public static function description(): string;
+    public static function shortCut(): string;
+    public static function mode(): ? int;
+    public static function defaultValue();
 }
