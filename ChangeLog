@@ -1,3 +1,11 @@
+2022-01-27         [RELEASE] Release of t3extension_tools 1.6.0 (Dirk Wenzel)
+2022-01-21 edbad93 Allowed  php 8.0 in requirements (Vladimir Falcon Piva)
+2022-01-08 5bf607b [TASK] InputArgumentInterface und ArgumentAwareTrait introduced, Option classes/interfaces/traits refactored (Dirk Wenzel)
+2022-01-07 a85b664 [BUGFIX] example command registration corrected (Dirk Wenzel)
+2022-01-07 a213733 [TASK] readme edited (Dirk Wenzel)
+2022-01-07 b50bdd1 [TASK] interfaces and traits for commands and options added (Dirk Wenzel)
+2021-09-16 90a53a1 Feature: Methods to add page TsConfig and TsConfig files for extensions. (Vladimir Falcon)
+
 2021-09-14         [RELEASE] Release of t3extension_tools 1.5.0 (Vladimir Falcon)
 2021-09-14 57ecbd5 Fixed  package requirements  in composer.json file. (Vladimir Falcon Piva)
 2019-08-13 213c4f9 [!!!][BUGFIX] Define correct boolean value in extension configuration (Elias Häußler)
