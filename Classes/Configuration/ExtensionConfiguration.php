@@ -2,6 +2,7 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
+use Fr\JohServices\Updates\ServicePluginUpdateWizard;
 use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProviderInterface;
@@ -29,7 +30,18 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 class ExtensionConfiguration
 {
     public const EXTENSION_KEY = 't3extension_tools';
+    /**
+     * @deprecated  use UPDATE_WIZARDS_TO_REGISTER instead
+     */
     public const UPDATE_WIZARDS = [];
+
+    /**
+     * Array of Update wizard to register during extension configuration.
+     * [
+     *   <Identifier> => <Fully Qualified Class Name>
+     * ]
+     */
+    public const UPDATE_WIZARDS_TO_REGISTER = [];
     /**
      * [
      *  <tableName>,
@@ -86,6 +98,7 @@ class ExtensionConfiguration
      */
     protected const REGISTER_PAGE_TSCONFIG_FILES = [];
 
+
     /**
      * Register update wizards
      */
@@ -96,6 +109,10 @@ class ExtensionConfiguration
                 = $class;
         }
 
+        foreach (static::UPDATE_WIZARDS_TO_REGISTER as $identifier => $class) {
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][$identifier]
+                = $class;
+        }
     }
 
     /**
@@ -188,29 +205,6 @@ class ExtensionConfiguration
     }
 
     /**
-     * override in order to configure tables
-     */
-    public static function configureTables()
-    {
-        self::allowTablesOnStandardPages();
-        self::addLocalizedTableDescription();
-    }
-
-    protected static function allowTablesOnStandardPages(): void
-    {
-        foreach (static::TABLES_ALLOWED_ON_STANDARD_PAGES as $table) {
-            ExtensionManagementUtility::allowTableOnStandardPages($table);
-        }
-    }
-
-    protected static function addLocalizedTableDescription()
-    {
-        foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {
-            ExtensionManagementUtility::addLLrefForTCAdescr($table, $file);
-        }
-    }
-
-    /**
      * Registers icons with a provider class
      * @param array $icons
      * @param string $iconProviderClass
@@ -235,6 +229,29 @@ class ExtensionConfiguration
                 $iconProviderClass,
                 ['source' => $path]
             );
+        }
+    }
+
+    /**
+     * override in order to configure tables
+     */
+    public static function configureTables()
+    {
+        self::allowTablesOnStandardPages();
+        self::addLocalizedTableDescription();
+    }
+
+    protected static function allowTablesOnStandardPages(): void
+    {
+        foreach (static::TABLES_ALLOWED_ON_STANDARD_PAGES as $table) {
+            ExtensionManagementUtility::allowTableOnStandardPages($table);
+        }
+    }
+
+    protected static function addLocalizedTableDescription()
+    {
+        foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {
+            ExtensionManagementUtility::addLLrefForTCAdescr($table, $file);
         }
     }
 
