@@ -1,3 +1,7 @@
+2022-02-07         [RELEASE] Release of t3extension_tools 1.7.0 (Dirk Wenzel)
+2022-02-07 c207a4a [BUGFIX] invalid import fixed (Dirk Wenzel)
+2022-02-01 d318bec [TASK] traits for upgrade wizards implemented (Dirk Wenzel)
+
 2022-01-27         [RELEASE] Release of t3extension_tools 1.6.0 (Dirk Wenzel)
 2022-01-21 edbad93 Allowed  php 8.0 in requirements (Vladimir Falcon Piva)
 2022-01-08 5bf607b [TASK] InputArgumentInterface und ArgumentAwareTrait introduced, Option classes/interfaces/traits refactored (Dirk Wenzel)
