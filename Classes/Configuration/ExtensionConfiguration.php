@@ -2,7 +2,6 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
-use Fr\JohServices\Updates\ServicePluginUpdateWizard;
 use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProviderInterface;
