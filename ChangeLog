@@ -1,3 +1,6 @@
+2022-07-15         [RELEASE] Release of t3extension_tools 1.8.1 (Vladimir Falcon)
+2022-07-15 eb977a2 Fixed extension version number in ext_emconf.php file (Vladimir Falcon)
+
 2022-02-07         [RELEASE] Release of t3extension_tools 1.7.0 (Dirk Wenzel)
 2022-02-07 c207a4a [BUGFIX] invalid import fixed (Dirk Wenzel)
 2022-02-01 d318bec [TASK] traits for upgrade wizards implemented (Dirk Wenzel)
