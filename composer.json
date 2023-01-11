@@ -22,7 +22,7 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "nimut/testing-framework": "^3.0 || ^4.1 || ^5.2"
+    "nimut/testing-framework": "^4.1 || ^5.2 || ^6.0"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
