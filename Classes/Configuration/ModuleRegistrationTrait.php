@@ -18,6 +18,7 @@ namespace DWenzel\T3extensionTools\Configuration;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use DWenzel\T3extensionTools\Configuration\ModuleRegistrationInterface as MCI;
 
 trait ModuleRegistrationTrait

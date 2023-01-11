@@ -2,6 +2,8 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
+use Exception;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -18,5 +20,6 @@ namespace DWenzel\T3extensionTools\Configuration;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class InvalidConfigurationException extends \Exception
-{}
+class InvalidConfigurationException extends Exception
+{
+}

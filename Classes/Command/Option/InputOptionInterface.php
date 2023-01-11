@@ -31,8 +31,12 @@ use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
 interface InputOptionInterface
 {
     public static function name(): string;
+
     public static function description(): string;
+
     public static function shortCut(): string;
-    public static function mode(): ? int;
+
+    public static function mode(): ?int;
+
     public static function defaultValue();
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace DWenzel\T3extensionTools\Command\Argument;
 
 /***************************************************************
@@ -17,11 +18,13 @@ namespace DWenzel\T3extensionTools\Command\Argument;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 interface InputArgumentInterface
 {
     public static function name(): string;
+
     public static function description(): string;
+
     public static function mode(): ?int;
+
     public static function defaultValue();
 }

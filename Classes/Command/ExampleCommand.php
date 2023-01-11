@@ -42,7 +42,7 @@ class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAw
     public const MESSAGE_HELP_COMMAND = 'Does nothing';
     public const MESSAGE_SUCCESS = 'successfully done nothing';
     public const OPTION_CONNECTION = ConnectionOption::NAME;
-    public const OPTION_EXAMPLE =  ExampleOption::NAME;
+    public const OPTION_EXAMPLE = ExampleOption::NAME;
     public const OPTION_CONNECTION_DEFAULT = 'Default';
     public const CONNECTION_TYPE_MYSQL = 'mysql';
     public const ERROR_MISSING_CONNECTION = 'No suitable MySQL connection found.';

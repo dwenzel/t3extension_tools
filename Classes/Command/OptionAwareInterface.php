@@ -25,10 +25,10 @@ interface OptionAwareInterface
 {
     /**
      * Returns an array of items implementing InputOptionInterface
-     * Those are use to describe command options.
+     * Those are used to describe command options.
      *
      * @return array<InputOptionInterface>
-     *@see ExampleCommand for usage
+     * @see ExampleCommand for usage
      * @see OptionAwareTrait for implementation
      */
     public function getOptions(): array;
