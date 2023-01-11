@@ -1,3 +1,6 @@
+2023-01-11         [RELEASE] Release of t3extension_tools 1.8.2 (Vladimir Falcon)
+2023-01-11 8f1f68c Support nimut/testing-framework 6.0 (Vladimir Falcon)
+
 2022-07-15         [RELEASE] Release of t3extension_tools 1.8.1 (Vladimir Falcon)
 2022-07-15 eb977a2 Fixed extension version number in ext_emconf.php file (Vladimir Falcon)
 
