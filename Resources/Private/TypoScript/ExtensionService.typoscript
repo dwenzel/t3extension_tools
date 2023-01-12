@@ -1,7 +1,0 @@
-####################
-# use a different implementation of ExtensionService class
-config.tx_extbase.objects {
-    TYPO3\CMS\Extbase\Service\ExtensionService {
-        className = DWenzel\T3extensionTools\Service\ExtensionService
-    }
-}

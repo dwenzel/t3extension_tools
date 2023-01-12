@@ -10,7 +10,6 @@ Use the latest composer version instead.
 
 ### Features
 
-* [switchable caching for plugin](docs/PluginCache.md)
 * register plugins
 * register modules
 * configure tables
