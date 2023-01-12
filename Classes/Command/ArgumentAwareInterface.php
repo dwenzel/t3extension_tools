@@ -25,7 +25,7 @@ interface ArgumentAwareInterface
 {
     /**
      * Returns an array of items implementing InputArgumentInterface
-     * Those are use to describe command options.
+     * Those are used to describe command options.
      *
      * @return array<InputArgumentInterface>
      * @see ExampleCommand for usage

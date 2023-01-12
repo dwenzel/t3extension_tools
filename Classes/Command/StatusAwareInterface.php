@@ -20,7 +20,6 @@ namespace DWenzel\T3extensionTools\Command;
  ***************************************************************/
 interface StatusAwareInterface
 {
-
     public const SUCCESS = 0;
     public const FAILURE = 1;
     public const INVALID = 2;

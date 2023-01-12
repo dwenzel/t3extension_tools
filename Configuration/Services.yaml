@@ -1,0 +1,16 @@
+# Configuration/Services.yaml
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  DWenzel\T3extensionTools\:
+    resource: '../Classes/*'
+
+  DWenzel\T3extensionTools\Command\ExampleCommand:
+    tags:
+      - name: 'console.command'
+        command: 't3extension-tools:example'
+        description: 'Download file to location'
+        schedulable: false

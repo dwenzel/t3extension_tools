@@ -46,22 +46,22 @@ trait ExecuteSqlTrait
      * @param MysqlCommand|null $mysqlCommand
      * @param ConnectionConfiguration $connectionConfiguration
      */
-    public function __construct(string $name = null,
-                                MysqlCommand $mysqlCommand = null,
-                                ConnectionConfiguration $connectionConfiguration = null,
-                                SymfonyStyle $io = null
-    )
-    {
+    public function __construct(
+        string $name = null,
+        MysqlCommand $mysqlCommand = null,
+        ConnectionConfiguration $connectionConfiguration = null,
+        SymfonyStyle $io = null
+    ) {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
         );
         $this->connectionConfiguration = $connectionConfiguration ?? GeneralUtility::makeInstance(
-                ConnectionConfiguration::class
-            );
+            ConnectionConfiguration::class
+        );
         $this->mysqlCommand = $mysqlCommand ?? GeneralUtility::makeInstance(
-                MysqlCommand::class,
-                $this->connectionConfiguration->build()
-            );
+            MysqlCommand::class,
+            $this->connectionConfiguration->build()
+        );
         $this->io = $io;
         parent::__construct($name);
     }

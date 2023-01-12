@@ -37,8 +37,7 @@ trait ConfigureTrait
 
         if ($this instanceof ArgumentAwareInterface) {
             foreach ($this->getArguments() as $argument) {
-                if(!in_array(InputArgumentInterface::class, class_implements($argument), true))
-                {
+                if (!in_array(InputArgumentInterface::class, class_implements($argument), true)) {
                     continue;
                 }
                 $this->addArgument(
