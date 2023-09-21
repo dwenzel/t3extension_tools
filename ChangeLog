@@ -1,3 +1,6 @@
+2023-09-21         [RELEASE] Release of t3extension_tools 2.1.0 (Arend Maubach)
+2023-09-21 90af565 adding test configuration trait (Arend Maubach)
+
 2023-01-12         [RELEASE] Release of t3extension_tools 2.0.0 (Vladimir Falcon)
 2023-01-12 30b8873 Update Unit tests (Vladimir Falcon)
 2023-01-11 4ec464e Extension requires  TYPO3 >= 11.5.x (Vladimir Falcon)
