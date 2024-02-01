@@ -218,7 +218,7 @@ class ExtensionConfiguration
             throw new InvalidConfigurationException(
                 "Invalid IconProvider '$iconProviderClass'. Provider class must implement " .
                 IconProviderInterface::class,
-                1565689093
+                1_565_689_093
             );
         }
         $registry = GeneralUtility::makeInstance(IconRegistry::class);

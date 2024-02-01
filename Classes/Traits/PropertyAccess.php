@@ -29,12 +29,12 @@ trait PropertyAccess
      */
     protected static function getStaticProperty(string $propertyName)
     {
-        if (property_exists(__CLASS__, $propertyName)) {
+        if (property_exists(self::class, $propertyName)) {
             return static::$$propertyName;
         }
         throw new InvalidConfigurationException(
-            "Missing property $propertyName in class" . __CLASS__ . ".",
-            1565600918
+            "Missing property $propertyName in class" . self::class . ".",
+            1_565_600_918
         );
     }
 }

@@ -82,7 +82,7 @@ trait ExecuteSqlTrait
 
         if (empty($availableConnections) || !in_array($connection, $availableConnections, true)) {
             $this->io->error(self::ERROR_MISSING_CONNECTION);
-            return 1641390076;
+            return 1_641_390_076;
         }
         $dbConfig = $this->connectionConfiguration->build($connection);
 
@@ -100,7 +100,7 @@ trait ExecuteSqlTrait
 
         if ($exitCode) {
             $this->io->error(self::ERROR_SQL_EXECUTION_FAILED);
-            return 1641390086;
+            return 1_641_390_086;
         }
 
         $this->io->success(self::MESSAGE_SUCCESS);
