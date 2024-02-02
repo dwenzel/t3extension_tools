@@ -30,11 +30,8 @@ trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
-    /**
-     * @var MysqlCommand
-     */
-    protected MysqlCommand $mysqlCommand;
     protected ConnectionConfiguration $connectionConfiguration;
+
     /**
      * @var string
      */
@@ -43,12 +40,10 @@ trait ExecuteSqlTrait
     /**
      * SyncInstitutionPlaceFlatCommand constructor.
      * @param string|null $name
-     * @param MysqlCommand|null $mysqlCommand
      * @param ConnectionConfiguration $connectionConfiguration
      */
     public function __construct(
         string $name = null,
-        MysqlCommand $mysqlCommand = null,
         ConnectionConfiguration $connectionConfiguration = null,
         SymfonyStyle $io = null
     ) {
@@ -57,10 +52,6 @@ trait ExecuteSqlTrait
         );
         $this->connectionConfiguration = $connectionConfiguration ?? GeneralUtility::makeInstance(
             ConnectionConfiguration::class
-        );
-        $this->mysqlCommand = $mysqlCommand ?? GeneralUtility::makeInstance(
-            MysqlCommand::class,
-            $this->connectionConfiguration->build()
         );
         $this->io = $io;
         parent::__construct($name);
@@ -89,10 +80,10 @@ trait ExecuteSqlTrait
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
         if ($connection !== self::OPTION_CONNECTION_DEFAULT) {
             /** @noinspection PhpParamsInspection */
-            $this->mysqlCommand = new MysqlCommand($dbConfig, [], $output);
+            $mysqlCommand = new MysqlCommand($dbConfig, [], $output);
         }
 
-        $exitCode = $this->mysqlCommand->mysql(
+        $exitCode = $mysqlCommand->mysql(
             self::DEFAULT_MYSQL_ARGUMENTS,
             $this->sqlToExecute,
             null
