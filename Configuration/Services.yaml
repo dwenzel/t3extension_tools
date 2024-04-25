@@ -14,3 +14,9 @@ services:
         command: 't3extension-tools:example'
         description: 'Download file to location'
         schedulable: false
+
+  DWenzel\T3extensionTools\Command\DeleteLogs:
+    tags:
+      - name: 'console.command'
+        command: 't3extension-tools:delete-logs'
+        schedulable: true

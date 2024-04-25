@@ -1,15 +1,15 @@
 <?php
 
-namespace DWenzel\T3extensionTools\Traits\Command;
+namespace DWenzel\T3extensionTools\Command\Argument;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
+use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
+use Symfony\Component\Console\Input\InputOption;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2021 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2022 Dirk Wenzel <wenzel@cps-it.de>
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -22,20 +22,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-trait InitializeTrait
+class AgeArgument implements InputArgumentInterface
 {
+    use InputArgumentTrait;
 
-    /**
-     * @var SymfonyStyle
-     * @noinspection PhpMissingFieldTypeInspection
-     */
-    protected $io;
-
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        if (!$this->io instanceof SymfonyStyle) {
-            $this->io = new SymfonyStyle($input, $output);
-        }
-    }
-
+    public const NAME = 'age';
+    public const HELP = 'Provide an age in days for log files to delete.';
+    public const MODE = InputOption::VALUE_REQUIRED;
+    public const DESCRIPTION = 'min age for files to delete';
+    public const SHORTCUT = 'a';
+    public const DEFAULT = 90;
 }
