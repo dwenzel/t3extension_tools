@@ -4,7 +4,6 @@ namespace DWenzel\T3extensionTools\Traits\Command;
 
 use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
 use Helhum\Typo3Console\Database\Process\MysqlCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -40,7 +39,8 @@ trait ExecuteSqlTrait
     /**
      * SyncInstitutionPlaceFlatCommand constructor.
      * @param string|null $name
-     * @param ConnectionConfiguration $connectionConfiguration
+     * @param ConnectionConfiguration|null $connectionConfiguration
+     * @param SymfonyStyle|null $io
      */
     public function __construct(
         string $name = null,

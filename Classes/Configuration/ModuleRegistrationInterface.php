@@ -54,5 +54,4 @@ interface ModuleRegistrationInterface extends ControllerRegistrationInterface
      * @return array
      */
     public static function getModuleConfiguration(): array;
-
 }

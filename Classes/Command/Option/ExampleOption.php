@@ -35,5 +35,4 @@ class ExampleOption implements InputOptionInterface
     public const DESCRIPTION = 'example option';
     public const SHORTCUT = 'eOpt';
     public const DEFAULT = null;
-
 }

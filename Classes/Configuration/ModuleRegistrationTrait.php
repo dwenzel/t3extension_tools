@@ -60,5 +60,4 @@ trait ModuleRegistrationTrait
     {
         return self::getStaticProperty(MCI::POSITION);
     }
-
 }

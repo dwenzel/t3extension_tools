@@ -118,7 +118,7 @@ class ExtensionConfiguration
      * Register all plugins
      * To be used in ext_tables.php
      */
-    public static function registerPlugins()
+    public static function registerPlugins(): void
     {
         /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_REGISTER as $configuration) {
@@ -146,7 +146,7 @@ class ExtensionConfiguration
      * Configure all plugins
      * To be used in ext_localconf.php
      */
-    public static function configurePlugins()
+    public static function configurePlugins(): void
     {
         /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_REGISTER as $configuration) {
@@ -168,7 +168,7 @@ class ExtensionConfiguration
      * for the backend
      * Overwrite this method if necessary
      */
-    public static function registerAndConfigureModules()
+    public static function registerAndConfigureModules(): void
     {
         foreach (static::MODULES_TO_REGISTER as $module) {
             if (!in_array(ModuleRegistrationInterface::class, class_implements($module), true)) {
@@ -191,7 +191,7 @@ class ExtensionConfiguration
      * constants BITMAP_ICONS_TO_REGISTER and SVG_ICONS_TO_REGISTER
      * @throws InvalidConfigurationException
      */
-    public static function registerIcons()
+    public static function registerIcons(): void
     {
         self::registerIconsWithProvider(
             static::BITMAP_ICONS_TO_REGISTER,
@@ -234,7 +234,7 @@ class ExtensionConfiguration
     /**
      * override in order to configure tables
      */
-    public static function configureTables()
+    public static function configureTables(): void
     {
         self::allowTablesOnStandardPages();
         self::addLocalizedTableDescription();
@@ -247,7 +247,7 @@ class ExtensionConfiguration
         }
     }
 
-    protected static function addLocalizedTableDescription()
+    protected static function addLocalizedTableDescription(): void
     {
         foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {
             ExtensionManagementUtility::addLLrefForTCAdescr($table, $file);

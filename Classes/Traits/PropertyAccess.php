@@ -27,7 +27,7 @@ trait PropertyAccess
      * @return mixed
      * @throws InvalidConfigurationException
      */
-    protected static function getStaticProperty(string $propertyName)
+    protected static function getStaticProperty(string $propertyName): mixed
     {
         if (property_exists(self::class, $propertyName)) {
             return static::$$propertyName;

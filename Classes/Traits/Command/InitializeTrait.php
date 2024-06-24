@@ -24,17 +24,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  ***************************************************************/
 trait InitializeTrait
 {
-
     /**
      * @var SymfonyStyle
      */
     protected $io;
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         if (!$this->io instanceof SymfonyStyle) {
             $this->io = new SymfonyStyle($input, $output);
         }
     }
-
 }
