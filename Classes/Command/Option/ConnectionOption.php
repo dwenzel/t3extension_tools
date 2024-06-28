@@ -32,6 +32,4 @@ class ConnectionOption implements InputOptionInterface
     public const DESCRIPTION = 'connection identifier';
     public const SHORTCUT = 'c';
     public const DEFAULT = ConnectionPool::DEFAULT_CONNECTION_NAME;
-
-
 }

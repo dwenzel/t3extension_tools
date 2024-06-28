@@ -3,7 +3,7 @@
 namespace DWenzel\T3extensionTools\Command;
 
 use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
-use InputArgumentInterface;
+use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
 
 /***************************************************************
  *  Copyright notice

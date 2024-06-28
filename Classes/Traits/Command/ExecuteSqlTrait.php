@@ -4,7 +4,6 @@ namespace DWenzel\T3extensionTools\Traits\Command;
 
 use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
 use Helhum\Typo3Console\Database\Process\MysqlCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -30,11 +29,8 @@ trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
-    /**
-     * @var MysqlCommand
-     */
-    protected MysqlCommand $mysqlCommand;
     protected ConnectionConfiguration $connectionConfiguration;
+
     /**
      * @var string
      */
@@ -43,12 +39,11 @@ trait ExecuteSqlTrait
     /**
      * SyncInstitutionPlaceFlatCommand constructor.
      * @param string|null $name
-     * @param MysqlCommand|null $mysqlCommand
-     * @param ConnectionConfiguration $connectionConfiguration
+     * @param ConnectionConfiguration|null $connectionConfiguration
+     * @param SymfonyStyle|null $io
      */
     public function __construct(
         string $name = null,
-        MysqlCommand $mysqlCommand = null,
         ConnectionConfiguration $connectionConfiguration = null,
         SymfonyStyle $io = null
     ) {
@@ -57,10 +52,6 @@ trait ExecuteSqlTrait
         );
         $this->connectionConfiguration = $connectionConfiguration ?? GeneralUtility::makeInstance(
             ConnectionConfiguration::class
-        );
-        $this->mysqlCommand = $mysqlCommand ?? GeneralUtility::makeInstance(
-            MysqlCommand::class,
-            $this->connectionConfiguration->build()
         );
         $this->io = $io;
         parent::__construct($name);
@@ -82,17 +73,17 @@ trait ExecuteSqlTrait
 
         if (empty($availableConnections) || !in_array($connection, $availableConnections, true)) {
             $this->io->error(self::ERROR_MISSING_CONNECTION);
-            return 1641390076;
+            return 1_641_390_076;
         }
         $dbConfig = $this->connectionConfiguration->build($connection);
 
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
         if ($connection !== self::OPTION_CONNECTION_DEFAULT) {
             /** @noinspection PhpParamsInspection */
-            $this->mysqlCommand = new MysqlCommand($dbConfig, [], $output);
+            $mysqlCommand = new MysqlCommand($dbConfig, [], $output);
         }
 
-        $exitCode = $this->mysqlCommand->mysql(
+        $exitCode = $mysqlCommand->mysql(
             self::DEFAULT_MYSQL_ARGUMENTS,
             $this->sqlToExecute,
             null
@@ -100,7 +91,7 @@ trait ExecuteSqlTrait
 
         if ($exitCode) {
             $this->io->error(self::ERROR_SQL_EXECUTION_FAILED);
-            return 1641390086;
+            return 1_641_390_086;
         }
 
         $this->io->success(self::MESSAGE_SUCCESS);

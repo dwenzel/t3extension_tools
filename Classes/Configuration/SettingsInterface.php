@@ -20,8 +20,8 @@ namespace DWenzel\T3extensionTools\Configuration;
  ***************************************************************/
 class SettingsInterface
 {
-    const EXTENSION_KEY = 't3extension_tools';
-    const SETTINGS = 'settings';
-    const CACHE = 'cache';
-    const NOT_CACHEABLE = 'notCacheable';
+    public const EXTENSION_KEY = 't3extension_tools';
+    public const SETTINGS = 'settings';
+    public const CACHE = 'cache';
+    public const NOT_CACHEABLE = 'notCacheable';
 }

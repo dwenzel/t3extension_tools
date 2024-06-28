@@ -6,13 +6,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Dirk Wenzel',
     'author_email' => 't3events@gmx.de',
     'state' => 'stable',
-    'uploadfolder' => '0',
-    'createDirs' => '',
-    'clearCacheOnLoad' => 0,
-    'version' => '2.2.0',
+    'version' => '3.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.99'
+            'typo3' => '11.5.0-12.4.99'
         ],
         'conflicts' => [],
         'suggests' => [],
