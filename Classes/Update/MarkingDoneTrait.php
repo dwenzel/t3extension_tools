@@ -23,8 +23,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  ***************************************************************/
 trait MarkingDoneTrait
 {
-
-    protected function markWizardAsDone()
+    protected function markWizardAsDone(): void
     {
         GeneralUtility::makeInstance(Registry::class)->set('installUpdate', static::class, 1);
     }

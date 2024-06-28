@@ -24,7 +24,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  ***************************************************************/
 trait InitializeTrait
 {
-
     /**
      * @var SymfonyStyle
      * @noinspection PhpMissingFieldTypeInspection
@@ -37,5 +36,4 @@ trait InitializeTrait
             $this->io = new SymfonyStyle($input, $output);
         }
     }
-
 }

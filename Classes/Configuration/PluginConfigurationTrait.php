@@ -2,8 +2,6 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
-use DWenzel\T3extensionTools\Traits\PropertyAccess;
-
 /***************************************************************
  *  Copyright notice
  *

@@ -26,7 +26,6 @@ use Symfony\Component\Console\Input\InputOption;
  ***************************************************************/
 trait ConfigureTrait
 {
-
     /**
      * Command configuration
      */
@@ -81,6 +80,4 @@ trait ConfigureTrait
      *
      */
     //abstract public function addOption($name, $shortcut = null, $mode = null, $description = '', $default = null);
-
-
 }
