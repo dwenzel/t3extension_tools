@@ -1,3 +1,10 @@
+2024-06-28         [RELEASE] Release of t3extension-tools 3.0.0 (Marno Schmigotzki)
+2024-06-28 7037486 [TASK] optimize requirements/dependencies (Marno Schmigotzki)
+2024-06-24 5ae7f98 [TASK] optimized code (Marno Schmigotzki)
+2024-02-02 0453167 [TASK] fixed MysqlCommand instantiation (Marno Schmigotzki)
+2024-02-01 9d2f59d optimized code for TYPO3 12 (Marno Schmigotzki)
+2024-01-31 a903f47 update dependencies for TYPO3 12 (Marno Schmigotzki)
+
 2024-04-25         [RELEASE] Release of t3extension_tools 2.2.0 (Dirk Wenzel)
 2024-04-25 31f6486 command delete-logs implemented (Dirk Wenzel)
 
