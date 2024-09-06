@@ -1,3 +1,6 @@
+2024-09-06         [RELEASE] Release of t3extension-tools 3.1.0 (Dirk Wenzel)
+2024-09-06 d138a15 support for TYPO3 11 dropped (Dirk Wenzel)
+
 2024-06-28         [RELEASE] Release of t3extension-tools 3.0.0 (Marno Schmigotzki)
 2024-06-28 7037486 [TASK] optimize requirements/dependencies (Marno Schmigotzki)
 2024-06-24 5ae7f98 [TASK] optimized code (Marno Schmigotzki)
