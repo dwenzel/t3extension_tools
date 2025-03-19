@@ -1,7 +1,7 @@
 {
   "name": "dwenzel/t3extension-tools",
-  "description": "Tools for TYPO3 CMS extensions",
   "type": "typo3-cms-extension",
+  "description": "Tools for TYPO3 CMS extensions",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
@@ -11,9 +11,9 @@
     }
   ],
   "require": {
-    "php": "^8.0",
-    "typo3/cms-backend": "^12.4",
-    "typo3/cms-core": "^12.4"
+    "php": "^8.2",
+    "typo3/cms-backend": "^12.4 || ^13.4",
+	  "typo3/cms-core": "^12.4 || ^13.4"
   },
   "autoload": {
     "psr-4": {
@@ -21,8 +21,7 @@
     }
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
-    "nimut/testing-framework": "^6.0"
+    "roave/security-advisories": "dev-latest"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
