@@ -30,11 +30,11 @@ use Symfony\Component\Console\Command\Command;
  ***************************************************************/
 class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAwareInterface
 {
-    use ArgumentAwareTrait,
-        ConfigureTrait,
-        InitializeTrait,
-        OptionAwareTrait,
-        ExecuteSqlTrait;
+    use ArgumentAwareTrait;
+    use ConfigureTrait;
+    use InitializeTrait;
+    use OptionAwareTrait;
+    use ExecuteSqlTrait;
 
     public const DEFAULT_NAME = 't3extension-tools:example';
     public const SQL_FILE_PATH = 'EXT:t3extension_tools/Resources/Private/SQL/example.sql';
@@ -57,11 +57,11 @@ class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAw
 
     protected const OPTIONS = [
         ExampleOption::class,
-        ConnectionOption::class
+        ConnectionOption::class,
     ];
 
     protected const ARGUMENTS = [
-        ExampleArgument::class
+        ExampleArgument::class,
     ];
 
     protected static array $optionsToConfigure = self::OPTIONS;

@@ -77,7 +77,6 @@ trait ConfigureTrait
      * @param mixed $default The default value (must be null for InputOption::VALUE_NONE)
      *
      * @return $this
-     *
      */
     //abstract public function addOption($name, $shortcut = null, $mode = null, $description = '', $default = null);
 }

@@ -97,7 +97,6 @@ class ExtensionConfiguration
      */
     protected const REGISTER_PAGE_TSCONFIG_FILES = [];
 
-
     /**
      * Register update wizards
      */
@@ -120,6 +119,8 @@ class ExtensionConfiguration
      */
     public static function registerPlugins(): void
     {
+        // Todo: Method have to be refactored for new TYPO3 Versions
+        return;
         /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_REGISTER as $configuration) {
             if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
@@ -148,6 +149,8 @@ class ExtensionConfiguration
      */
     public static function configurePlugins(): void
     {
+        // Todo: Method have to be refactored for new TYPO3 Versions
+        return;
         /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_REGISTER as $configuration) {
             if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
@@ -232,7 +235,8 @@ class ExtensionConfiguration
     }
 
     /**
-     * override in order to configure tables
+     * @deprecated allowTablesOnStandardPages will be removed in TYPO3 v13.0. Use $GLOBALS['TCA'][$table]['ctrl']['security']['ignorePageTypeRestriction'] instead.
+     * @deprecated addLocalizedTableDescriptionThe functionality has been removed in v12. The method will be removed in TYPO3 v13.
      */
     public static function configureTables(): void
     {
@@ -240,6 +244,9 @@ class ExtensionConfiguration
         self::addLocalizedTableDescription();
     }
 
+    /**
+     * @deprecated will be removed in TYPO3 v13.0. Use $GLOBALS['TCA'][$table]['ctrl']['security']['ignorePageTypeRestriction'] instead.
+     */
     protected static function allowTablesOnStandardPages(): void
     {
         foreach (static::TABLES_ALLOWED_ON_STANDARD_PAGES as $table) {
@@ -247,6 +254,9 @@ class ExtensionConfiguration
         }
     }
 
+    /**
+     * @deprecated functionality has been removed in v12. The method will be removed in TYPO3 v13.
+     */
     protected static function addLocalizedTableDescription(): void
     {
         foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {

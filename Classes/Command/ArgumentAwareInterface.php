@@ -2,8 +2,8 @@
 
 namespace DWenzel\T3extensionTools\Command;
 
-use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
 use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
+use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
 
 /***************************************************************
  *  Copyright notice

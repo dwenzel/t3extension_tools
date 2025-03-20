@@ -33,7 +33,7 @@ trait PropertyAccess
             return static::$$propertyName;
         }
         throw new InvalidConfigurationException(
-            "Missing property $propertyName in class" . self::class . ".",
+            "Missing property $propertyName in class" . self::class . '.',
             1_565_600_918
         );
     }
