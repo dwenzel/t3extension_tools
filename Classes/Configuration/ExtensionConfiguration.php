@@ -260,7 +260,6 @@ class ExtensionConfiguration
     protected static function addLocalizedTableDescription(): void
     {
         foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {
-            ExtensionManagementUtility::addLLrefForTCAdescr($table, $file);
         }
     }
 
