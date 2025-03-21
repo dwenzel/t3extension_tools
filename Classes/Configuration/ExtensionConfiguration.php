@@ -127,17 +127,16 @@ class ExtensionConfiguration
                 continue;
             }
 
-            ExtensionUtility::registerPlugin(
-                $configuration::getVendorExtensionName(),
+            $pluginSignature = ExtensionUtility::registerPlugin(
+                $configuration::getExtensionName(),
                 $configuration::getPluginName(),
-                $configuration::getPluginTitle()
+                $configuration::getPluginTitle(),
+                $configuration::getPluginIcon(),
+                $configuration::getPluginGroup(),
             );
 
-            $pluginSignature = $configuration::getPluginSignature();
-            $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature] = 'layout,select_key,pages,recursive';
-            $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-
             if (!empty($flexForm = $configuration::getFlexForm())) {
+                $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
                 ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, $flexForm);
             }
         }
@@ -152,16 +151,17 @@ class ExtensionConfiguration
         // Todo: Method have to be refactored for new TYPO3 Versions
         return;
         /** @var PluginConfigurationInterface $configuration */
-        foreach (static::PLUGINS_TO_REGISTER as $configuration) {
+        foreach (static::PLUGINS_TO_CONFIGURE as $configuration) {
             if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
                 continue;
             }
 
             ExtensionUtility::configurePlugin(
-                $configuration::getVendorExtensionName(),
+                $configuration::getExtensionName(),
                 $configuration::getPluginName(),
                 $configuration::getControllerActions(),
-                $configuration::getNonCacheableControllerActions()
+                $configuration::getNonCacheableControllerActions(),
+                $configuration::getPluginType(),
             );
         }
     }

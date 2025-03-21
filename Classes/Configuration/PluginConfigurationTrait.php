@@ -2,26 +2,16 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
- *  All rights reserved
- *
- * The GNU General Public License can be found at
- * http://www.gnu.org/copyleft/gpl.html.
- * A copy is found in the text file GPL.txt and important notices to the license
- * from the author is found in LICENSE.txt distributed with these scripts.
- * This script is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+use DWenzel\T3extensionTools\Traits\PropertyAccess;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
 trait PluginConfigurationTrait
 {
-    use ControllerActionsTrait;
-
+    use PropertyAccess;
+    public static function getExtensionName(): string
+    {
+        return self::getStaticProperty(PluginConfigurationInterface::EXTENSION_NAME);
+    }
     /**
      * @return string
      * @throws InvalidConfigurationException
@@ -35,9 +25,26 @@ trait PluginConfigurationTrait
      * @return string
      * @throws InvalidConfigurationException
      */
-    public static function getPluginSignature(): string
+    public static function getPluginTitle(): string
     {
-        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_SIGNATURE);
+        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_TITLE);
+    }
+
+    public static function getPluginIcon(): string
+    {
+        $pluginIcon = self::getStaticProperty(PluginConfigurationInterface::PLUGIN_ICON);
+        return (!empty($pluginIcon)) ? $pluginIcon : '';
+    }
+
+    public static function getPluginGroup(): string
+    {
+        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_GROUP);
+    }
+
+    public static function getPluginType(): string
+    {
+        $pluginType = self::getStaticProperty(PluginConfigurationInterface::PLUGIN_TYPE);
+        return (!empty($pluginType)) ? $pluginType : ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT;
     }
 
     /**
@@ -50,20 +57,21 @@ trait PluginConfigurationTrait
     }
 
     /**
-     * @return string
+     * @return array
      * @throws InvalidConfigurationException
      */
-    public static function getPluginTitle(): string
+    public static function getNonCacheableControllerActions(): array
     {
-        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_TITLE);
+        $nonCacheableControllerActions = self::getStaticProperty(PluginConfigurationInterface::NON_CACHEABLE_CONTROLLER_ACTIONS);
+        return (!empty($nonCacheableControllerActions)) ? $nonCacheableControllerActions : [];
     }
 
     /**
      * @return array
      * @throws InvalidConfigurationException
      */
-    public static function getNonCacheableControllerActions(): array
+    public static function getControllerActions(): array
     {
-        return self::getStaticProperty(PluginConfigurationInterface::NON_CACHEABLE_CONTROLLER_ACTIONS);
+        return self::getStaticProperty(PluginConfigurationInterface::CONTROLLER_ACTIONS);
     }
 }

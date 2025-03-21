@@ -23,8 +23,6 @@ use DWenzel\T3extensionTools\Configuration\ModuleRegistrationInterface as MCI;
 
 trait ModuleRegistrationTrait
 {
-    use ControllerActionsTrait;
-
     /**
      * @return string
      * @throws InvalidConfigurationException
@@ -59,5 +57,15 @@ trait ModuleRegistrationTrait
     public static function getPosition(): string
     {
         return self::getStaticProperty(MCI::POSITION);
+    }
+
+    public static function getControllerActions(): array
+    {
+        return self::getStaticProperty(MCI::CONTROLLER_ACTIONS);
+    }
+
+    public static function getExtensionName(): string
+    {
+        return self::getStaticProperty(MCI::EXTENSION_NAME);
     }
 }

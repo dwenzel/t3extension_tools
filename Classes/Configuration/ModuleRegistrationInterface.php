@@ -18,12 +18,15 @@ namespace DWenzel\T3extensionTools\Configuration;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-interface ModuleRegistrationInterface extends ControllerRegistrationInterface
+interface ModuleRegistrationInterface
 {
+    public const EXTENSION_NAME = 'ExtensionName';
     public const MAIN_MODULE_NAME = 'mainModuleName';
     public const MODULE_CONFIGURATION = 'moduleConfiguration';
     public const POSITION = 'position';
     public const SUB_MODULE_NAME = 'subModuleName';
+    public const CONTROLLER_ACTIONS = [];
+    public const NON_CACHEABLE_CONTROLLER_ACTIONS = [];
 
     /**
      * Get the name of the submodule to register
@@ -54,4 +57,34 @@ interface ModuleRegistrationInterface extends ControllerRegistrationInterface
      * @return array
      */
     public static function getModuleConfiguration(): array;
+    /**
+     * Get an array of controller action combinations in the
+     * form:
+     * [
+     *   <ControllerName> => '<actionName>,<otherActionName>'
+     * ]
+     * (omit the 'Action' part from the method name)
+     *
+     * @return array
+     */
+    public static function getControllerActions(): array;
+
+    /**
+     * Get the Controller/Actions which shall not be cached
+     * [
+     *  <ControllerName> => <actionName>
+     * ]
+     * Omit the 'Action' part form action methods
+     *
+     * @return array
+     */
+    public static function getNonCacheableControllerActions(): array;
+
+    /**
+     * Get a key for registration in the form of
+     * <extensionName>
+     *
+     * @return string
+     */
+    public static function getExtensionName(): string;
 }
