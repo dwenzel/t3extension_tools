@@ -2,17 +2,12 @@
 
 namespace DWenzel\T3extensionTools\Command;
 
-use DateInterval;
-use DateTimeImmutable;
-use DirectoryIterator;
 use DWenzel\T3extensionTools\Command\Argument\AgeArgument;
 use DWenzel\T3extensionTools\Command\Argument\DirectoryArgument;
 use DWenzel\T3extensionTools\Command\Argument\FilePatternArgument;
 use DWenzel\T3extensionTools\Traits\Command\ArgumentAwareTrait;
 use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
 use DWenzel\T3extensionTools\Traits\Command\InitializeTrait;
-use RegexIterator;
-use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -79,21 +74,21 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
             return 1;
         }
 
-        $currentDate = new DateTimeImmutable('today');
-        $keepUntilDate = $currentDate->sub(new DateInterval("P{$input->getArgument(AgeArgument::name())}D"));
+        $currentDate = new \DateTimeImmutable('today');
+        $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(AgeArgument::name())}D"));
 
-        $directoryIterator = new DirectoryIterator($absDirectoryPath);
-        $fileList = new RegexIterator($directoryIterator, $filePattern);
+        $directoryIterator = new \DirectoryIterator($absDirectoryPath);
+        $fileList = new \RegexIterator($directoryIterator, $filePattern);
         $deletedFilesCount = 0;
         foreach ($fileList as $file) {
-            if (!$file instanceof SplFileInfo) {
+            if (!$file instanceof \SplFileInfo) {
                 continue;
             }
             $age = 0;
             if ($this->hasDatePrefix($filePattern)) {
                 // file pattern starts with expected date format (yyyy-mm-dd)
                 $dateString = substr($file->getFilename(), 0, 10);
-                $dateByPrefix = new DateTimeImmutable($dateString);
+                $dateByPrefix = new \DateTimeImmutable($dateString);
                 $age = $currentDate->diff($dateByPrefix)->d;
             }
 
@@ -101,7 +96,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
             // CTime reflects the time of last metadata change (e.g. access rights)
             if (!$this->hasDatePrefix($filePattern)
             ) {
-                $changeDate = new DateTimeImmutable('@' . $file->getCTime());
+                $changeDate = new \DateTimeImmutable('@' . $file->getCTime());
                 if ($changeDate < $keepUntilDate) {
                     continue;
                 }
