@@ -8,10 +8,12 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 trait PluginConfigurationTrait
 {
     use PropertyAccess;
+
     public static function getExtensionName(): string
     {
         return self::getStaticProperty(PluginConfigurationInterface::EXTENSION_NAME);
     }
+
     /**
      * @return string
      * @throws InvalidConfigurationException
@@ -21,13 +23,14 @@ trait PluginConfigurationTrait
         return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_NAME);
     }
 
-    /**
-     * @return string
-     * @throws InvalidConfigurationException
-     */
     public static function getPluginTitle(): string
     {
         return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_TITLE);
+    }
+
+    public static function getPluginDescription(): string
+    {
+        return self::getStaticProperty(PluginConfigurationInterface::PLUGIN_DESCRIPTION);
     }
 
     public static function getPluginIcon(): string

@@ -119,8 +119,6 @@ class ExtensionConfiguration
      */
     public static function registerPlugins(): void
     {
-        // Todo: Method have to be refactored for new TYPO3 Versions
-        return;
         /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_REGISTER as $configuration) {
             if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
@@ -133,6 +131,7 @@ class ExtensionConfiguration
                 $configuration::getPluginTitle(),
                 $configuration::getPluginIcon(),
                 $configuration::getPluginGroup(),
+                $configuration::getPluginDescription(),
             );
 
             if (!empty($flexForm = $configuration::getFlexForm())) {
@@ -148,8 +147,6 @@ class ExtensionConfiguration
      */
     public static function configurePlugins(): void
     {
-        // Todo: Method have to be refactored for new TYPO3 Versions
-        return;
         /** @var PluginConfigurationInterface $configuration */
         foreach (static::PLUGINS_TO_CONFIGURE as $configuration) {
             if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {

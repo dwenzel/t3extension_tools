@@ -31,8 +31,9 @@ interface PluginConfigurationInterface
      * Name of the property holding the plugin title
      */
     public const PLUGIN_TITLE = 'pluginTitle';
+    public const PLUGIN_DESCRIPTION = 'pluginDescription';
     public const PLUGIN_ICON = 'pluginIcon';
-    public const PLUGIN_GROUP = 'plugin';
+    public const PLUGIN_GROUP = 'pluginGroup';
     public const PLUGIN_TYPE = 'pluginType';
 
     /**
@@ -55,6 +56,13 @@ interface PluginConfigurationInterface
      * @return string
      */
     public static function getPluginTitle(): string;
+
+    /**
+     * Get the description of the plugin to register
+     * This can be a localized string reference
+     * @return string
+     */
+    public static function getPluginDescription(): string;
 
     /**
      * Get the icon of the plugin to register
