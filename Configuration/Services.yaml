@@ -20,3 +20,9 @@ services:
       - name: 'console.command'
         command: 't3extension-tools:delete-logs'
         schedulable: true
+
+  DWenzel\T3extensionTools\Service\PluginConfigurationService:
+    public: true
+    arguments:
+      - !tagged_iterator t3extensionTools.pluginConfiguration
+      - !tagged_iterator { tag: t3extensionTools.pluginRegistration }

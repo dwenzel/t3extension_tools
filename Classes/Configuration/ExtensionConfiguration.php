@@ -55,14 +55,6 @@ class ExtensionConfiguration
      */
     public const LOCALIZED_TABLE_DESCRIPTION = [];
 
-    protected const PLUGINS_TO_REGISTER = [];
-
-    /**
-     * Configuration class names for module registration
-     * Class must implement ModuleRegistrationInterface
-     */
-    protected const MODULES_TO_REGISTER = [];
-
     /**
      * Bitmap icons to register with IconRegistry
      * [
@@ -113,77 +105,6 @@ class ExtensionConfiguration
         }
     }
 
-    /**
-     * Register all plugins
-     * To be used in ext_tables.php
-     */
-    public static function registerPlugins(): void
-    {
-        /** @var PluginConfigurationInterface $configuration */
-        foreach (static::PLUGINS_TO_REGISTER as $configuration) {
-            if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
-                continue;
-            }
-
-            $pluginSignature = ExtensionUtility::registerPlugin(
-                $configuration::getExtensionName(),
-                $configuration::getPluginName(),
-                $configuration::getPluginTitle(),
-                $configuration::getPluginIcon(),
-                $configuration::getPluginGroup(),
-                $configuration::getPluginDescription(),
-            );
-
-            if (!empty($flexForm = $configuration::getFlexForm())) {
-                $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-                ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, $flexForm);
-            }
-        }
-    }
-
-    /**
-     * Configure all plugins
-     * To be used in ext_localconf.php
-     */
-    public static function configurePlugins(): void
-    {
-        /** @var PluginConfigurationInterface $configuration */
-        foreach (static::PLUGINS_TO_CONFIGURE as $configuration) {
-            if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
-                continue;
-            }
-
-            ExtensionUtility::configurePlugin(
-                $configuration::getExtensionName(),
-                $configuration::getPluginName(),
-                $configuration::getControllerActions(),
-                $configuration::getNonCacheableControllerActions(),
-                $configuration::getPluginType(),
-            );
-        }
-    }
-
-    /**
-     * Register custom modules or reconfigure existing modules
-     * for the backend
-     * Overwrite this method if necessary
-     */
-    public static function registerAndConfigureModules(): void
-    {
-        foreach (static::MODULES_TO_REGISTER as $module) {
-            if (!in_array(ModuleRegistrationInterface::class, class_implements($module), true)) {
-                continue;
-            }
-            ExtensionUtility::registerModule(
-                $module::getVendorExtensionName(),
-                $module::getMainModuleName(),
-                $module::getSubmoduleName(),
-                $module::getPosition(),
-                $module::getControllerActions(),
-                $module::getModuleConfiguration()
-            );
-        }
-    }
 
     /**
      * Register icons
