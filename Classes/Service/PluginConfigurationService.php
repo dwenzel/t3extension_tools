@@ -3,8 +3,6 @@
 namespace DWenzel\T3extensionTools\Service;
 
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
-use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /***************************************************************
@@ -23,75 +21,47 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+/**
+ * Class PluginConfigurationService
+ *
+ * This class is responsible for configuring plugins in the CMS.
+ */
 class PluginConfigurationService
 {
+    use PluginProcessorTrait;
+
     /**
-     * @param iterable<PluginConfigurationInterface> $pluginsToConfigure
-     * @param iterable<PluginRegistrationInterface> $pluginsToRegister
+     * @param iterable<PluginConfigurationInterface> $plugins
      */
     public function __construct(
-        protected iterable $pluginsToConfigure,
-        protected iterable $pluginsToRegister,
+        protected iterable $plugins,
     )
     {
     }
 
     /**
-     * Register all plugins
-     *
-     * For each plugin a class implementing the PluginRegistrationInterface must exist
-     * This class must be tagged for dependency injection with 't3extensionTools.pluginConfiguration'
-     * */
-    public function registerPlugins(): void
-    {
-        foreach ($this->pluginsToRegister as $pluginRegistrationClass) {
-            if (!in_array(PluginRegistrationInterface::class, class_implements($pluginRegistrationClass), true)) {
-                continue;
-            }
-
-            /** @var PluginRegistrationInterface $pluginRegistration */
-            $pluginRegistration = new $pluginRegistrationClass();
-
-            $pluginSignature = ExtensionUtility::registerPlugin(
-                $pluginRegistration->getExtensionName(),
-                $pluginRegistration->getPluginName(),
-                $pluginRegistration->getPluginTitle(),
-                $pluginRegistration->getPluginIcon(),
-                $pluginRegistration->getPluginGroup(),
-                $pluginRegistration->getPluginDescription(),
-            );
-
-            if (!empty($flexForm = $pluginRegistration->getFlexForm())) {
-                $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-                ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, $flexForm);
-            }
-        }
-    }
-
-    /**
      * Configure all plugins
+     * This method is called in EXT:t3extension-tools/ext_localconf.php
+     * You must not call it in your extension
+     *
      * For each plugin a class implementing the PluginConfigurationInterface must exist
-     * This class must be tagged for dependency injection with 't3extensionTools.pluginConfiguration'
      */
     public function configurePlugins(): void
     {
-        foreach ($this->pluginsToConfigure as $configurationClass) {
-            if (!in_array(PluginConfigurationInterface::class, class_implements($configurationClass), true)) {
-                continue;
-            }
-
-            /** @var PluginConfigurationInterface $configurationClass */
-            $pluginConfiguration = new $configurationClass();
-
+        $this->processPlugins(
+            $this->plugins,
+            function ($plugin) {
             ExtensionUtility::configurePlugin(
-                $pluginConfiguration->getExtensionName(),
-                $pluginConfiguration->getPluginName(),
-                $pluginConfiguration->getControllerActions(),
-                $pluginConfiguration->getNonCacheableControllerActions(),
-                $pluginConfiguration->getPluginType(),
+                    $plugin->getExtensionName(),
+                    $plugin->getPluginName(),
+                    $plugin->getControllerActions(),
+                    $plugin->getNonCacheableControllerActions(),
+                    $plugin->getPluginType(),
+                );
+            },
+            PluginConfigurationInterface::class
             );
         }
     }
 
-
-}

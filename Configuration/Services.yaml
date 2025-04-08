@@ -25,4 +25,4 @@ services:
     public: true
     arguments:
       - !tagged_iterator t3extensionTools.pluginConfiguration
-      - !tagged_iterator { tag: t3extensionTools.pluginRegistration }
+      - !tagged_iterator t3extensionTools.pluginRegistration
