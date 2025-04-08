@@ -25,4 +25,7 @@ services:
     public: true
     arguments:
       - !tagged_iterator t3extensionTools.pluginConfiguration
+  DWenzel\T3extensionTools\Service\PluginRegistrationService:
+    public: true
+    arguments:
       - !tagged_iterator t3extensionTools.pluginRegistration
