@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Imaging\IconProviderInterface;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /***************************************************************
  *  Copyright notice
@@ -104,7 +103,6 @@ class ExtensionConfiguration
                 = $class;
         }
     }
-
 
     /**
      * Register icons

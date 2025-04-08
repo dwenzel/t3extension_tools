@@ -1,4 +1,6 @@
-<?php /** @noinspection StaticClosureCanBeUsedInspection */
+<?php
+
+/** @noinspection StaticClosureCanBeUsedInspection */
 
 use DWenzel\T3extensionTools\Service\PluginRegistrationService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

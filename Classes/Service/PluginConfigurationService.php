@@ -36,9 +36,7 @@ class PluginConfigurationService
      */
     public function __construct(
         protected iterable $plugins,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Configure all plugins
@@ -52,7 +50,7 @@ class PluginConfigurationService
         $this->processPlugins(
             $this->plugins,
             function ($plugin) {
-            ExtensionUtility::configurePlugin(
+                ExtensionUtility::configurePlugin(
                     $plugin->getExtensionName(),
                     $plugin->getPluginName(),
                     $plugin->getControllerActions(),
@@ -61,7 +59,6 @@ class PluginConfigurationService
                 );
             },
             PluginConfigurationInterface::class
-            );
-        }
+        );
     }
-
+}

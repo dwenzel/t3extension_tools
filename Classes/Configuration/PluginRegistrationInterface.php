@@ -2,8 +2,6 @@
 
 namespace DWenzel\T3extensionTools\Configuration;
 
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-
 /***************************************************************
  *  Copyright notice
  *

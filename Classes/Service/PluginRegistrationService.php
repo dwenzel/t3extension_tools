@@ -22,9 +22,7 @@ class PluginRegistrationService
      */
     public function __construct(
         protected iterable $plugins,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Register all plugins.

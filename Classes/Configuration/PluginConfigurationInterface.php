@@ -36,7 +36,6 @@ interface PluginConfigurationInterface
      */
     public function getPluginType(): string;
 
-
     /**
      * Get an array of controller action combinations in the
      * form:
