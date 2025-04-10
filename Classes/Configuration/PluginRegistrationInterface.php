@@ -1,8 +1,6 @@
 <?php
 
-namespace DWenzel\T3extensionTools\Traits;
-
-use DWenzel\T3extensionTools\Configuration\InvalidConfigurationException;
+namespace DWenzel\T3extensionTools\Configuration;
 
 /***************************************************************
  *  Copyright notice
@@ -20,21 +18,16 @@ use DWenzel\T3extensionTools\Configuration\InvalidConfigurationException;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-trait PropertyAccess
+interface PluginRegistrationInterface extends PluginConfigurationInterface
 {
+    public function getPluginTitle(): string;
+    public function getPluginDescription(): string;
+    public function getPluginGroup(): string;
+    public function getPluginIcon(): string;
+
     /**
-     * @param string $propertyName
-     * @return mixed
-     * @throws InvalidConfigurationException
+     * Get the flex form configuration
      */
-    protected static function getStaticProperty(string $propertyName): mixed
-    {
-        if (property_exists(self::class, $propertyName)) {
-            return static::$$propertyName;
-        }
-        throw new InvalidConfigurationException(
-            "Missing property $propertyName in class" . self::class . ".",
-            1_565_600_918
-        );
-    }
+    public function getFlexForm(): string;
+
 }

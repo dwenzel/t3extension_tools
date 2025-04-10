@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Imaging\IconProviderInterface;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /***************************************************************
  *  Copyright notice
@@ -55,14 +54,6 @@ class ExtensionConfiguration
      */
     public const LOCALIZED_TABLE_DESCRIPTION = [];
 
-    protected const PLUGINS_TO_REGISTER = [];
-
-    /**
-     * Configuration class names for module registration
-     * Class must implement ModuleRegistrationInterface
-     */
-    protected const MODULES_TO_REGISTER = [];
-
     /**
      * Bitmap icons to register with IconRegistry
      * [
@@ -97,7 +88,6 @@ class ExtensionConfiguration
      */
     protected const REGISTER_PAGE_TSCONFIG_FILES = [];
 
-
     /**
      * Register update wizards
      */
@@ -111,77 +101,6 @@ class ExtensionConfiguration
         foreach (static::UPDATE_WIZARDS_TO_REGISTER as $identifier => $class) {
             $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][$identifier]
                 = $class;
-        }
-    }
-
-    /**
-     * Register all plugins
-     * To be used in ext_tables.php
-     */
-    public static function registerPlugins(): void
-    {
-        /** @var PluginConfigurationInterface $configuration */
-        foreach (static::PLUGINS_TO_REGISTER as $configuration) {
-            if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
-                continue;
-            }
-
-            ExtensionUtility::registerPlugin(
-                $configuration::getVendorExtensionName(),
-                $configuration::getPluginName(),
-                $configuration::getPluginTitle()
-            );
-
-            $pluginSignature = $configuration::getPluginSignature();
-            $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature] = 'layout,select_key,pages,recursive';
-            $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-
-            if (!empty($flexForm = $configuration::getFlexForm())) {
-                ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, $flexForm);
-            }
-        }
-    }
-
-    /**
-     * Configure all plugins
-     * To be used in ext_localconf.php
-     */
-    public static function configurePlugins(): void
-    {
-        /** @var PluginConfigurationInterface $configuration */
-        foreach (static::PLUGINS_TO_REGISTER as $configuration) {
-            if (!in_array(PluginConfigurationInterface::class, class_implements($configuration), true)) {
-                continue;
-            }
-
-            ExtensionUtility::configurePlugin(
-                $configuration::getVendorExtensionName(),
-                $configuration::getPluginName(),
-                $configuration::getControllerActions(),
-                $configuration::getNonCacheableControllerActions()
-            );
-        }
-    }
-
-    /**
-     * Register custom modules or reconfigure existing modules
-     * for the backend
-     * Overwrite this method if necessary
-     */
-    public static function registerAndConfigureModules(): void
-    {
-        foreach (static::MODULES_TO_REGISTER as $module) {
-            if (!in_array(ModuleRegistrationInterface::class, class_implements($module), true)) {
-                continue;
-            }
-            ExtensionUtility::registerModule(
-                $module::getVendorExtensionName(),
-                $module::getMainModuleName(),
-                $module::getSubmoduleName(),
-                $module::getPosition(),
-                $module::getControllerActions(),
-                $module::getModuleConfiguration()
-            );
         }
     }
 
@@ -232,7 +151,8 @@ class ExtensionConfiguration
     }
 
     /**
-     * override in order to configure tables
+     * @deprecated allowTablesOnStandardPages will be removed in TYPO3 v13.0. Use $GLOBALS['TCA'][$table]['ctrl']['security']['ignorePageTypeRestriction'] instead.
+     * @deprecated addLocalizedTableDescriptionThe functionality has been removed in v12. The method will be removed in TYPO3 v13.
      */
     public static function configureTables(): void
     {
@@ -240,6 +160,9 @@ class ExtensionConfiguration
         self::addLocalizedTableDescription();
     }
 
+    /**
+     * @deprecated will be removed in TYPO3 v13.0. Use $GLOBALS['TCA'][$table]['ctrl']['security']['ignorePageTypeRestriction'] instead.
+     */
     protected static function allowTablesOnStandardPages(): void
     {
         foreach (static::TABLES_ALLOWED_ON_STANDARD_PAGES as $table) {
@@ -247,10 +170,12 @@ class ExtensionConfiguration
         }
     }
 
+    /**
+     * @deprecated functionality has been removed in v12. The method will be removed in TYPO3 v13.
+     */
     protected static function addLocalizedTableDescription(): void
     {
         foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {
-            ExtensionManagementUtility::addLLrefForTCAdescr($table, $file);
         }
     }
 

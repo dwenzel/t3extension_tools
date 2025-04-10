@@ -20,7 +20,6 @@ namespace DWenzel\T3extensionTools\Traits\Command;
  ***************************************************************/
 trait InputPropertiesTrait
 {
-
     public static function defaultValue(): ?string
     {
         return static::DEFAULT;
