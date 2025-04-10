@@ -1,3 +1,16 @@
+2025-04-10         [RELEASE] Release of t3extension-tools 4.0.0 (Dirk Wenzel)
+2025-04-08 98b0ede [TASK] missing configuration for PluginRegistrationService added (Dirk Wenzel)
+2025-04-08 2c8b964 code cleanup (Dirk Wenzel)
+2025-04-08 a8adf55 [TASK] PluginConfigurationService refactored, PluginRegistrationService added (Dirk Wenzel)
+2025-04-07 77cdd0a [BREAKING] plugin configuration and registration rewritten, module registration dropped - a new PluginConfigurationService configures and registers plugins - obsolete methods removed from ExtensionConfiguration - ModuleRegistrationInterface and ModuleRegistrationTrait removed (Dirk Wenzel)
+2025-03-26 040606a Fixed plugin configuration and registration methods (Vladimir Falcón Piva)
+2025-03-21 8e71b4a Refactor with rector. Functionality was not tested. (Vladimir Falcón Piva)
+2025-03-21 95edd45 Refactor plugin registration and configuration (Vladimir Falcón Piva)
+2025-03-20 9c4cb94 Refactor with rector. Functionality was not tested. (Vladimir Falcón Piva)
+2025-03-20 7360864 Refactor with php-cs fix and manually. Functionality was not tested. (Vladimir Falcón Piva)
+2025-03-19 b30f4f3 Update composer json to support TYPO3 v12 and v13 (Vladimir Falcón Piva)
+2025-03-19 0dd6517 Update composer json to support TYPO3 v12 and v13 (Vladimir Falcón Piva)
+
 2024-09-06         [RELEASE] Release of t3extension-tools 3.1.0 (Dirk Wenzel)
 2024-09-06 d138a15 support for TYPO3 11 dropped (Dirk Wenzel)
 
