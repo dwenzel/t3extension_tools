@@ -2,7 +2,6 @@
 
 namespace DWenzel\T3extensionTools\Command\Argument;
 
-use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
 use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -36,7 +35,7 @@ use Symfony\Component\Console\Input\InputOption;
  * ### files with leading date string
  * pattern "/
  */
- class FilePatternArgument implements InputArgumentInterface
+class FilePatternArgument implements InputArgumentInterface
 {
     use InputArgumentTrait;
 

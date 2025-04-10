@@ -2,7 +2,6 @@
 
 namespace DWenzel\T3extensionTools\Command\Argument;
 
-use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
 use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
 use Symfony\Component\Console\Input\InputOption;
 

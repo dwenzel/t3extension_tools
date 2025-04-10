@@ -26,7 +26,6 @@ use Symfony\Component\Console\Command\Command;
  * This class provides wrapper methods for constants of the Command::class
  * which are not defined in those versions of the symfony package used in TYPO3 9
  * Use those static methods to get a correct status code instead.
- *
  */
 class Status implements StatusAwareInterface
 {

@@ -30,40 +30,47 @@ use Symfony\Component\Console\Command\Command;
  ***************************************************************/
 class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAwareInterface
 {
-    use ArgumentAwareTrait,
-        ConfigureTrait,
-        InitializeTrait,
-        OptionAwareTrait,
-        ExecuteSqlTrait;
+    use ArgumentAwareTrait;
+    use ConfigureTrait;
+    use InitializeTrait;
+    use OptionAwareTrait;
+    use ExecuteSqlTrait;
 
-    public const DEFAULT_NAME = 't3extension-tools:example';
-    public const SQL_FILE_PATH = 'EXT:t3extension_tools/Resources/Private/SQL/example.sql';
-    public const MESSAGE_DESCRIPTION_COMMAND = 'Example command';
-    public const MESSAGE_HELP_COMMAND = 'Does nothing';
-    public const MESSAGE_SUCCESS = 'successfully done nothing';
-    public const OPTION_CONNECTION = ConnectionOption::NAME;
-    public const OPTION_EXAMPLE = ExampleOption::NAME;
-    public const OPTION_CONNECTION_DEFAULT = 'Default';
-    public const CONNECTION_TYPE_MYSQL = 'mysql';
-    public const ERROR_MISSING_CONNECTION = 'No suitable MySQL connection found.';
-    public const ERROR_SQL_EXECUTION_FAILED = 'Execution of SQL statement failed';
-    public const MESSAGE_STARTING = 'Start doing nothing...';
-    public const DEFAULT_MYSQL_ARGUMENTS = ['--skip-column-names'];
+    public const string DEFAULT_NAME = 't3extension-tools:example';
+    public const string SQL_FILE_PATH = 'EXT:t3extension_tools/Resources/Private/SQL/example.sql';
+    public const string MESSAGE_DESCRIPTION_COMMAND = 'Example command';
+    public const string MESSAGE_HELP_COMMAND = 'Does nothing';
+    public const string MESSAGE_SUCCESS = 'successfully done nothing';
+    public const string OPTION_CONNECTION = ConnectionOption::NAME;
+    public const string OPTION_EXAMPLE = ExampleOption::NAME;
+    public const string OPTION_CONNECTION_DEFAULT = 'Default';
+    public const string CONNECTION_TYPE_MYSQL = 'mysql';
+    public const string ERROR_MISSING_CONNECTION = 'No suitable MySQL connection found.';
+    public const string ERROR_SQL_EXECUTION_FAILED = 'Execution of SQL statement failed';
+    public const string MESSAGE_STARTING = 'Start doing nothing...';
+    public const array DEFAULT_MYSQL_ARGUMENTS = ['--skip-column-names'];
 
     /**
      * @var string
      */
-    protected static $defaultName = self::DEFAULT_NAME;
+    protected static string $defaultName = self::DEFAULT_NAME;
 
-    protected const OPTIONS = [
+    protected const array OPTIONS = [
         ExampleOption::class,
-        ConnectionOption::class
+        ConnectionOption::class,
     ];
 
-    protected const ARGUMENTS = [
-        ExampleArgument::class
+    protected const array ARGUMENTS = [
+        ExampleArgument::class,
     ];
 
+    /**
+     * @var array|string[]
+     */
     protected static array $optionsToConfigure = self::OPTIONS;
+
+    /**
+     * @var array|string[]
+     */
     protected static array $argumentsToConfigure = self::ARGUMENTS;
 }

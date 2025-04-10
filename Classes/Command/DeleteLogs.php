@@ -2,17 +2,12 @@
 
 namespace DWenzel\T3extensionTools\Command;
 
-use DateInterval;
-use DateTimeImmutable;
-use DirectoryIterator;
-use DWenzel\T3extensionTools\Traits\Command\ArgumentAwareTrait;
-use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
-use DWenzel\T3extensionTools\Traits\Command\InitializeTrait;
 use DWenzel\T3extensionTools\Command\Argument\AgeArgument;
 use DWenzel\T3extensionTools\Command\Argument\DirectoryArgument;
 use DWenzel\T3extensionTools\Command\Argument\FilePatternArgument;
-use RegexIterator;
-use SplFileInfo;
+use DWenzel\T3extensionTools\Traits\Command\ArgumentAwareTrait;
+use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
+use DWenzel\T3extensionTools\Traits\Command\InitializeTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,9 +33,9 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  ***************************************************************/
 class DeleteLogs extends Command implements ArgumentAwareInterface
 {
-    use ArgumentAwareTrait,
-        ConfigureTrait,
-        InitializeTrait;
+    use ArgumentAwareTrait;
+    use ConfigureTrait;
+    use InitializeTrait;
 
     public const DEFAULT_NAME = 't3extension-tools:delete-logs:delete-logs';
     public const MESSAGE_DESCRIPTION_COMMAND = 'Deletes a file according to retention policy.';
@@ -52,7 +47,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
     protected const ARGUMENTS = [
         AgeArgument::class,
         DirectoryArgument::class,
-        FilePatternArgument::class
+        FilePatternArgument::class,
     ];
     protected static $argumentsToConfigure = self::ARGUMENTS;
 
@@ -79,23 +74,21 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
             return 1;
         }
 
+        $currentDate = new \DateTimeImmutable('today');
+        $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(AgeArgument::name())}D"));
 
-        $currentDate = new DateTimeImmutable('today');
-        $keepUntilDate = $currentDate->sub(new DateInterval("P{$input->getArgument(AgeArgument::name())}D"));
-
-
-        $directoryIterator = new DirectoryIterator($absDirectoryPath);
-        $fileList = new RegexIterator($directoryIterator, $filePattern);
+        $directoryIterator = new \DirectoryIterator($absDirectoryPath);
+        $fileList = new \RegexIterator($directoryIterator, $filePattern);
         $deletedFilesCount = 0;
         foreach ($fileList as $file) {
-            if (!$file instanceof SplFileInfo) {
+            if (!$file instanceof \SplFileInfo) {
                 continue;
             }
             $age = 0;
             if ($this->hasDatePrefix($filePattern)) {
                 // file pattern starts with expected date format (yyyy-mm-dd)
                 $dateString = substr($file->getFilename(), 0, 10);
-                $dateByPrefix = new DateTimeImmutable($dateString);
+                $dateByPrefix = new \DateTimeImmutable($dateString);
                 $age = $currentDate->diff($dateByPrefix)->d;
             }
 
@@ -103,14 +96,13 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
             // CTime reflects the time of last metadata change (e.g. access rights)
             if (!$this->hasDatePrefix($filePattern)
             ) {
-                $changeDate = new DateTimeImmutable('@' . $file->getCTime());
+                $changeDate = new \DateTimeImmutable('@' . $file->getCTime());
                 if ($changeDate < $keepUntilDate) {
                     continue;
                 }
 
                 $age = $currentDate->diff($changeDate)->d;
             }
-
 
             if ($age > $maxAge) {
                 $filePath = $file->getRealPath();
@@ -148,7 +140,6 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
         if ($directory !== DirectoryArgument::DEFAULT) {
             $absDirectoryPath = Environment::getPublicPath() . '/' . PathUtility::getCanonicalPath($directory);
         }
-
 
         if (PathUtility::isAbsolutePath($directory)) {
             $absDirectoryPath = $directory;

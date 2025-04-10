@@ -1,14 +1,11 @@
 <?php
 
-namespace DWenzel\T3extensionTools\Configuration;
-
-use DWenzel\T3extensionTools\Configuration\ModuleRegistrationInterface as MCI;
-use DWenzel\T3extensionTools\Traits\PropertyAccess;
+namespace DWenzel\T3extensionTools\Service;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 Dirk Wenzel <wenzel@cps-it.de>
+ *  (c) 2025 Dirk Wenzel <wenzel@cps-it.de>
  *  All rights reserved
  *
  * The GNU General Public License can be found at
@@ -21,25 +18,14 @@ use DWenzel\T3extensionTools\Traits\PropertyAccess;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-trait ControllerActionsTrait
+trait PluginProcessorTrait
 {
-    use PropertyAccess;
-
-    /**
-     * @return array
-     * @throws InvalidConfigurationException
-     */
-    public static function getControllerActions(): array
+    private function processPlugins(iterable $plugins, callable $callback, string $interface): void
     {
-        return self::getStaticProperty(MCI::CONTROLLER_ACTIONS);
-    }
-
-    /**
-     * @return string
-     * @throws InvalidConfigurationException
-     */
-    public static function getVendorExtensionName(): string
-    {
-        return self::getStaticProperty(MCI::VENDOR_EXTENSION_NAME);
+        foreach ($plugins as $pluginClass) {
+            if (in_array($interface, class_implements($pluginClass), true)) {
+                $callback(new $pluginClass());
+            }
+        }
     }
 }

@@ -27,13 +27,11 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * @see UpgradeWizardInterface
  *
  * The included traits require some constants to be present in the consuming class
- *
- * @package DWenzel\T3extensionTools\Traits\Upgrade
  */
 trait UpgradeWizardTrait
 {
-    use DescriptionTrait,
-        IdentifierTrait,
-        PrerequisitesTrait,
-        TitleTrait;
+    use DescriptionTrait;
+    use IdentifierTrait;
+    use PrerequisitesTrait;
+    use TitleTrait;
 }
