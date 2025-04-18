@@ -41,29 +41,6 @@ jobs:
           composer require typo3/cms-core:${{ matrix.typo3-version }} --no-progress
           composer require typo3/testing-framework:^7.0 --no-progress
           composer require phpunit/phpunit:^9.5 --no-progress
-
-      - name: Create test bootstrap
-        run: |
-          mkdir -p Tests/Unit
-          cat > Tests/Unit/BootstrapTest.php << 'EOL'
-          <?php
-          require_once __DIR__ . '/../../vendor/autoload.php';
-          // Define TYPO3 constants
-          if (!defined('TYPO3_MODE')) {
-              define('TYPO3_MODE', 'BE');
-          }
-          if (!defined('TYPO3_REQUESTTYPE')) {
-              define('TYPO3_REQUESTTYPE', 1);
-          }
-          $classLoader = new \Composer\Autoload\ClassLoader();
-          $classLoader->addPsr4('DWenzel\\T3extensionTools\\', [__DIR__ . '/../../Classes']);
-          $classLoader->addPsr4('DWenzel\\T3extensionTools\\Tests\\', [__DIR__ . '/../../Tests']);
-          $classLoader->register();
-          EOL
-
-          # Update phpunit configuration to use our bootstrap
-          sed -i 's|bootstrap="[^"]*"|bootstrap="../Unit/BootstrapTest.php"|' Tests/Build/UnitTests.xml
-
       - name: Run tests
         run: |
           echo "Running unit tests for TYPO3 ${{ matrix.typo3-version }}"
