@@ -11,6 +11,8 @@ Use the latest composer version instead.
 ### Features
 
 * register plugins
+  * [YAML-based plugin configuration](docs/PluginConfiguration.md) for simplified setup
+  * [Class-based plugin configuration](docs/ClassBasedPluginConfiguration.md) for advanced use cases
 * register modules
 * configure tables
   * allow tables on standard pages

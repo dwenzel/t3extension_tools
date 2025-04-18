@@ -29,3 +29,16 @@ services:
     public: true
     arguments:
       - !tagged_iterator t3extensionTools.pluginRegistration
+      
+  DWenzel\T3extensionTools\Service\PluginConfigurationScanner:
+    public: true
+    
+  DWenzel\T3extensionTools\Service\PluginConfigurationParser:
+    public: true
+    
+  DWenzel\T3extensionTools\Service\YamlPluginRegistrationService:
+    public: true
+    calls:
+      - method: setLogger
+        arguments:
+          - '@Psr\Log\LoggerInterface'
