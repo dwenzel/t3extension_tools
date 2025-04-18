@@ -24,7 +24,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl, pdo_sqlite, curl
-          coverage: none
+          coverage: pcov
 
       - name: Validate composer.json and composer.lock
         run: composer validate
