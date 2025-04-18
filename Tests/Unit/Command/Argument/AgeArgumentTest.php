@@ -4,15 +4,13 @@ namespace DWenzel\T3extensionTools\Tests\Unit\Command\Argument;
 
 use DWenzel\T3extensionTools\Command\Argument\AgeArgument;
 use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputOption;
 
 class AgeArgumentTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function implementsInputArgumentInterface(): void
+    #[Test] public function implementsInputArgumentInterface(): void
     {
         $this->assertInstanceOf(
             InputArgumentInterface::class,
@@ -20,10 +18,7 @@ class AgeArgumentTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function returnsCorrectName(): void
+    #[Test] public function returnsCorrectName(): void
     {
         $this->assertEquals(
             'age',
@@ -31,10 +26,7 @@ class AgeArgumentTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function returnsCorrectMode(): void
+    #[Test] public function returnsCorrectMode(): void
     {
         $this->assertEquals(
             InputOption::VALUE_REQUIRED,
@@ -42,10 +34,7 @@ class AgeArgumentTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function returnsCorrectDescription(): void
+    #[Test] public function returnsCorrectDescription(): void
     {
         $this->assertEquals(
             'min age for files to delete',

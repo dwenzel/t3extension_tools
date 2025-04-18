@@ -3,6 +3,8 @@
 namespace DWenzel\T3extensionTools\Tests\Unit\Service;
 
 use DWenzel\T3extensionTools\Service\PluginConfigurationScanner;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Package\Package;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -10,14 +12,14 @@ use TYPO3\CMS\Core\Package\PackageManager;
 class PluginConfigurationScannerTest extends TestCase
 {
     /**
-     * @var PackageManager|\PHPUnit\Framework\MockObject\MockObject
+     * @var PackageManager|MockObject
      */
-    protected $packageManagerMock;
+    protected PackageManager|MockObject $packageManagerMock;
 
     /**
      * @var PluginConfigurationScanner
      */
-    protected $subject;
+    protected PluginConfigurationScanner $subject;
 
     protected function setUp(): void
     {
@@ -28,10 +30,7 @@ class PluginConfigurationScannerTest extends TestCase
         $this->subject = new PluginConfigurationScanner($this->packageManagerMock);
     }
 
-    /**
-     * @test
-     */
-    public function findExtensionsWithPluginConfigurationsReturnsCorrectExtensions(): void
+    #[Test] public function findExtensionsWithPluginConfigurationsReturnsCorrectExtensions(): void
     {
         // Create mock packages
         $package1 = $this->createMock(Package::class);
@@ -150,10 +149,7 @@ class PluginConfigurationScannerTest extends TestCase
 
     }
 
-    /**
-     * @test
-     */
-    public function getPluginConfigurationPathReturnsCorrectPath(): void
+    #[Test] public function getPluginConfigurationPathReturnsCorrectPath(): void
     {
         $extensionKey = 'ext1';
         $fileName = 'Plugin1.yaml';

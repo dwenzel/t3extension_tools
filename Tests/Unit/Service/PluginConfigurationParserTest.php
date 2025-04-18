@@ -5,6 +5,7 @@ namespace DWenzel\T3extensionTools\Tests\Unit\Service;
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
 use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
 use DWenzel\T3extensionTools\Service\PluginConfigurationParser;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
@@ -20,10 +21,7 @@ class PluginConfigurationParserTest extends TestCase
         $this->subject = new PluginConfigurationParser();
     }
 
-    /**
-     * @test
-     */
-    public function parseYamlReturnsPluginConfigurationInterfaceInstance(): void
+    #[Test] public function parseYamlReturnsPluginConfigurationInterfaceInstance(): void
     {
         $yamlContent = <<<YAML
 plugin:
@@ -40,10 +38,7 @@ YAML;
         $this->assertInstanceOf(PluginConfigurationInterface::class, $result);
     }
 
-    /**
-     * @test
-     */
-    public function parseYamlWithRegistrationReturnsPluginRegistrationInterfaceInstance(): void
+    #[Test] public function parseYamlWithRegistrationReturnsPluginRegistrationInterfaceInstance(): void
     {
         $yamlContent = <<<YAML
 plugin:
@@ -66,10 +61,7 @@ YAML;
         $this->assertInstanceOf(PluginRegistrationInterface::class, $result);
     }
 
-    /**
-     * @test
-     */
-    public function parseYamlSetsCorrectPluginValues(): void
+    #[Test] public function parseYamlSetsCorrectPluginValues(): void
     {
         $yamlContent = <<<YAML
 plugin:
@@ -83,7 +75,7 @@ plugin:
 YAML;
 
         $result = $this->subject->parseYaml($yamlContent);
-        
+
         $this->assertEquals('TestExtension', $result->getExtensionName());
         $this->assertEquals('TestPlugin', $result->getPluginName());
         $this->assertEquals(ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT, $result->getPluginType());
@@ -91,10 +83,7 @@ YAML;
         $this->assertEquals(['Test' => 'list'], $result->getNonCacheableControllerActions());
     }
 
-    /**
-     * @test
-     */
-    public function parseYamlWithListTypePluginType(): void
+    #[Test] public function parseYamlWithListTypePluginType(): void
     {
         $yamlContent = <<<YAML
 plugin:
@@ -106,14 +95,11 @@ plugin:
 YAML;
 
         $result = $this->subject->parseYaml($yamlContent);
-        
+
         $this->assertEquals(ExtensionUtility::PLUGIN_TYPE_PLUGIN, $result->getPluginType());
     }
 
-    /**
-     * @test
-     */
-    public function parseYamlSetsCorrectRegistrationValues(): void
+    #[Test] public function parseYamlSetsCorrectRegistrationValues(): void
     {
         $yamlContent = <<<YAML
 plugin:
@@ -131,7 +117,7 @@ registration:
 YAML;
 
         $result = $this->subject->parseYaml($yamlContent);
-        
+
         $this->assertInstanceOf(PluginRegistrationInterface::class, $result);
         $this->assertEquals('Test Plugin', $result->getPluginTitle());
         $this->assertEquals('Test Description', $result->getPluginDescription());
@@ -140,13 +126,10 @@ YAML;
         $this->assertEquals('FILE:EXT:test/flexform.xml', $result->getFlexForm());
     }
 
-    /**
-     * @test
-     */
-    public function parseYamlThrowsExceptionOnMissingPluginSection(): void
+    #[Test] public function parseYamlThrowsExceptionOnMissingPluginSection(): void
     {
         $this->expectException(\RuntimeException::class);
-        
+
         $yamlContent = <<<YAML
 registration:
   title: 'Test Plugin'
