@@ -28,7 +28,9 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "mikey179/vfsstream": "^1.6",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5",
+    "typo3/testing-framework": "^7.0",
+    "phpstan/phpstan": "^1.10"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
@@ -39,6 +41,16 @@
       "mkdir -p .Build/Web/typo3conf/ext/",
       "mkdir -p .Build/log/coverage/",
       "[ -L .Build/Web/typo3conf/ext/t3extension_tools ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3extension_tools"
+    ],
+    "test:unit": [
+      "@php .Build/bin/phpunit -c Tests/Build/UnitTests.xml"
+    ],
+    "test:phpstan": [
+      "@php .Build/bin/phpstan analyse -c phpstan.neon"
+    ],
+    "test": [
+      "@test:unit",
+      "@test:phpstan"
     ]
   },
   "extra": {

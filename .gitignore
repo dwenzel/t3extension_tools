@@ -1,5 +1,24 @@
+# IDE
 *.iml
+.idea/
+
+# Documentation
 Documentation/_build/
+
+# Composer
+/vendor/
+/composer.lock
+/.Build/
+
+# Sonarqube
 .scannerwork
-.Build/
-composer.lock
+
+# Unit test reports
+coverage.xml
+.phpunit.result.cache
+
+# Static analysis cache
+/.phpstan-cache/
+
+# Mac specific
+.DS_Store
