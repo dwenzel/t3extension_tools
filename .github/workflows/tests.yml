@@ -39,7 +39,6 @@ jobs:
       - name: Install dependencies
         run: |
           composer require typo3/cms-core:${{ matrix.typo3-version }} --no-progress
-          composer require typo3/testing-framework:^7.0 --no-progress
           composer require phpunit/phpunit:^9.5 --no-progress
       - name: Run tests
         run: |
