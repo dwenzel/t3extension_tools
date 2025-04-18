@@ -1,0 +1,73 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, master, develop, 'feature/**' ]
+  pull_request:
+    branches: [ main, master, develop, 'feature/**' ]
+
+jobs:
+  unit-tests:
+    name: "Unit Tests TYPO3 ${{ matrix.typo3-version }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [8.2]
+        typo3-version: ['^12.4', '^13.4']
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, pdo_sqlite, curl
+          coverage: none
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: dependencies-php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: dependencies-php-${{ matrix.php-version }}-composer-
+
+      - name: Install dependencies
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3-version }} --no-progress
+          composer require typo3/testing-framework:^7.0 --no-progress
+          composer require phpunit/phpunit:^9.5 --no-progress
+          # Create a skeleton TYPO3 project structure for testing
+          mkdir -p .Build/Web/typo3conf/ext/
+          ln -s ../../../../. .Build/Web/typo3conf/ext/t3extension_tools
+
+      - name: Create test bootstrap
+        run: |
+          mkdir -p Tests/Unit
+          cat > Tests/Unit/BootstrapTest.php << 'EOL'
+          <?php
+          require_once __DIR__ . '/../../vendor/autoload.php';
+          // Define TYPO3 constants
+          if (!defined('TYPO3_MODE')) {
+              define('TYPO3_MODE', 'BE');
+          }
+          if (!defined('TYPO3_REQUESTTYPE')) {
+              define('TYPO3_REQUESTTYPE', 1);
+          }
+          $classLoader = new \Composer\Autoload\ClassLoader();
+          $classLoader->addPsr4('DWenzel\\T3extensionTools\\', [__DIR__ . '/../../Classes']);
+          $classLoader->addPsr4('DWenzel\\T3extensionTools\\Tests\\', [__DIR__ . '/../../Tests']);
+          $classLoader->register();
+          EOL
+
+          # Update phpunit configuration to use our bootstrap
+          sed -i 's|bootstrap="[^"]*"|bootstrap="../Unit/BootstrapTest.php"|' Tests/Build/UnitTests.xml
+
+      - name: Run tests
+        run: |
+          echo "Running unit tests for TYPO3 ${{ matrix.typo3-version }}"
+          vendor/bin/phpunit -c Tests/Build/UnitTests.xml
