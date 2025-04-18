@@ -41,9 +41,6 @@ jobs:
           composer require typo3/cms-core:${{ matrix.typo3-version }} --no-progress
           composer require typo3/testing-framework:^7.0 --no-progress
           composer require phpunit/phpunit:^9.5 --no-progress
-          # Create a skeleton TYPO3 project structure for testing
-          mkdir -p .Build/Web/typo3conf/ext/
-          ln -s ../../../../. .Build/Web/typo3conf/ext/t3extension_tools
 
       - name: Create test bootstrap
         run: |
@@ -70,4 +67,4 @@ jobs:
       - name: Run tests
         run: |
           echo "Running unit tests for TYPO3 ${{ matrix.typo3-version }}"
-          vendor/bin/phpunit -c Tests/Build/UnitTests.xml
+          .Build/bin/phpunit -c Tests/Build/UnitTests.xml
