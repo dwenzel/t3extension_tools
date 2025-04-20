@@ -39,6 +39,9 @@ This extension comes with a comprehensive test suite. You can run the tests with
 # Run unit tests
 composer test:unit
 
+# Run functional tests
+composer test:functional
+
 # Run static analysis
 composer test:phpstan
 

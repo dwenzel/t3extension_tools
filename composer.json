@@ -48,11 +48,15 @@
 		"test:unit": [
 			"@php .Build/bin/phpunit -c Tests/Build/UnitTests.xml"
 		],
+		"test:functional": [
+			"@php .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml"
+		],
 		"test:phpstan": [
 			"@php .Build/bin/phpstan analyse -c phpstan.neon"
 		],
 		"test": [
 			"@test:unit",
+			"@test:functional",
 			"@test:phpstan"
 		]
 	},

@@ -43,3 +43,5 @@ jobs:
         run: |
           echo "Running unit tests for TYPO3 ${{ matrix.typo3-version }}"
           composer test:unit
+          echo "Running functional tests for TYPO3 ${{ matrix.typo3-version }}"
+          composer test:functional
