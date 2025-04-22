@@ -14,52 +14,52 @@ class StatusTest extends TestCase
      */
     public function implementsStatusAwareInterface(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             StatusAwareInterface::class,
             new Status()
         );
     }
-    
+
     /**
      * @test
      */
     public function successReturnsCorrectStatusCode(): void
     {
-        $expectedStatusCode = defined(Command::class . 'Command::class' . '::SUCCESS') 
-            ? Command::SUCCESS 
+        $expectedStatusCode = defined(Command::class . 'Command::class' . '::SUCCESS')
+            ? Command::SUCCESS
             : StatusAwareInterface::SUCCESS;
-            
-        $this->assertEquals(
+
+        self::assertEquals(
             $expectedStatusCode,
             Status::success()
         );
     }
-    
+
     /**
      * @test
      */
     public function failureReturnsCorrectStatusCode(): void
     {
-        $expectedStatusCode = defined(Command::class . 'Command::class' . '::FAILURE') 
-            ? Command::FAILURE 
+        $expectedStatusCode = defined(Command::class . 'Command::class' . '::FAILURE')
+            ? Command::FAILURE
             : StatusAwareInterface::FAILURE;
-            
-        $this->assertEquals(
+
+        self::assertEquals(
             $expectedStatusCode,
             Status::failure()
         );
     }
-    
+
     /**
      * @test
      */
     public function invalidReturnsCorrectStatusCode(): void
     {
-        $expectedStatusCode = defined(Command::class . 'Command::class' . '::INVALID') 
-            ? Command::INVALID 
+        $expectedStatusCode = defined(Command::class . 'Command::class' . '::INVALID')
+            ? Command::INVALID
             : StatusAwareInterface::INVALID;
-            
-        $this->assertEquals(
+
+        self::assertEquals(
             $expectedStatusCode,
             Status::invalid()
         );

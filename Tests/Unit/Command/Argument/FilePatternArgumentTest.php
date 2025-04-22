@@ -14,7 +14,7 @@ class FilePatternArgumentTest extends TestCase
      */
     public function implementsInputArgumentInterface(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             InputArgumentInterface::class,
             new FilePatternArgument()
         );
@@ -25,7 +25,7 @@ class FilePatternArgumentTest extends TestCase
      */
     public function returnsCorrectName(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             'pattern',
             FilePatternArgument::name()
         );
@@ -36,7 +36,7 @@ class FilePatternArgumentTest extends TestCase
      */
     public function returnsCorrectMode(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             InputOption::VALUE_REQUIRED,
             FilePatternArgument::mode()
         );
@@ -47,7 +47,7 @@ class FilePatternArgumentTest extends TestCase
      */
     public function returnsCorrectDescription(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             'pattern for log file',
             FilePatternArgument::description()
         );
