@@ -9,7 +9,7 @@ This document describes how to configure and register TYPO3 plugins using YAML f
 ## Overview
 
 Plugin configuration files should be placed in your extension's `Configuration/Plugins` directory.
-The `PluginConfigurationScanner` will automatically discover these files and use them to configure and register your plugins.
+The `YamlPluginRegistrationService` will automatically discover these files and use them to configure and register your plugins.
 
 ## File Structure
 
@@ -31,15 +31,15 @@ plugin:
   type: 'CType'
 
   # Controller actions (required)
-  # Format: ControllerName without 'Controller' suffix => comma-separated list of actions without 'Action' suffix
+  # Format: fully qualified controller class name => comma-separated list of actions without 'Action' suffix
   controllerActions:
-    Event: 'list,show,search'
+    MyVendor\MyExtensionName\Controller\EventController: 'list,show,search'
     Category: 'list'
 
   # Non-cacheable controller actions (optional)
   # Format: same as controllerActions
   nonCacheableControllerActions:
-    Event: 'search'
+      MyVendor\MyExtensionName\Controller\EventController: 'search'
 
 # Plugin registration (optional, only needed if the plugin should appear in the backend)
 registration:
