@@ -5,7 +5,6 @@ namespace DWenzel\T3extensionTools\Service;
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
 use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
 use Symfony\Component\Yaml\Yaml;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /***************************************************************
@@ -42,7 +41,7 @@ class PluginConfigurationParser
     public function parseFile(string $filePath): object
     {
         if (!file_exists($filePath)) {
-            throw new \RuntimeException(sprintf('Plugin configuration file not found: %s', $filePath));
+            throw new \RuntimeException(sprintf('Plugin configuration file not found: %s', $filePath), 8656676970);
         }
 
         $content = file_get_contents($filePath);
@@ -59,14 +58,14 @@ class PluginConfigurationParser
     public function parseYaml(string $yamlContent): object
     {
         $config = Yaml::parse($yamlContent);
-        
+
         // Validate required sections
         if (!isset($config['plugin'])) {
-            throw new \RuntimeException('Plugin configuration must contain a "plugin" section');
+            throw new \RuntimeException('Plugin configuration must contain a "plugin" section', 7068134753);
         }
-        
+
         // Create anonymous class implementing the required interfaces
-        return new class($config) implements PluginConfigurationInterface, PluginRegistrationInterface {
+        return new class ($config) implements PluginConfigurationInterface, PluginRegistrationInterface {
             protected array $config;
             protected string $extensionName;
             protected string $pluginName;
@@ -87,7 +86,7 @@ class PluginConfigurationParser
                 $this->pluginType = $config['plugin']['type'] ?? ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT;
                 $this->controllerActions = $this->parseControllerActions($config['plugin']['controllerActions'] ?? []);
                 $this->nonCacheableControllerActions = $this->parseControllerActions($config['plugin']['nonCacheableControllerActions'] ?? []);
-                
+
                 // Registration config (optional)
                 if (isset($config['registration'])) {
                     $this->pluginTitle = $config['registration']['title'] ?? '';

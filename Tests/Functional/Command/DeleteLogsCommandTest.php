@@ -22,12 +22,11 @@ class DeleteLogsCommandTest extends TestCase
     {
         parent::setUp();
 
-        $this->subject = new class extends DeleteLogs {
+        $this->subject = new class () extends DeleteLogs {
             public function executeTest(ArrayInput $input, BufferedOutput $output): int
             {
                 return $this->execute($input, $output);
             }
-
 
             protected function initialize(InputInterface $input, OutputInterface $output): void
             {
@@ -84,7 +83,7 @@ class DeleteLogsCommandTest extends TestCase
         $input = new ArrayInput([
             AgeArgument::NAME => '30',
             DirectoryArgument::NAME => $this->testDir,
-            FilePatternArgument::NAME => '/.*\.log/'
+            FilePatternArgument::NAME => '/.*\.log/',
         ]);
         $output = new BufferedOutput();
 
@@ -92,14 +91,14 @@ class DeleteLogsCommandTest extends TestCase
         $result = $this->subject->executeTest($input, $output);
 
         // Check that the command executed successfully
-        $this->assertEquals(0, $result);
+        self::assertEquals(0, $result);
 
         // Verify old file was deleted and recent file still exists
-        $this->assertFileDoesNotExist($oldFile);
-        $this->assertFileExists($recentFile);
+        self::assertFileDoesNotExist($oldFile);
+        self::assertFileExists($recentFile);
 
         // Check that the output contains the success message
-        $this->assertStringContainsString('1 file(s) successfully deleted', $output->fetch());
+        self::assertStringContainsString('1 file(s) successfully deleted', $output->fetch());
     }
 
     public function testExecuteHandlesDatePrefixedFiles(): void
@@ -111,7 +110,7 @@ class DeleteLogsCommandTest extends TestCase
         $input = new ArrayInput([
             AgeArgument::NAME => '365', // 1 year
             DirectoryArgument::NAME => $this->testDir,
-            FilePatternArgument::NAME => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_logs\.log/'
+            FilePatternArgument::NAME => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_logs\.log/',
         ]);
         $output = new BufferedOutput();
 
@@ -119,11 +118,11 @@ class DeleteLogsCommandTest extends TestCase
         $result = $this->subject->executeTest($input, $output);
 
         // Check that the command executed successfully
-        $this->assertEquals(0, $result);
+        self::assertEquals(0, $result);
 
         // Verify the old date-prefixed file was deleted
-        $this->assertFileDoesNotExist($oldDatePrefixedFile);
-        $this->assertFileExists($recentDatePrefixedFile);
+        self::assertFileDoesNotExist($oldDatePrefixedFile);
+        self::assertFileExists($recentDatePrefixedFile);
     }
 
     public function testExecuteHandlesInvalidDirectory(): void
@@ -131,7 +130,7 @@ class DeleteLogsCommandTest extends TestCase
         $input = new ArrayInput([
             AgeArgument::NAME => '30',
             DirectoryArgument::NAME => '/non/existent/directory',
-            FilePatternArgument::NAME => '/.*\.log/'
+            FilePatternArgument::NAME => '/.*\.log/',
         ]);
         $output = new BufferedOutput();
 
@@ -139,7 +138,7 @@ class DeleteLogsCommandTest extends TestCase
         $result = $this->subject->executeTest($input, $output);
 
         // Check that the command failed
-        $this->assertEquals(1, $result);
-        $this->assertStringContainsString('Invalid log file path', $output->fetch());
+        self::assertEquals(1, $result);
+        self::assertStringContainsString('Invalid log file path', $output->fetch());
     }
 }

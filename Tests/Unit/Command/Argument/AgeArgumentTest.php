@@ -12,7 +12,7 @@ class AgeArgumentTest extends TestCase
 {
     #[Test] public function implementsInputArgumentInterface(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             InputArgumentInterface::class,
             new AgeArgument()
         );
@@ -20,7 +20,7 @@ class AgeArgumentTest extends TestCase
 
     #[Test] public function returnsCorrectName(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             'age',
             AgeArgument::name()
         );
@@ -28,7 +28,7 @@ class AgeArgumentTest extends TestCase
 
     #[Test] public function returnsCorrectMode(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             InputOption::VALUE_REQUIRED,
             AgeArgument::mode()
         );
@@ -36,7 +36,7 @@ class AgeArgumentTest extends TestCase
 
     #[Test] public function returnsCorrectDescription(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             'min age for files to delete',
             AgeArgument::description()
         );

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Service;
 
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
 use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,34 +35,13 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
  *
  * This class registers TYPO3 plugins from YAML configuration files.
  */
-class YamlPluginRegistrationService implements SingletonInterface, LoggerAwareInterface
+readonly class YamlPluginRegistrationService implements SingletonInterface
 {
-    use LoggerAwareTrait;
-    
-    /**
-     * @var PluginConfigurationScanner
-     */
-    protected PluginConfigurationScanner $scanner;
-
-    /**
-     * @var PluginConfigurationParser
-     */
-    protected PluginConfigurationParser $parser;
-    
-    /**
-     * @var PackageManager
-     */
-    protected PackageManager $packageManager;
-
     public function __construct(
-        PluginConfigurationScanner $scanner,
-        PluginConfigurationParser $parser,
-        PackageManager $packageManager
-    ) {
-        $this->scanner = $scanner;
-        $this->parser = $parser;
-        $this->packageManager = $packageManager;
-    }
+        private PluginConfigurationScanner $scanner,
+        private PluginConfigurationParser $parser,
+        private ?LoggerInterface $logger = null,
+    ) {}
 
     /**
      * Configure all plugins from YAML files
@@ -68,7 +49,7 @@ class YamlPluginRegistrationService implements SingletonInterface, LoggerAwareIn
     public function configurePlugins(): void
     {
         $pluginConfigurations = $this->findAndParsePluginConfigurations();
-        
+
         foreach ($pluginConfigurations as $config) {
             ExtensionUtility::configurePlugin(
                 $config->getExtensionName(),
@@ -86,7 +67,7 @@ class YamlPluginRegistrationService implements SingletonInterface, LoggerAwareIn
     public function registerPlugins(): void
     {
         $pluginConfigurations = $this->findAndParsePluginConfigurations();
-        
+
         foreach ($pluginConfigurations as $config) {
             if ($config instanceof PluginRegistrationInterface) {
                 ExtensionUtility::registerPlugin(
@@ -96,14 +77,14 @@ class YamlPluginRegistrationService implements SingletonInterface, LoggerAwareIn
                     $config->getPluginIcon(),
                     $config->getPluginGroup()
                 );
-                
+
                 // Add flexform if specified
                 if (!empty($config->getFlexForm())) {
                     $listType = strtolower($config->getExtensionName() . '_' . GeneralUtility::camelCaseToLowerCaseUnderscored($config->getPluginName()));
-                    
+
                     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
                     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key,pages,recursive';
-                    
+
                     if (substr($config->getFlexForm(), 0, 5) === 'FILE:') {
                         $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds'][$listType] = $config->getFlexForm();
                     } else {
@@ -118,34 +99,31 @@ class YamlPluginRegistrationService implements SingletonInterface, LoggerAwareIn
      * Find and parse all plugin configurations from YAML files
      *
      * @return PluginConfigurationInterface[]|PluginRegistrationInterface[] Array of objects implementing PluginConfigurationInterface
-     * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackageException
      */
     protected function findAndParsePluginConfigurations(): array
     {
         $pluginConfigurations = [];
         $extensionsWithPlugins = $this->scanner->findExtensionsWithPluginConfigurations();
-        
+
         foreach ($extensionsWithPlugins as $extensionKey => $pluginFiles) {
             foreach ($pluginFiles as $fileName) {
-                $filePath = $this->scanner->getPluginConfigurationPath($extensionKey, $fileName);
                 try {
+                    $filePath = $this->scanner->getPluginConfigurationPath($extensionKey, $fileName);
                     $pluginConfig = $this->parser->parseFile($filePath);
                     $pluginConfigurations[] = $pluginConfig;
-                } catch (\Exception $e) {
-                    if ($this->logger) {
-                        $this->logger->error(
-                            'Error parsing plugin configuration file: ' . $filePath,
-                            [
-                                'exception' => $e->getMessage(),
-                                'extension' => $extensionKey,
-                                'file' => $fileName
-                            ]
-                        );
-                    }
+                } catch (\Exception|UnknownPackageException $e) {
+                    $this->logger?->error(
+                        'Error parsing plugin configuration file.',
+                        [
+                            'exception' => $e->getMessage(),
+                            'extension' => $extensionKey,
+                            'file' => $fileName,
+                        ]
+                    );
                 }
             }
         }
-        
+
         return $pluginConfigurations;
     }
 }

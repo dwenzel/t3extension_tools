@@ -12,7 +12,7 @@ class StatusTest extends TestCase
 {
     #[Test] public function implementsStatusAwareInterface(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             StatusAwareInterface::class,
             new Status()
         );
@@ -24,7 +24,7 @@ class StatusTest extends TestCase
             ? Command::SUCCESS
             : StatusAwareInterface::SUCCESS;
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedStatusCode,
             Status::success()
         );
@@ -36,7 +36,7 @@ class StatusTest extends TestCase
             ? Command::FAILURE
             : StatusAwareInterface::FAILURE;
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedStatusCode,
             Status::failure()
         );
@@ -48,7 +48,7 @@ class StatusTest extends TestCase
             ? Command::INVALID
             : StatusAwareInterface::INVALID;
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedStatusCode,
             Status::invalid()
         );

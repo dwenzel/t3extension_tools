@@ -55,7 +55,7 @@ class PluginConfigurationScannerTest extends TestCase
             'ext1' => $package1,
             'ext2' => $package2,
             'ext3' => $package3,
-            'ext4' => $package4
+            'ext4' => $package4,
         ]);
 
         // Mock the Finder
@@ -138,14 +138,14 @@ class PluginConfigurationScannerTest extends TestCase
         $result = $subjectMock->findExtensionsWithPluginConfigurations();
 
         // ext1 and ext3 should have plugin configurations
-        $this->assertArrayHasKey('ext1', $result);
-        $this->assertArrayHasKey('ext3', $result);
-        $this->assertCount(2, $result);
+        self::assertArrayHasKey('ext1', $result);
+        self::assertArrayHasKey('ext3', $result);
+        self::assertCount(2, $result);
 
         // Check that plugin files were correctly detected
-        $this->assertContains('Plugin1.yaml', $result['ext1']);
-        $this->assertContains('Plugin2.yaml', $result['ext1']);
-        $this->assertContains('Plugin3.yaml', $result['ext3']);
+        self::assertContains('Plugin1.yaml', $result['ext1']);
+        self::assertContains('Plugin2.yaml', $result['ext1']);
+        self::assertContains('Plugin3.yaml', $result['ext3']);
 
     }
 
@@ -166,6 +166,6 @@ class PluginConfigurationScannerTest extends TestCase
 
         // Call method and check result
         $result = $this->subject->getPluginConfigurationPath($extensionKey, $fileName);
-        $this->assertEquals($expectedPath, $result);
+        self::assertEquals($expectedPath, $result);
     }
 }

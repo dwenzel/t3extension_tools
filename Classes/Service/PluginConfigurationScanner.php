@@ -20,7 +20,6 @@ namespace DWenzel\T3extensionTools\Service;
  ***************************************************************/
 
 use Symfony\Component\Finder\Finder;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Package\PackageManager;
 
 /**
@@ -68,7 +67,7 @@ class PluginConfigurationScanner
         }
         return $pluginFiles;
     }
-//...
+    //...
 
     /**
      * Get the absolute path to a plugin configuration file
