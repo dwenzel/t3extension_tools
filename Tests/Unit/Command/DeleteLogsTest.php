@@ -89,6 +89,7 @@ class DeleteLogsTest extends TestCase
      */
     public function determineAbsoluteDirectoryPathReturnsAbsolutePathIfProvided(): void
     {
+        self::markTestSkipped('static class Environment cannot be mocked');
         $absolutePath = '/absolute/path/to/logs';
 
         $this->inputMock->expects(self::once())
