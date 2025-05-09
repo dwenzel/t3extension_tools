@@ -1,3 +1,8 @@
+2025-05-09         [RELEASE] Release of t3extension-tools 4.0.1 (Vladimir Falcón Piva)
+2025-05-09 0a2ca5e Skipped Test determineAbsoluteDirectoryPathReturnsPublicPathForRelativePath (Vladimir Falcón Piva)
+2025-04-22 3bae0ae Refactor source formatting rector (Vladimir Falcón Piva)
+2025-04-14 05e17b2 unit tests added (Dirk Wenzel)
+
 2025-04-10         [RELEASE] Release of t3extension-tools 4.0.0 (Dirk Wenzel)
 2025-04-08 98b0ede [TASK] missing configuration for PluginRegistrationService added (Dirk Wenzel)
 2025-04-08 2c8b964 code cleanup (Dirk Wenzel)
