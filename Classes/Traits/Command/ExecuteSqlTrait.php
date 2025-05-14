@@ -43,9 +43,9 @@ trait ExecuteSqlTrait
      * @param SymfonyStyle|null $io
      */
     public function __construct(
-        string $name = null,
-        ConnectionConfiguration $connectionConfiguration = null,
-        SymfonyStyle $io = null
+        ?string $name = null,
+        ?ConnectionConfiguration $connectionConfiguration = null,
+        ?SymfonyStyle $io = null
     ) {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
