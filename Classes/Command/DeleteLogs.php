@@ -155,7 +155,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
     {
         return !empty($filePattern)
             && str_contains(
-                haystack: (string) $filePattern,
+                haystack: (string)$filePattern,
                 needle: '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_',
             );
     }
