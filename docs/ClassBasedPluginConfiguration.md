@@ -26,11 +26,11 @@ class MyPluginConfiguration implements PluginConfigurationInterface
     protected string $extensionName = 'MyExtension';
     protected string $pluginName = 'MyPlugin';
     protected string $pluginType = ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT; // or ExtensionUtility::PLUGIN_TYPE_PLUGIN
-    
+
     protected array $controllerActions = [
         'MyController' => 'list,show,search'
     ];
-    
+
     protected array $nonCacheableControllerActions = [
         'MyController' => 'search'
     ];
@@ -59,15 +59,15 @@ class MyPluginRegistration implements PluginRegistrationInterface
     protected string $extensionName = 'MyExtension';
     protected string $pluginName = 'MyPlugin';
     protected string $pluginType = ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT;
-    
+
     protected array $controllerActions = [
         'MyController' => 'list,show,search'
     ];
-    
+
     protected array $nonCacheableControllerActions = [
         'MyController' => 'search'
     ];
-    
+
     // Registration properties
     protected string $pluginTitle = 'My Plugin Title';
     protected string $pluginDescription = 'Description for my plugin';
@@ -114,7 +114,7 @@ services:
   MyVendor\MyExtension\Configuration\MyPluginConfiguration:
     tags:
       - 't3extensionTools.pluginConfiguration'
-      
+
   MyVendor\MyExtension\Configuration\MyPluginRegistration:
     tags:
       - 't3extensionTools.pluginRegistration'

@@ -1,8 +1,8 @@
 {
 	"name": "dwenzel/t3extension-tools",
-	"type": "typo3-cms-extension",
 	"description": "Tools for TYPO3 CMS extensions",
 	"license": "GPL-2.0-or-later",
+	"type": "typo3-cms-extension",
 	"authors": [
 		{
 			"name": "Dirk Wenzel",
@@ -12,10 +12,21 @@
 	],
 	"require": {
 		"php": ">=8.3",
+		"symfony/finder": "^5.4 || ^6.0 || ^7.1",
 		"typo3/cms-backend": "^12.4 || ^13.4",
 		"typo3/cms-core": "^12.4 || ^13.4",
-		"symfony/finder": "^5.4 || ^6.0 || ^7.1",
 		"typo3/cms-install": "^12.4 || ^13.4"
+	},
+	"require-dev": {
+		"armin/editorconfig-cli": "^2.0",
+		"ergebnis/composer-normalize": "^2.45",
+		"mikey179/vfsstream": "^1.6",
+		"phpstan/phpstan": "^2.1",
+		"phpunit/phpunit": "^10.5 || ^11.2 || ^12.1",
+		"roave/security-advisories": "dev-latest",
+		"ssch/typo3-rector": "^3.5",
+		"typo3/coding-standards": "^0.8.0",
+		"typo3/testing-framework": "^7.0 || ^8.0 || ^9.2"
 	},
 	"autoload": {
 		"psr-4": {
@@ -27,24 +38,20 @@
 			"DWenzel\\T3extensionTools\\Tests\\": "Tests/"
 		}
 	},
-	"require-dev": {
-		"roave/security-advisories": "dev-latest",
-		"mikey179/vfsstream": "^1.6",
-		"phpunit/phpunit": "^10.5 || ^11.2 || ^12.1",
-		"typo3/testing-framework": "^7.0 || ^8.0 || ^9.2",
-		"phpstan/phpstan": "^2.1",
-		"ergebnis/composer-normalize": "^2.45",
-		"armin/editorconfig-cli": "^2.0",
-		"typo3/coding-standards": "^0.8.0",
-		"ssch/typo3-rector": "^3.5"
-	},
 	"config": {
-		"vendor-dir": ".Build/vendor",
-		"bin-dir": ".Build/bin",
 		"allow-plugins": {
+			"ergebnis/composer-normalize": true,
 			"typo3/class-alias-loader": true,
-			"typo3/cms-composer-installers": true,
-			"ergebnis/composer-normalize": true
+			"typo3/cms-composer-installers": true
+		},
+		"bin-dir": ".Build/bin",
+		"vendor-dir": ".Build/vendor"
+	},
+	"extra": {
+		"typo3/cms": {
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"extension-key": "t3extension_tools",
+			"web-dir": ".Build/Web"
 		}
 	},
 	"scripts": {
@@ -75,21 +82,21 @@
 			"@sca:php"
 		],
 		"sca:php": "phpstan analyse --memory-limit=1G",
-		"test:unit": [
-			"@php .Build/bin/phpunit -c Tests/Build/UnitTests.xml"
+		"test": [
+			"@test:unit",
+			"@test:functional",
+			"@test:phpstan"
 		],
+		"test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
+		"test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml",
 		"test:functional": [
 			"@php .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml"
 		],
 		"test:phpstan": [
 			"@php .Build/bin/phpstan analyse -c phpstan.neon"
 		],
-		"test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
-		"test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml",
-		"test": [
-			"@test:unit",
-			"@test:functional",
-			"@test:phpstan"
+		"test:unit": [
+			"@php .Build/bin/phpunit -c Tests/Build/UnitTests.xml"
 		]
 	},
 	"scripts-descriptions": {
@@ -106,17 +113,10 @@
 		"sca": "Run all registered static code analyzers to detect issues in the codebase",
 		"sca:php": "Analyze all PHP files by using PHPStan",
 		"test": "Run all configured test suites",
-		"test:unit": "Run unit tests for the extension",
+		"test:coverage": "Run unit tests with HTML coverage report",
+		"test:coverage-clover": "Run unit tests with Clover coverage report",
 		"test:functional": "Run functional tests for the extension",
 		"test:phpstan": "Run PHPStan static analysis",
-		"test:coverage": "Run unit tests with HTML coverage report",
-		"test:coverage-clover": "Run unit tests with Clover coverage report"
-	},
-	"extra": {
-		"typo3/cms": {
-			"extension-key": "t3extension_tools",
-			"cms-package-dir": "{$vendor-dir}/typo3/cms",
-			"web-dir": ".Build/Web"
-		}
+		"test:unit": "Run unit tests for the extension"
 	}
 }
