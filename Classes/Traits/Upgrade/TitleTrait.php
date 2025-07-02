@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Traits\Upgrade;
 
 /***************************************************************
@@ -18,8 +20,20 @@ namespace DWenzel\T3extensionTools\Traits\Upgrade;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+/**
+ * Trait TitleTrait
+ *
+ * Provides getTitle() method implementation for UpgradeWizardInterface.
+ * Requires TITLE constant to be defined in the using class.
+ */
 trait TitleTrait
 {
+    /**
+     * Return the speaking name of this wizard
+     *
+     * @return string The wizard title from TITLE constant
+     */
     public function getTitle(): string
     {
         return static::TITLE;

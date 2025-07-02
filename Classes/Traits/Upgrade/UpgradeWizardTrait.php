@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Traits\Upgrade;
 
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
@@ -24,14 +26,16 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 /**
  * Trait UpgradeWizardTrait
  * Provides a convenient implementation of the accessor methods of the
- * @see UpgradeWizardInterface
+ * @see UpgradeWizardInterface for TYPO3 v13+
  *
- * The included traits require some constants to be present in the consuming class
+ * The included traits require some constants to be present in the consuming class:
+ * - TITLE: string constant for the wizard title
+ * - DESCRIPTION: string constant for the wizard description
+ * - PRE_REQUISITES: array constant for prerequisite classes
  */
 trait UpgradeWizardTrait
 {
     use DescriptionTrait;
-    use IdentifierTrait;
     use PrerequisitesTrait;
     use TitleTrait;
 }

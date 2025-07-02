@@ -238,21 +238,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
-          
+
       - name: Install Dependencies
         run: composer install --no-progress --no-interaction
-        
+
       - name: Run Linting
         run: composer lint
-        
+
       - name: Run Tests
         run: composer test
-        
+
       - name: Run Static Analysis
         run: composer sca:php
 ```
@@ -384,7 +384,7 @@ final class ExampleClassTest extends TestCase
     public function processDataReturnsEmptyArrayForEmptyInput(): void
     {
         $result = $this->subject->processData([]);
-        
+
         self::assertSame([], $result);
     }
 
@@ -395,9 +395,9 @@ final class ExampleClassTest extends TestCase
     {
         $input = ['item1', 'item2'];
         $expected = ['ITEM1', 'ITEM2'];
-        
+
         $result = $this->subject->processData($input);
-        
+
         self::assertSame($expected, $result);
     }
 }

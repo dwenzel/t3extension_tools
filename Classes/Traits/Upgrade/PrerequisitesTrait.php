@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Traits\Upgrade;
 
 /***************************************************************
@@ -18,8 +20,23 @@ namespace DWenzel\T3extensionTools\Traits\Upgrade;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+/**
+ * Trait PrerequisitesTrait
+ *
+ * Provides getPrerequisites() method implementation for UpgradeWizardInterface.
+ * Requires PRE_REQUISITES constant to be defined in the using class.
+ */
 trait PrerequisitesTrait
 {
+    /**
+     * Returns an array of class names of Prerequisite classes
+     *
+     * This way a wizard can define dependencies like "database up-to-date" or
+     * "reference index updated"
+     *
+     * @return string[] Array of prerequisite class names from PRE_REQUISITES constant
+     */
     public function getPrerequisites(): array
     {
         return static::PRE_REQUISITES;

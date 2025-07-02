@@ -6,3 +6,5 @@ parameters:
 	ignoreErrors:
 		# Allow dynamic properties in test classes
 		- '#Access to an undefined property.*Test::\$.*#'
+		# Ignore unused trait warnings for tool traits that are meant to be used by consumers
+		- '#Trait .* is used zero times and is not analysed\.#'

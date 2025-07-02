@@ -65,7 +65,6 @@ The extension follows a strict **Interface-Trait Pattern** where each major feat
 | Trait | Purpose | Interface Pattern |
 |-------|---------|-------------------|
 | [`DescriptionTrait`][DescriptionTrait] | Wizard descriptions | Upgrade wizards |
-| [`IdentifierTrait`][IdentifierTrait] | Wizard identifiers | Upgrade wizards |
 | [`PrerequisitesTrait`][PrerequisitesTrait] | Prerequisites checking | Upgrade wizards |
 | [`TitleTrait`][TitleTrait] | Wizard titles | Upgrade wizards |
 | [`UpgradeWizardTrait`][UpgradeWizardTrait] | Complete wizard implementation | Upgrade wizards |
@@ -97,16 +96,16 @@ The extension follows a strict **Interface-Trait Pattern** where each major feat
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationTrait;
 
-class MyPluginConfiguration implements PluginConfigurationInterface 
+class MyPluginConfiguration implements PluginConfigurationInterface
 {
     use PluginConfigurationTrait;
-    
-    public function getPluginName(): string 
+
+    public function getPluginName(): string
     {
         return 'MyPlugin';
     }
-    
-    public function getControllerActions(): array 
+
+    public function getControllerActions(): array
     {
         return [
             'MyController' => 'list,show,detail'
@@ -128,7 +127,7 @@ use Symfony\Component\Console\Command\Command;
 class MyCommand extends Command implements ArgumentAwareInterface, OptionAwareInterface
 {
     use ArgumentAwareTrait, OptionAwareTrait;
-    
+
     protected function configure(): void
     {
         $this->setDescription('My custom command');
@@ -143,20 +142,27 @@ class MyCommand extends Command implements ArgumentAwareInterface, OptionAwareIn
 ```php
 <?php
 use DWenzel\T3extensionTools\Traits\Upgrade\UpgradeWizardTrait;
+use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 class MyUpgradeWizard implements UpgradeWizardInterface
 {
     use UpgradeWizardTrait;
-    
-    public function getIdentifier(): string
+
+    public const TITLE = 'My Extension Upgrade';
+    public const DESCRIPTION = 'Upgrades my extension data to the latest format';
+    public const PRE_REQUISITES = [DatabaseUpdatedPrerequisite::class];
+
+    public function executeUpdate(): bool
     {
-        return 'myExtensionUpgrade';
+        // Perform upgrade logic here
+        return true;
     }
-    
-    public function getTitle(): string
+
+    public function updateNecessary(): bool
     {
-        return 'My Extension Upgrade';
+        // Check if upgrade is needed
+        return false;
     }
 }
 ```
@@ -171,7 +177,7 @@ class MyUpgradeWizard implements UpgradeWizardInterface
 
 ---
 
-## Reference Links
+<!-- Reference Links -->
 
 <!-- Command Interfaces -->
 [ArgumentAwareInterface]: ../Classes/Command/ArgumentAwareInterface.php
@@ -206,7 +212,6 @@ class MyUpgradeWizard implements UpgradeWizardInterface
 
 <!-- Upgrade Traits -->
 [DescriptionTrait]: ../Classes/Traits/Upgrade/DescriptionTrait.php
-[IdentifierTrait]: ../Classes/Traits/Upgrade/IdentifierTrait.php
 [PrerequisitesTrait]: ../Classes/Traits/Upgrade/PrerequisitesTrait.php
 [TitleTrait]: ../Classes/Traits/Upgrade/TitleTrait.php
 [UpgradeWizardTrait]: ../Classes/Traits/Upgrade/UpgradeWizardTrait.php
@@ -218,6 +223,7 @@ class MyUpgradeWizard implements UpgradeWizardInterface
 
 <!-- Example Classes -->
 [ExampleCommand]: ../Classes/Command/ExampleCommand.php
+[ExampleUpgradeWizard]: ../Classes/Command/ExampleUpgradeWizard.php
 [ExampleOption]: ../Classes/Command/Option/ExampleOption.php
 [ConnectionOption]: ../Classes/Command/Option/ConnectionOption.php
 [AgeArgument]: ../Classes/Command/Argument/AgeArgument.php

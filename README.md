@@ -14,7 +14,7 @@ composer require dwenzel/t3extension-tools
 
 ### Core Components
 * **Plugin Registration**: Automated plugin configuration and registration services
-* **Console Commands**: Extensible command framework with modular argument/option handling  
+* **Console Commands**: Extensible command framework with modular argument/option handling
 * **Configuration Management**: Interfaces and services for extension configuration
 * **Upgrade Wizards**: Traits for TYPO3 version migration support
 * **Icon Registration**: Utilities for bitmap and SVG icon registration
@@ -53,16 +53,16 @@ composer sca:php
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationTrait;
 
-class MyPluginConfiguration implements PluginConfigurationInterface 
+class MyPluginConfiguration implements PluginConfigurationInterface
 {
     use PluginConfigurationTrait;
-    
-    public function getPluginName(): string 
+
+    public function getPluginName(): string
     {
         return 'MyPlugin';
     }
-    
-    public function getControllerActions(): array 
+
+    public function getControllerActions(): array
     {
         return [
             'MyController' => 'list,show'
@@ -82,7 +82,7 @@ use Symfony\Component\Console\Command\Command;
 class MyCommand extends Command implements ArgumentAwareInterface
 {
     use ArgumentAwareTrait;
-    
+
     protected function configure(): void
     {
         $this->setDescription('My custom command');
@@ -163,4 +163,3 @@ GPL-2.0-or-later
 ## Support
 
 For issues and feature requests, please use the project's issue tracker.
-
