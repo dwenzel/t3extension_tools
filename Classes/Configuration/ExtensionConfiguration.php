@@ -195,7 +195,7 @@ class ExtensionConfiguration
     public static function registerPageTSConfigFiles(): void
     {
         foreach (static::REGISTER_PAGE_TSCONFIG_FILES as $TsConfigFile => $label) {
-            ExtensionManagementUtility::registerPageTSConfigFile(static::KEY, $TsConfigFile, $label);
+            ExtensionManagementUtility::registerPageTSConfigFile(static::EXTENSION_KEY, $TsConfigFile, $label);
         }
     }
 }
