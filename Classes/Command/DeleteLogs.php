@@ -67,6 +67,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
             !(GeneralUtility::isAllowedAbsPath($absDirectoryPath)
                 || PathUtility::isAllowedAdditionalPath($absDirectoryPath))
         ) {
+            // @extensionScannerIgnoreLine
             $this->io->error(
                 sprintf('Invalid log file path %s', $absDirectoryPath)
             );
@@ -110,6 +111,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
                     unlink($filePath);
                     $deletedFilesCount++;
                 } catch (\Exception $exception) {
+                    // @extensionScannerIgnoreLine
                     $this->io->error($exception->getMessage());
                     return self::FAILURE;
                 }

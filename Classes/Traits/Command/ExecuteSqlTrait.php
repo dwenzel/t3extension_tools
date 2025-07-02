@@ -72,6 +72,7 @@ trait ExecuteSqlTrait
         $availableConnections = $this->connectionConfiguration->getAvailableConnectionNames(self::CONNECTION_TYPE_MYSQL);
 
         if (empty($availableConnections) || !in_array($connection, $availableConnections, true)) {
+            // @extensionScannerIgnoreLine
             $this->io->error(self::ERROR_MISSING_CONNECTION);
             return 1_641_390_076;
         }
@@ -90,6 +91,7 @@ trait ExecuteSqlTrait
         );
 
         if ($exitCode) {
+            // @extensionScannerIgnoreLine
             $this->io->error(self::ERROR_SQL_EXECUTION_FAILED);
             return 1_641_390_086;
         }
