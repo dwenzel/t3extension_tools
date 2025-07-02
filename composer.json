@@ -42,8 +42,7 @@
   },
   "scripts": {
     "post-autoload-dump": [
-      "mkdir -p .Build/log/coverage/",
-      "[ -L .Build/Web/typo3conf/ext/t3extension_tools ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3extension_tools"
+      "mkdir -p .Build/log/coverage/"
     ],
     "fix": [
       "@fix:composer",
