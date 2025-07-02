@@ -25,3 +25,6 @@ coverage.xml
 
 # claude
 .claude/settings.local.json
+
+# PHP CS Fixer
+.php-cs-fixer.cache

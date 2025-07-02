@@ -30,6 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require phpstan/phpstan:^1.10 --no-progress --dev
+          composer install --no-progress --dev
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c phpstan.neon

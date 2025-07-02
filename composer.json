@@ -14,17 +14,17 @@
 		"php": ">=8.3",
 		"symfony/finder": "^5.4 || ^6.0 || ^7.1",
 		"typo3/cms-backend": "^12.4 || ^13.4",
-		"typo3/cms-core": "^12.4 || ^13.4",
+		"typo3/cms-core": "^12.4",
 		"typo3/cms-install": "^12.4 || ^13.4"
 	},
 	"require-dev": {
 		"armin/editorconfig-cli": "^2.0",
 		"ergebnis/composer-normalize": "^2.45",
 		"mikey179/vfsstream": "^1.6",
-		"phpstan/phpstan": "^2.1",
+		"phpstan/phpstan": "1.12 || ^2.1",
 		"phpunit/phpunit": "^10.5 || ^11.2 || ^12.1",
 		"roave/security-advisories": "dev-latest",
-		"ssch/typo3-rector": "^3.5",
+		"ssch/typo3-rector": "^2.14 || ^3.5",
 		"typo3/coding-standards": "^0.8.0",
 		"typo3/testing-framework": "^7.0 || ^8.0 || ^9.2"
 	},

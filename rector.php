@@ -26,7 +26,7 @@ return RectorConfig::configure()
     ])
     ->withPHPStanConfigs([Typo3Option::PHPSTAN_FOR_RECTOR_PATH])
     ->withRules([
-        AddVoidReturnTypeWhereNoReturnRector::class
+        AddVoidReturnTypeWhereNoReturnRector::class,
     ])
     ->withConfiguredRule(ExtEmConfRector::class, [
         ExtEmConfRector::PHP_VERSION_CONSTRAINT => '8.3.0-8.4.99',
@@ -38,5 +38,5 @@ return RectorConfig::configure()
             'ext_localconf.php',
             'ext_tables.php',
             'ClassAliasMap.php',
-        ]
+        ],
     ]);

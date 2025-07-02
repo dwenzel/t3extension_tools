@@ -8,10 +8,7 @@ use DWenzel\T3extensionTools\Command\Argument\FilePatternArgument;
 use DWenzel\T3extensionTools\Command\DeleteLogs;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DeleteLogsCommandTest extends TestCase
 {

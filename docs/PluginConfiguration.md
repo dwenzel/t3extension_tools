@@ -1,19 +1,25 @@
 # Plugin Configuration with YAML
 
-This document describes how to configure and register TYPO3 plugins using YAML files instead of PHP classes.
+This document describes how to configure and register TYPO3 plugins using YAML
+files instead of PHP classes.
 
-> **Note:** Any parsing errors or issues with YAML configuration files will be logged using TYPO3's standard logging system.
+> **Note:** Any parsing errors or issues with YAML configuration files will be
+> logged using TYPO3's standard logging system.
 >
-> For the traditional class-based approach, see [Class-Based Plugin Configuration](ClassBasedPluginConfiguration.md).
+> For the traditional class-based approach, see
+> [Class-Based Plugin Configuration](ClassBasedPluginConfiguration.md).
 
 ## Overview
 
-Plugin configuration files should be placed in your extension's `Configuration/Plugins` directory.
-The `YamlPluginRegistrationService` will automatically discover these files and use them to configure and register your plugins.
+Plugin configuration files should be placed in your extension's
+`Configuration/Plugins` directory. The `YamlPluginRegistrationService` will
+automatically discover these files and use them to configure and register your
+plugins.
 
 ## File Structure
 
-Each plugin configuration file should be named descriptively (e.g., `EventList.yaml`) and follow this format:
+Each plugin configuration file should be named descriptively
+(e.g., `EventList.yaml`) and follow this format:
 
 ```yaml
 # Basic plugin configuration (required)
@@ -26,12 +32,15 @@ plugin:
 
   # Plugin type (optional, defaults to content element)
   # Possible values:
-  # - 'CType' (TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT)
-  # - 'list_type' (TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_PLUGIN)
+  # - 'CType'
+  #  (TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT)
+  # - 'list_type'
+  #  (TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_PLUGIN)
   type: 'CType'
 
   # Controller actions (required)
-  # Format: fully qualified controller class name => comma-separated list of actions without 'Action' suffix
+  # Format: fully qualified controller class name => comma-separated list of
+  # actions without 'Action' suffix
   controllerActions:
     MyVendor\MyExtensionName\Controller\EventController: 'list,show,search'
     Category: 'list'
@@ -41,7 +50,8 @@ plugin:
   nonCacheableControllerActions:
       MyVendor\MyExtensionName\Controller\EventController: 'search'
 
-# Plugin registration (optional, only needed if the plugin should appear in the backend)
+# Plugin registration
+# (optional, only needed if the plugin should appear in the backend)
 registration:
   # Plugin title shown in the backend (required for registration)
   title: 'LLL:EXT:my_extension/Resources/Private/Language/locallang.xlf:plugin.event_list.title'
