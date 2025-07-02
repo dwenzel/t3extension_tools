@@ -32,4 +32,4 @@ jobs:
         run: |
           composer install --no-progress --dev
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse -c phpstan.neon
+        run: composer test:phpstan
