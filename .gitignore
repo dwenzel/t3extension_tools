@@ -3,3 +3,5 @@ Documentation/_build/
 .scannerwork
 .Build/
 composer.lock
+.claude/settings.local.json
+.php-cs-fixer.cache

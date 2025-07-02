@@ -6,7 +6,6 @@ use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
 use DWenzel\T3extensionTools\Command\ArgumentAwareInterface;
 use DWenzel\T3extensionTools\Command\Option\InputOptionInterface;
 use DWenzel\T3extensionTools\Command\OptionAwareInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 /***************************************************************
  *  Copyright notice

@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 
-class InvalidIconProviderClass
-{
-}
+class InvalidIconProviderClass {}
 
 class ExtensionConfigurationTest extends TestCase
 {

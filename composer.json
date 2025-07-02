@@ -20,18 +20,81 @@
     }
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest"
+    "a9f/typo3-fractor": "^0.4.2",
+    "armin/editorconfig-cli": "^2.0",
+    "ergebnis/composer-normalize": "^2.45",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.0",
+    "roave/security-advisories": "dev-latest",
+    "ssch/typo3-rector": "^3.5",
+    "typo3/coding-standards": "^0.8.0",
+    "typo3/testing-framework": "^7.1 || ^8.2 || ^9.2"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
+    "bin-dir": ".Build/bin",
+    "allow-plugins": {
+      "a9f/fractor-extension-installer": true,
+      "ergebnis/composer-normalize": true,
+      "typo3/cms-composer-installers": true,
+      "typo3/class-alias-loader": true
+    }
   },
   "scripts": {
     "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
       "mkdir -p .Build/log/coverage/",
       "[ -L .Build/Web/typo3conf/ext/t3extension_tools ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3extension_tools"
-    ]
+    ],
+    "fix": [
+      "@fix:composer",
+      "@fix:editorconfig",
+      "@fix:php",
+      "@fix:rector",
+      "@fix:fractor"
+    ],
+    "fix:composer": "@composer normalize",
+    "fix:editorconfig": "ec --fix",
+    "fix:fractor": "fractor process",
+    "fix:php": "php-cs-fixer fix",
+    "fix:rector": "rector process",
+    "lint": [
+      "@lint:composer",
+      "@lint:editorconfig",
+      "@lint:php",
+      "@lint:rector",
+      "@lint:fractor"
+    ],
+    "lint:composer": "@composer normalize --dry-run",
+    "lint:editorconfig": "ec",
+    "lint:fractor": "fractor process --dry-run",
+    "lint:php": "php-cs-fixer fix --dry-run",
+    "lint:rector": "rector process --dry-run",
+    "sca": [
+      "@sca:php"
+    ],
+    "sca:php": "phpstan analyse --memory-limit=1G",
+    "test": [
+      "@test:unit"
+    ],
+    "test:unit": "phpunit -c Tests/Build/UnitTests.xml"
+  },
+  "scripts-descriptions": {
+    "fix": "Fix all code quality issues reported by the registered linters",
+    "fix:composer": "Fix all issues in `composer.json`",
+    "fix:editorconfig": "Fix all styling issues violating the `.editorconfig` rules",
+    "fix:fractor": "Apply automatic TypoScript code migrations with TYPO3 Fractor",
+    "fix:php": "Fix all styling issues violating the configured PHP-CS-Fixer rules",
+    "fix:rector": "Apply automatic code migrations with TYPO3 Rector",
+    "lint": "Run all registered linters to detect code quality issues",
+    "lint:composer": "Lint `composer.json` to detect unnormalized styles",
+    "lint:editorconfig": "Lint all project files to detect violations of the `.editorconfig` rules",
+    "lint:fractor": "Perform TypoScript code migration analysis with TYPO3 Fractor",
+    "lint:php": "Lint all PHP files to detect coding style violations",
+    "lint:rector": "Perform code migration analysis with TYPO3 Rector",
+    "sca": "Run all registered static code analyzers to detect issues in the codebase",
+    "sca:php": "Analyze all PHP files by using PHPStan",
+    "test": "Run all configured test suites",
+    "test:unit": "Run unit tests for the extension"
   },
   "extra": {
     "typo3/cms": {
