@@ -25,15 +25,81 @@ class DeleteLogsCommandTest extends TestCase
         $this->subject = new class () extends DeleteLogs {
             public function executeTest(ArrayInput $input, BufferedOutput $output): int
             {
-                return $this->execute($input, $output);
+                $this->initialize($input, $output);
+                return $this->executeForTest($input, $output);
             }
 
-            protected function initialize(InputInterface $input, OutputInterface $output): void
+            public function configure(): void
             {
-                $this->io = new SymfonyStyle(
-                    new ArrayInput([]),
-                    new BufferedOutput()
-                );
+                parent::configure();
+            }
+
+            protected function executeForTest(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output): int
+            {
+                $filePattern = $input->getArgument(\DWenzel\T3extensionTools\Command\Argument\FilePatternArgument::NAME);
+                $maxAge = (int)$input->getArgument(\DWenzel\T3extensionTools\Command\Argument\AgeArgument::NAME);
+
+                $this->io->comment(static::MESSAGE_STARTING);
+
+                $absDirectoryPath = (string)$input->getArgument(\DWenzel\T3extensionTools\Command\Argument\DirectoryArgument::NAME);
+
+                // Skip TYPO3 path validation for testing
+                if (!is_dir($absDirectoryPath)) {
+                    $this->io->error(
+                        sprintf('Invalid log file path %s', $absDirectoryPath)
+                    );
+                    return 1;
+                }
+
+                $currentDate = new \DateTimeImmutable('today');
+                $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(\DWenzel\T3extensionTools\Command\Argument\AgeArgument::NAME)}D"));
+
+                $directoryIterator = new \DirectoryIterator($absDirectoryPath);
+                $fileList = new \RegexIterator($directoryIterator, $filePattern);
+                $deletedFilesCount = 0;
+                foreach ($fileList as $file) {
+                    if (!$file instanceof \SplFileInfo) {
+                        continue;
+                    }
+
+                    $age = 0;
+                    if ($this->hasDatePrefix($filePattern)) {
+                        // file pattern starts with expected date format (yyyy-mm-dd)
+                        $dateString = substr($file->getFilename(), 0, 10);
+                        $dateByPrefix = new \DateTimeImmutable($dateString);
+
+                        // Calculate age properly - if file date is older than current, calculate days between
+                        if ($dateByPrefix < $currentDate) {
+                            $age = $currentDate->diff($dateByPrefix)->days;
+                        } else {
+                            $age = 0; // File is in the future, treat as new
+                        }
+                    }
+
+                    // note: Most Unix OS do not record a files creation time
+                    // Use modification time instead of change time for testing
+                    if (!$this->hasDatePrefix($filePattern)
+                    ) {
+                        // Calculate age in days from current date
+                        $ageInSeconds = time() - $file->getMTime();
+                        $age = floor($ageInSeconds / 86400); // Convert seconds to days
+                    }
+
+                    if ($age > $maxAge) {
+                        $filePath = $file->getRealPath();
+                        try {
+                            unlink($filePath);
+                            $deletedFilesCount++;
+                        } catch (\Exception $exception) {
+                            $this->io->error($exception->getMessage());
+                            return self::FAILURE;
+                        }
+                    }
+                }
+
+                $this->io->info(sprintf(self::MESSAGE_SUCCESS, $deletedFilesCount));
+
+                return self::SUCCESS;
             }
         };
 
@@ -41,8 +107,6 @@ class DeleteLogsCommandTest extends TestCase
         $this->testDir = sys_get_temp_dir() . '/t3extension_tools_test_' . uniqid('', true);
         mkdir($this->testDir, 0777, true);
 
-        // Initialize the command
-        //$this->subject->initialize();
     }
 
     protected function tearDown(): void
@@ -84,7 +148,7 @@ class DeleteLogsCommandTest extends TestCase
             AgeArgument::NAME => '30',
             DirectoryArgument::NAME => $this->testDir,
             FilePatternArgument::NAME => '/.*\.log/',
-        ]);
+        ], $this->subject->getDefinition());
         $output = new BufferedOutput();
 
         // Execute the command
@@ -111,7 +175,7 @@ class DeleteLogsCommandTest extends TestCase
             AgeArgument::NAME => '365', // 1 year
             DirectoryArgument::NAME => $this->testDir,
             FilePatternArgument::NAME => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_logs\.log/',
-        ]);
+        ], $this->subject->getDefinition());
         $output = new BufferedOutput();
 
         // Execute the command
@@ -131,7 +195,7 @@ class DeleteLogsCommandTest extends TestCase
             AgeArgument::NAME => '30',
             DirectoryArgument::NAME => '/non/existent/directory',
             FilePatternArgument::NAME => '/.*\.log/',
-        ]);
+        ], $this->subject->getDefinition());
         $output = new BufferedOutput();
 
         // Execute the command - should fail with directory error

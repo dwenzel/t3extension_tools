@@ -5,6 +5,7 @@ namespace DWenzel\T3extensionTools\Command;
 use DWenzel\T3extensionTools\Command\Argument\AgeArgument;
 use DWenzel\T3extensionTools\Command\Argument\DirectoryArgument;
 use DWenzel\T3extensionTools\Command\Argument\FilePatternArgument;
+use DWenzel\T3extensionTools\Command\ArgumentAwareInterface;
 use DWenzel\T3extensionTools\Traits\Command\ArgumentAwareTrait;
 use DWenzel\T3extensionTools\Traits\Command\ConfigureTrait;
 use DWenzel\T3extensionTools\Traits\Command\InitializeTrait;
@@ -75,7 +76,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
         }
 
         $currentDate = new \DateTimeImmutable('today');
-        $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(AgeArgument::name())}D"));
+        $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(AgeArgument::NAME)}D"));
 
         $directoryIterator = new \DirectoryIterator($absDirectoryPath);
         $fileList = new \RegexIterator($directoryIterator, $filePattern);
@@ -89,19 +90,20 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
                 // file pattern starts with expected date format (yyyy-mm-dd)
                 $dateString = substr($file->getFilename(), 0, 10);
                 $dateByPrefix = new \DateTimeImmutable($dateString);
-                $age = $currentDate->diff($dateByPrefix)->d;
+
+                // Calculate age properly - if file date is older than current, calculate days between
+                if ($dateByPrefix < $currentDate) {
+                    $age = $currentDate->diff($dateByPrefix)->days;
+                }
             }
 
             // note: Most Unix OS do not record a files creation time
             // CTime reflects the time of last metadata change (e.g. access rights)
             if (!$this->hasDatePrefix($filePattern)
             ) {
-                $changeDate = new \DateTimeImmutable('@' . $file->getCTime());
-                if ($changeDate < $keepUntilDate) {
-                    continue;
-                }
-
-                $age = $currentDate->diff($changeDate)->d;
+                // Calculate age in days from current date
+                $ageInSeconds = time() - $file->getCTime();
+                $age = floor($ageInSeconds / 86400); // Convert seconds to days
             }
 
             if ($age > $maxAge) {
