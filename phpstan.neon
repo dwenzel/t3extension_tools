@@ -1,0 +1,10 @@
+parameters:
+  level: 5
+  paths:
+    - Classes
+  excludePaths:
+    - .Build/*
+  checkMissingIterableValueType: false
+  ignoreErrors:
+    - '#Method .* has no return type specified.#'
+    - '#PHPDoc tag @param has invalid value.*#'

@@ -1,0 +1,35 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [ main, master, develop, 'feature/**' ]
+  pull_request:
+    branches: [ main, master, develop, 'feature/**' ]
+
+jobs:
+  phpstan:
+    name: "PHPStan"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, pdo_sqlite
+          coverage: none
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: dependencies-php-8.2-composer-${{ hashFiles('composer.json') }}
+          restore-keys: dependencies-php-8.3-composer-
+
+      - name: Install dependencies
+        run: |
+          composer require phpstan/phpstan:^1.10 --no-progress --dev
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse -c phpstan.neon
