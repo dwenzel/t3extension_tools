@@ -5,6 +5,7 @@ namespace DWenzel\T3extensionTools\Traits\Command;
 use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
 use Helhum\Typo3Console\Database\Process\MysqlCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -78,6 +79,10 @@ trait ExecuteSqlTrait
         }
         $dbConfig = $this->connectionConfiguration->build($connection);
 
+        if(!$output instanceof ConsoleOutput) {
+            $this->io->error('Invalid output type. Please use ConsoleOutput.');
+            return 1_641_390_077;
+        };
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
         /** @noinspection PhpParamsInspection */
         $mysqlCommand = new MysqlCommand($dbConfig, $output);
