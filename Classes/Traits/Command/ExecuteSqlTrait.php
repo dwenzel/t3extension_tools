@@ -44,11 +44,10 @@ trait ExecuteSqlTrait
      * @param SymfonyStyle|null $io
      */
     public function __construct(
-        string                  $name = null,
+        string $name = null,
         ConnectionConfiguration $connectionConfiguration = null,
-        SymfonyStyle            $io = null
-    )
-    {
+        SymfonyStyle $io = null
+    ) {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
         );
@@ -79,10 +78,10 @@ trait ExecuteSqlTrait
         }
         $dbConfig = $this->connectionConfiguration->build($connection);
 
-        if(!$output instanceof ConsoleOutput) {
+        if (!$output instanceof ConsoleOutput) {
             $this->io->error('Invalid output type. Please use ConsoleOutput.');
             return 1_641_390_077;
-        };
+        }
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
         /** @noinspection PhpParamsInspection */
         $mysqlCommand = new MysqlCommand($dbConfig, $output);
