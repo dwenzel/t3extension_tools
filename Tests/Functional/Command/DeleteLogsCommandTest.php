@@ -149,6 +149,7 @@ class DeleteLogsCommandTest extends TestCase
         $output = new BufferedOutput();
 
         // Execute the command
+        // @phpstan-ignore method.notFound
         $result = $this->subject->executeTest($input, $output);
 
         // Check that the command executed successfully
@@ -176,6 +177,7 @@ class DeleteLogsCommandTest extends TestCase
         $output = new BufferedOutput();
 
         // Execute the command
+        // @phpstan-ignore method.notFound
         $result = $this->subject->executeTest($input, $output);
 
         // Check that the command executed successfully
@@ -196,6 +198,7 @@ class DeleteLogsCommandTest extends TestCase
         $output = new BufferedOutput();
 
         // Execute the command - should fail with directory error
+        // @phpstan-ignore method.notFound
         $result = $this->subject->executeTest($input, $output);
 
         // Check that the command failed

@@ -49,7 +49,11 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
         DirectoryArgument::class,
         FilePatternArgument::class,
     ];
-    protected static $argumentsToConfigure = self::ARGUMENTS;
+    /**
+     * @var array|string[] $argumentsToConfigure
+     * @noinspection PhpMissingFieldTypeInspection
+     */
+    protected static array $argumentsToConfigure = self::ARGUMENTS;
 
     /**
      * @throws \Exception
@@ -128,6 +132,7 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
      */
     protected function determineAbsoluteDirectoryPath(InputInterface $input): string
     {
+        $absDirectoryPath = '';
         $directory = PathUtility::getCanonicalPath(
             (string)$input->getArgument(DirectoryArgument::NAME)
         );

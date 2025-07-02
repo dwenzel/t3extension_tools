@@ -44,6 +44,7 @@ class DeleteLogsTest extends TestCase
     {
         $pattern = '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_test.log/';
 
+        // @phpstan-ignore method.notFound
         self::assertTrue($this->subject->isDatePrefixedPattern($pattern));
     }
 
@@ -51,12 +52,14 @@ class DeleteLogsTest extends TestCase
     {
         $pattern = '/test_[0-9]{4}-[0-9]{2}-[0-9]{2}.log/';
 
+        // @phpstan-ignore method.notFound
         self::assertFalse($this->subject->isDatePrefixedPattern($pattern));
     }
 
     #[Test] public function determineAbsoluteDirectoryPathReturnsVarLogForDefaultArgument(): void
     {
         self::markTestSkipped('static class Environment cannot be mocked');
+        // @phpstan-ignore deadCode.unreachable
         $expectedPath = '/var/log';
 
         // Mock Environment class
@@ -86,6 +89,7 @@ class DeleteLogsTest extends TestCase
 
         self::assertEquals(
             $absolutePath,
+            // @phpstan-ignore method.notFound
             $this->subject->getAbsoluteDirectoryPath($this->inputMock)
         );
     }
@@ -93,6 +97,7 @@ class DeleteLogsTest extends TestCase
     #[Test] public function determineAbsoluteDirectoryPathReturnsPublicPathForRelativePath(): void
     {
         self::markTestSkipped('static classes Environment and PathUtility cannot be mocked');
+        // @phpstan-ignore deadCode.unreachable
         $relativePath = 'relative/path';
         $expectedPath = '/public/relative/path';
 

@@ -27,7 +27,7 @@ interface OptionAwareInterface
      * Returns an array of items implementing InputOptionInterface
      * Those are used to describe command options.
      *
-     * @return array<InputOptionInterface>
+     * @return array<string>
      * @see ExampleCommand for usage
      * @see OptionAwareTrait for implementation
      */
