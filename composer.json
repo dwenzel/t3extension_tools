@@ -32,20 +32,49 @@
 		"mikey179/vfsstream": "^1.6",
 		"phpunit/phpunit": "^10.5 || ^11.2 || ^12.1",
 		"typo3/testing-framework": "^7.0 || ^8.0 || ^9.2",
-		"phpstan/phpstan": "^1.10"
+		"phpstan/phpstan": "^2.1",
+		"ergebnis/composer-normalize": "^2.45",
+		"armin/editorconfig-cli": "^2.0",
+		"typo3/coding-standards": "^0.8.0",
+		"ssch/typo3-rector": "^3.5"
 	},
 	"config": {
 		"vendor-dir": ".Build/vendor",
 		"bin-dir": ".Build/bin",
 		"allow-plugins": {
 			"typo3/class-alias-loader": true,
-			"typo3/cms-composer-installers": true
+			"typo3/cms-composer-installers": true,
+			"ergebnis/composer-normalize": true
 		}
 	},
 	"scripts": {
 		"post-autoload-dump": [
 			"mkdir -p .Build/log/coverage/"
 		],
+		"fix": [
+			"@fix:composer",
+			"@fix:editorconfig",
+			"@fix:php",
+			"@fix:rector"
+		],
+		"fix:composer": "@composer normalize",
+		"fix:editorconfig": "ec --fix",
+		"fix:php": "php-cs-fixer fix",
+		"fix:rector": "rector process",
+		"lint": [
+			"@lint:composer",
+			"@lint:editorconfig",
+			"@lint:php",
+			"@lint:rector"
+		],
+		"lint:composer": "@composer normalize --dry-run",
+		"lint:editorconfig": "ec",
+		"lint:php": "php-cs-fixer fix --dry-run",
+		"lint:rector": "rector process --dry-run",
+		"sca": [
+			"@sca:php"
+		],
+		"sca:php": "phpstan analyse --memory-limit=1G",
 		"test:unit": [
 			"@php .Build/bin/phpunit -c Tests/Build/UnitTests.xml"
 		],
@@ -55,11 +84,33 @@
 		"test:phpstan": [
 			"@php .Build/bin/phpstan analyse -c phpstan.neon"
 		],
+		"test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
+		"test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml",
 		"test": [
 			"@test:unit",
 			"@test:functional",
 			"@test:phpstan"
 		]
+	},
+	"scripts-descriptions": {
+		"fix": "Fix all code quality issues reported by the registered linters",
+		"fix:composer": "Fix all issues in `composer.json`",
+		"fix:editorconfig": "Fix all styling issues violating the `.editorconfig` rules",
+		"fix:php": "Fix all styling issues violating the configured PHP-CS-Fixer rules",
+		"fix:rector": "Apply automatic code migrations with TYPO3 Rector",
+		"lint": "Run all registered linters to detect code quality issues",
+		"lint:composer": "Lint `composer.json` to detect unnormalized styles",
+		"lint:editorconfig": "Lint all project files to detect violations of the `.editorconfig` rules",
+		"lint:php": "Lint all PHP files to detect coding style violations",
+		"lint:rector": "Perform code migration analysis with TYPO3 Rector",
+		"sca": "Run all registered static code analyzers to detect issues in the codebase",
+		"sca:php": "Analyze all PHP files by using PHPStan",
+		"test": "Run all configured test suites",
+		"test:unit": "Run unit tests for the extension",
+		"test:functional": "Run functional tests for the extension",
+		"test:phpstan": "Run PHPStan static analysis",
+		"test:coverage": "Run unit tests with HTML coverage report",
+		"test:coverage-clover": "Run unit tests with Clover coverage report"
 	},
 	"extra": {
 		"typo3/cms": {

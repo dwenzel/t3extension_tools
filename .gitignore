@@ -22,3 +22,6 @@ coverage.xml
 
 # Mac specific
 .DS_Store
+
+# claude
+.claude/settings.local.json
