@@ -1,0 +1,91 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master, develop, feature/** ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  unit-tests:
+    name: "Unit Tests with TYPO3 ${{ matrix.typo3-version }} and PHP ${{ matrix.php-version }}"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        typo3-version: ['^13.4']
+        php-version: ['8.3', '8.4']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP version ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, intl, zip, json, iconv, gd
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies with TYPO3 ${{ matrix.typo3-version }}
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3-version }} typo3/cms-backend:${{ matrix.typo3-version }} --no-progress --prefer-dist --optimize-autoloader
+          git checkout composer.json
+
+      - name: Run unit tests
+        run: |
+          php --version
+          composer install --no-progress
+          composer test:unit
+
+  coverage:
+    name: "Test Coverage with TYPO3 ^13.4 and PHP 8.3"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, intl, zip, json, iconv, gd
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run unit tests with coverage
+        run: |
+          XDEBUG_MODE=coverage composer test:unit --coverage-clover=coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

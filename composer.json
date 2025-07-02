@@ -76,7 +76,9 @@
     "test": [
       "@test:unit"
     ],
-    "test:unit": "phpunit -c Tests/Build/UnitTests.xml"
+    "test:unit": "phpunit -c Tests/Build/UnitTests.xml",
+    "test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
+    "test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml"
   },
   "scripts-descriptions": {
     "fix": "Fix all code quality issues reported by the registered linters",
@@ -94,7 +96,9 @@
     "sca": "Run all registered static code analyzers to detect issues in the codebase",
     "sca:php": "Analyze all PHP files by using PHPStan",
     "test": "Run all configured test suites",
-    "test:unit": "Run unit tests for the extension"
+    "test:unit": "Run unit tests for the extension",
+    "test:coverage": "Run unit tests with HTML coverage report",
+    "test:coverage-clover": "Run unit tests with Clover coverage report"
   },
   "extra": {
     "typo3/cms": {
