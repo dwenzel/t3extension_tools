@@ -26,5 +26,5 @@ interface InputArgumentInterface
 
     public static function mode(): ?int;
 
-    public static function defaultValue();
+    public static function defaultValue(): mixed;
 }

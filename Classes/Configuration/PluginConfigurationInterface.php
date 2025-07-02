@@ -44,7 +44,7 @@ interface PluginConfigurationInterface
      * ]
      * (omit the 'Action' part from the method name)
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getControllerActions(): array;
 
@@ -55,7 +55,7 @@ interface PluginConfigurationInterface
      * ]
      * Omit the 'Action' part form action methods
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getNonCacheableControllerActions(): array;
 
