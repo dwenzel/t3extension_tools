@@ -43,10 +43,11 @@ trait ExecuteSqlTrait
      * @param SymfonyStyle|null $io
      */
     public function __construct(
-        string $name = null,
+        string                  $name = null,
         ConnectionConfiguration $connectionConfiguration = null,
-        SymfonyStyle $io = null
-    ) {
+        SymfonyStyle            $io = null
+    )
+    {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
         );
@@ -78,15 +79,16 @@ trait ExecuteSqlTrait
         $dbConfig = $this->connectionConfiguration->build($connection);
 
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
-        if ($connection !== self::OPTION_CONNECTION_DEFAULT) {
-            /** @noinspection PhpParamsInspection */
-            $mysqlCommand = new MysqlCommand($dbConfig, [], $output);
-        }
+        /** @noinspection PhpParamsInspection */
+        $mysqlCommand = new MysqlCommand($dbConfig, $output);
+
+        $inputStream = fopen('php://temp', 'r+');
+        fwrite($inputStream, $this->sqlToExecute);
+        rewind($inputStream);
 
         $exitCode = $mysqlCommand->mysql(
             self::DEFAULT_MYSQL_ARGUMENTS,
-            $this->sqlToExecute,
-            null
+            $inputStream
         );
 
         if ($exitCode) {

@@ -11,6 +11,7 @@
 		}
 	],
 	"require": {
+		"helhum/typo3-console": "^8.2",
 		"php": ">=8.3",
 		"symfony/finder": "^5.4 || ^6.0 || ^7.1",
 		"typo3/cms-backend": "^12.4 || ^13.4",
