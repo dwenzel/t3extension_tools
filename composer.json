@@ -11,13 +11,13 @@
     }
   ],
   "require": {
+    "helhum/typo3-console": "^8.2",
     "typo3/cms-backend": "^13.4",
     "typo3/cms-core": "^13.4",
-    "typo3/cms-install": "^13.4",
-    "helhum/typo3-console": "^8.2"
+    "typo3/cms-install": "^13.4"
   },
   "require-dev": {
-    "a9f/typo3-fractor": "^0.4.2",
+    "a9f/typo3-fractor": "^0.5",
     "armin/editorconfig-cli": "^2.0",
     "ergebnis/composer-normalize": "^2.45",
     "phpstan/phpstan": "^2.1",
