@@ -4,17 +4,16 @@ namespace DWenzel\T3extensionTools\Tests\Unit\Configuration;
 
 use DWenzel\T3extensionTools\Configuration\ExtensionConfiguration;
 use DWenzel\T3extensionTools\Configuration\InvalidConfigurationException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 
 class InvalidIconProviderClass {}
+
 class ExtensionConfigurationTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function registerUpdateWizardsRegistersWizardsInGlobals(): void
+    #[Test] public function registerUpdateWizardsRegistersWizardsInGlobals(): void
     {
         // Save initial state
         $initialGlobals = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'] ?? [];
@@ -52,10 +51,7 @@ class ExtensionConfigurationTest extends TestCase
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'] = $initialGlobals;
     }
 
-    /**
-     * @test
-     */
-    public function registerIconsWithInvalidProviderThrowsException(): void
+    #[Test] public function registerIconsWithInvalidProviderThrowsException(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -70,10 +66,7 @@ class ExtensionConfigurationTest extends TestCase
         $testClass::testRegisterWithInvalidProvider();
     }
 
-    /**
-     * @test
-     */
-    public function registerIconsWithEmptyArrayDoesNotRegisterIcons(): void
+    #[Test] public function registerIconsWithEmptyArrayDoesNotRegisterIcons(): void
     {
         // Create a mock for IconRegistry
         $iconRegistryMock = $this->createMock(IconRegistry::class);

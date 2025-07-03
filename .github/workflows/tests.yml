@@ -1,0 +1,47 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, master, develop, 'feature/**' ]
+  pull_request:
+    branches: [ main, master, develop, 'feature/**' ]
+
+jobs:
+  unit-tests:
+    name: "Unit Tests TYPO3 ${{ matrix.typo3-version }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [8.3]
+        typo3-version: ['^12.4', '^13.4']
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, pdo_sqlite, curl
+          coverage: pcov
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: dependencies-php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: dependencies-php-${{ matrix.php-version }}-composer-
+
+      - name: Install dependencies
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3-version }} --no-progress
+      - name: Run tests
+        run: |
+          echo "Running unit tests for TYPO3 ${{ matrix.typo3-version }}"
+          composer test:unit
+          echo "Running functional tests for TYPO3 ${{ matrix.typo3-version }}"
+          composer test:functional

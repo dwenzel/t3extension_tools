@@ -7,10 +7,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Dirk Wenzel',
     'author_email' => 't3events@gmx.de',
     'state' => 'stable',
-    'version' => '4.0.1',
+    'version' => '4.1.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '12.4.0-13.4.99',
+            'typo3' => '12.4.0 - 13.4.99',
         ],
         'conflicts' => [],
         'suggests' => [],

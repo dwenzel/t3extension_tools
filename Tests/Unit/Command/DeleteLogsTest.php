@@ -4,12 +4,12 @@ namespace DWenzel\T3extensionTools\Tests\Unit\Command;
 
 use DWenzel\T3extensionTools\Command\Argument\DirectoryArgument;
 use DWenzel\T3extensionTools\Command\DeleteLogs;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Utility\PathUtility;
 
 class DeleteLogsTest extends TestCase
 {
@@ -40,32 +40,26 @@ class DeleteLogsTest extends TestCase
         $this->outputMock = $this->createMock(OutputInterface::class);
     }
 
-    /**
-     * @test
-     */
-    public function hasDatePrefixReturnsTrueForDatePrefixedPattern(): void
+    #[Test] public function hasDatePrefixReturnsTrueForDatePrefixedPattern(): void
     {
         $pattern = '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_test.log/';
 
+        // @phpstan-ignore method.notFound
         self::assertTrue($this->subject->isDatePrefixedPattern($pattern));
     }
 
-    /**
-     * @test
-     */
-    public function hasDatePrefixReturnsFalseForNonDatePrefixedPattern(): void
+    #[Test] public function hasDatePrefixReturnsFalseForNonDatePrefixedPattern(): void
     {
         $pattern = '/test_[0-9]{4}-[0-9]{2}-[0-9]{2}.log/';
 
+        // @phpstan-ignore method.notFound
         self::assertFalse($this->subject->isDatePrefixedPattern($pattern));
     }
 
-    /**
-     * @test
-     */
-    public function determineAbsoluteDirectoryPathReturnsVarLogForDefaultArgument(): void
+    #[Test] public function determineAbsoluteDirectoryPathReturnsVarLogForDefaultArgument(): void
     {
         self::markTestSkipped('static class Environment cannot be mocked');
+        // @phpstan-ignore deadCode.unreachable
         $expectedPath = '/var/log';
 
         // Mock Environment class
@@ -84,12 +78,8 @@ class DeleteLogsTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function determineAbsoluteDirectoryPathReturnsAbsolutePathIfProvided(): void
+    #[Test] public function determineAbsoluteDirectoryPathReturnsAbsolutePathIfProvided(): void
     {
-        self::markTestSkipped('static class Environment cannot be mocked');
         $absolutePath = '/absolute/path/to/logs';
 
         $this->inputMock->expects(self::once())
@@ -99,16 +89,15 @@ class DeleteLogsTest extends TestCase
 
         self::assertEquals(
             $absolutePath,
+            // @phpstan-ignore method.notFound
             $this->subject->getAbsoluteDirectoryPath($this->inputMock)
         );
     }
 
-    /**
-     * @test
-     */
-    public function determineAbsoluteDirectoryPathReturnsPublicPathForRelativePath(): void
+    #[Test] public function determineAbsoluteDirectoryPathReturnsPublicPathForRelativePath(): void
     {
         self::markTestSkipped('static classes Environment and PathUtility cannot be mocked');
+        // @phpstan-ignore deadCode.unreachable
         $relativePath = 'relative/path';
         $expectedPath = '/public/relative/path';
 

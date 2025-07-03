@@ -1,7 +1,7 @@
 Interfaces
 ==========
 
-## Commands 
+## Commands
 namespace `DWenzel\T3extensionTools\Command\`
 
 | interface                                                            | implementation                         | example  |
