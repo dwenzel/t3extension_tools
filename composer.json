@@ -13,7 +13,8 @@
   "require": {
     "typo3/cms-backend": "^13.4",
     "typo3/cms-core": "^13.4",
-    "typo3/cms-install": "^13.4"
+    "typo3/cms-install": "^13.4",
+    "helhum/typo3-console": "^8.2"
   },
   "require-dev": {
     "a9f/typo3-fractor": "^0.4.2",
