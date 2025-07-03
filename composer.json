@@ -4,107 +4,107 @@
   "license": "GPL-2.0-or-later",
   "type": "typo3-cms-extension",
   "authors": [
-	{
-	  "name": "Dirk Wenzel",
-	  "email": "t3events@gmx.de",
-	  "role": "Developer"
-	}
+    {
+      "name": "Dirk Wenzel",
+      "email": "t3events@gmx.de",
+      "role": "Developer"
+    }
   ],
   "require": {
-	"typo3/cms-backend": "^13.4",
-	"typo3/cms-core": "^13.4",
-	"typo3/cms-install": "^13.4"
+    "typo3/cms-backend": "^13.4",
+    "typo3/cms-core": "^13.4",
+    "typo3/cms-install": "^13.4"
   },
   "require-dev": {
-	"a9f/typo3-fractor": "^0.4.2",
-	"armin/editorconfig-cli": "^2.0",
-	"ergebnis/composer-normalize": "^2.45",
-	"phpstan/phpstan": "^2.1",
-	"phpunit/phpunit": "^11.0",
-	"roave/security-advisories": "dev-latest",
-	"ssch/typo3-rector": "^3.5",
-	"typo3/coding-standards": "^0.8.0",
-	"typo3/testing-framework": "^7.1 || ^8.2 || ^9.2"
+    "a9f/typo3-fractor": "^0.4.2",
+    "armin/editorconfig-cli": "^2.0",
+    "ergebnis/composer-normalize": "^2.45",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.0",
+    "roave/security-advisories": "dev-latest",
+    "ssch/typo3-rector": "^3.5",
+    "typo3/coding-standards": "^0.8.0",
+    "typo3/testing-framework": "^7.1 || ^8.2 || ^9.2"
   },
   "autoload": {
-	"psr-4": {
-	  "DWenzel\\T3extensionTools\\": "Classes/"
-	}
+    "psr-4": {
+      "DWenzel\\T3extensionTools\\": "Classes/"
+    }
   },
   "config": {
-	"allow-plugins": {
-	  "a9f/fractor-extension-installer": true,
-	  "ergebnis/composer-normalize": true,
-	  "typo3/class-alias-loader": true,
-	  "typo3/cms-composer-installers": true
-	},
-	"bin-dir": ".Build/bin",
-	"vendor-dir": ".Build/vendor"
+    "allow-plugins": {
+      "a9f/fractor-extension-installer": true,
+      "ergebnis/composer-normalize": true,
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    },
+    "bin-dir": ".Build/bin",
+    "vendor-dir": ".Build/vendor"
   },
   "extra": {
-	"typo3/cms": {
-	  "cms-package-dir": "{$vendor-dir}/typo3/cms",
-	  "extension-key": "t3extension_tools",
-	  "web-dir": ".Build/Web"
-	}
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "extension-key": "t3extension_tools",
+      "web-dir": ".Build/Web"
+    }
   },
   "scripts": {
-	"post-autoload-dump": [
-	  "mkdir -p .Build/log/coverage/"
-	],
-	"fix": [
-	  "@fix:composer",
-	  "@fix:editorconfig",
-	  "@fix:php",
-	  "@fix:rector",
-	  "@fix:fractor"
-	],
-	"fix:composer": "@composer normalize",
-	"fix:editorconfig": "ec --fix",
-	"fix:fractor": "fractor process",
-	"fix:php": "php-cs-fixer fix",
-	"fix:rector": "rector process",
-	"lint": [
-	  "@lint:composer",
-	  "@lint:editorconfig",
-	  "@lint:php",
-	  "@lint:rector",
-	  "@lint:fractor"
-	],
-	"lint:composer": "@composer normalize --dry-run",
-	"lint:editorconfig": "ec",
-	"lint:fractor": "fractor process --dry-run",
-	"lint:php": "php-cs-fixer fix --dry-run",
-	"lint:rector": "rector process --dry-run",
-	"sca": [
-	  "@sca:php"
-	],
-	"sca:php": "phpstan analyse --memory-limit=1G",
-	"test": [
-	  "@test:unit"
-	],
-	"test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
-	"test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml",
-	"test:unit": "phpunit -c Tests/Build/UnitTests.xml"
+    "post-autoload-dump": [
+      "mkdir -p .Build/log/coverage/"
+    ],
+    "fix": [
+      "@fix:composer",
+      "@fix:editorconfig",
+      "@fix:php",
+      "@fix:rector",
+      "@fix:fractor"
+    ],
+    "fix:composer": "@composer normalize",
+    "fix:editorconfig": "ec --fix",
+    "fix:fractor": "fractor process",
+    "fix:php": "php-cs-fixer fix",
+    "fix:rector": "rector process",
+    "lint": [
+      "@lint:composer",
+      "@lint:editorconfig",
+      "@lint:php",
+      "@lint:rector",
+      "@lint:fractor"
+    ],
+    "lint:composer": "@composer normalize --dry-run",
+    "lint:editorconfig": "ec",
+    "lint:fractor": "fractor process --dry-run",
+    "lint:php": "php-cs-fixer fix --dry-run",
+    "lint:rector": "rector process --dry-run",
+    "sca": [
+      "@sca:php"
+    ],
+    "sca:php": "phpstan analyse --memory-limit=1G",
+    "test": [
+      "@test:unit"
+    ],
+    "test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
+    "test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml",
+    "test:unit": "phpunit -c Tests/Build/UnitTests.xml"
   },
   "scripts-descriptions": {
-	"fix": "Fix all code quality issues reported by the registered linters",
-	"fix:composer": "Fix all issues in `composer.json`",
-	"fix:editorconfig": "Fix all styling issues violating the `.editorconfig` rules",
-	"fix:fractor": "Apply automatic TypoScript code migrations with TYPO3 Fractor",
-	"fix:php": "Fix all styling issues violating the configured PHP-CS-Fixer rules",
-	"fix:rector": "Apply automatic code migrations with TYPO3 Rector",
-	"lint": "Run all registered linters to detect code quality issues",
-	"lint:composer": "Lint `composer.json` to detect unnormalized styles",
-	"lint:editorconfig": "Lint all project files to detect violations of the `.editorconfig` rules",
-	"lint:fractor": "Perform TypoScript code migration analysis with TYPO3 Fractor",
-	"lint:php": "Lint all PHP files to detect coding style violations",
-	"lint:rector": "Perform code migration analysis with TYPO3 Rector",
-	"sca": "Run all registered static code analyzers to detect issues in the codebase",
-	"sca:php": "Analyze all PHP files by using PHPStan",
-	"test": "Run all configured test suites",
-	"test:coverage": "Run unit tests with HTML coverage report",
-	"test:coverage-clover": "Run unit tests with Clover coverage report",
-	"test:unit": "Run unit tests for the extension"
+    "fix": "Fix all code quality issues reported by the registered linters",
+    "fix:composer": "Fix all issues in `composer.json`",
+    "fix:editorconfig": "Fix all styling issues violating the `.editorconfig` rules",
+    "fix:fractor": "Apply automatic TypoScript code migrations with TYPO3 Fractor",
+    "fix:php": "Fix all styling issues violating the configured PHP-CS-Fixer rules",
+    "fix:rector": "Apply automatic code migrations with TYPO3 Rector",
+    "lint": "Run all registered linters to detect code quality issues",
+    "lint:composer": "Lint `composer.json` to detect unnormalized styles",
+    "lint:editorconfig": "Lint all project files to detect violations of the `.editorconfig` rules",
+    "lint:fractor": "Perform TypoScript code migration analysis with TYPO3 Fractor",
+    "lint:php": "Lint all PHP files to detect coding style violations",
+    "lint:rector": "Perform code migration analysis with TYPO3 Rector",
+    "sca": "Run all registered static code analyzers to detect issues in the codebase",
+    "sca:php": "Analyze all PHP files by using PHPStan",
+    "test": "Run all configured test suites",
+    "test:coverage": "Run unit tests with HTML coverage report",
+    "test:coverage-clover": "Run unit tests with Clover coverage report",
+    "test:unit": "Run unit tests for the extension"
   }
 }
