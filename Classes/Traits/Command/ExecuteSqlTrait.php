@@ -40,8 +40,6 @@ trait ExecuteSqlTrait
     /**
      * SyncInstitutionPlaceFlatCommand constructor.
      * @param string|null $name
-     * @param ConnectionConfiguration|null $connectionConfiguration
-     * @param SymfonyStyle|null $io
      */
     public function __construct(
         string $name = null
@@ -49,7 +47,7 @@ trait ExecuteSqlTrait
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
         );
-        $this->connectionConfiguration = $connectionConfiguration ?? GeneralUtility::makeInstance(
+        $this->connectionConfiguration = GeneralUtility::makeInstance(
             ConnectionConfiguration::class
         );
         parent::__construct($name);
