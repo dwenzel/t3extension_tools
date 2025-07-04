@@ -30,7 +30,7 @@ trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
-    protected ConnectionConfiguration $connectionConfiguration;
+    protected ?ConnectionConfiguration $connectionConfiguration =  null;
 
     /**
      * @var string
@@ -44,9 +44,7 @@ trait ExecuteSqlTrait
      * @param SymfonyStyle|null $io
      */
     public function __construct(
-        string $name = null,
-        ConnectionConfiguration $connectionConfiguration = null,
-        SymfonyStyle $io = null
+        string $name = null
     ) {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
@@ -54,7 +52,6 @@ trait ExecuteSqlTrait
         $this->connectionConfiguration = $connectionConfiguration ?? GeneralUtility::makeInstance(
             ConnectionConfiguration::class
         );
-        $this->io = $io;
         parent::__construct($name);
     }
 
