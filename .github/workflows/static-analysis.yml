@@ -22,7 +22,7 @@ jobs:
           coverage: none
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.composer/cache
           key: dependencies-php-8.2-composer-${{ hashFiles('composer.json') }}
