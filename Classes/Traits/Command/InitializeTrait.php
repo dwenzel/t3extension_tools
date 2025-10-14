@@ -24,16 +24,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  ***************************************************************/
 trait InitializeTrait
 {
-    /**
-     * @var SymfonyStyle
-     * @noinspection PhpMissingFieldTypeInspection
-     */
-    protected $io;
+    protected SymfonyStyle $io;
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        if (!$this->io instanceof SymfonyStyle) {
-            $this->io = new SymfonyStyle($input, $output);
-        }
+        $this->io = new SymfonyStyle($input, $output);
     }
 }

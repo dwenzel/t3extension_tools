@@ -46,8 +46,8 @@ class PluginRegistrationService
                 );
 
                 if (!empty($flexForm = $plugin->getFlexForm())) {
-                    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-                    ExtensionManagementUtility::addPiFlexFormValue($pluginSignature, $flexForm);
+                    ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;Configuration,pi_flexform,', $pluginSignature, 'after:subheader');
+                    ExtensionManagementUtility::addPiFlexFormValue('*', $flexForm, $pluginSignature);
                 }
             },
             PluginRegistrationInterface::class

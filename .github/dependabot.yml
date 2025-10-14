@@ -1,0 +1,46 @@
+version: 2
+updates:
+  # Enable version updates for Composer
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "dwenzel"
+    assignees:
+      - "dwenzel"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "composer"
+    ignore:
+      # Ignore major version updates for core TYPO3 packages
+      - dependency-name: "typo3/*"
+        update-types: ["version-update:semver-major"]
+      # Ignore patch updates for development tools (to reduce noise)
+      - dependency-name: "roave/security-advisories"
+        update-types: ["version-update:semver-patch"]
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "dwenzel"
+    assignees:
+      - "dwenzel"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
