@@ -1,0 +1,59 @@
+# Example plugin configuration for TYPO3 extensions
+# This YAML file format allows configuring and registering plugins without PHP classes
+
+# Basic plugin configuration (required)
+plugin:
+  # Extension key (required)
+  extensionName: 'MyExtension'
+
+  # Plugin name (required) - used as identifier
+  name: 'EventList'
+
+  # Plugin type (optional, defaults to content element)
+  # Possible values:
+  # - 'CType' (TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT)
+  # - 'list_type' (TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_PLUGIN)
+  type: 'list_type'
+
+  # Controller actions (required)
+  # Format: ControllerName without 'Controller' suffix => comma-separated list of actions without 'Action' suffix
+  controllerActions:
+    Event: 'list,show,search'
+    Category: 'list'
+
+  # Non-cacheable controller actions (optional)
+  # Format: same as controllerActions
+  nonCacheableControllerActions:
+    Event: 'search'
+
+# Plugin registration (optional, only needed if the plugin should appear in the backend)
+registration:
+  # Plugin title shown in the backend (required for registration)
+  title: 'LLL:EXT:my_extension/Resources/Private/Language/locallang.xlf:plugin.event_list.title'
+
+  # Plugin description shown in the backend (optional)
+  description: 'LLL:EXT:my_extension/Resources/Private/Language/locallang.xlf:plugin.event_list.description'
+
+  # Plugin icon, referring to an icon identifier (required for registration)
+  icon: 'ext-myextension-event-list'
+
+  # Plugin group in the New Content Element Wizard (optional)
+  # If omitted, the plugin will appear in the "plugins" tab
+  group: 'MyExtension'
+
+  # Path to a FlexForm configuration file (optional)
+  # If provided, this FlexForm will be used for the plugin configuration
+  flexForm: 'FILE:EXT:my_extension/Configuration/FlexForms/EventList.xml'
+
+# Additional configuration (optional)
+advanced:
+  # Custom wizard items (optional)
+  # Allows defining custom wizard items for the plugin
+  wizardItems:
+    - id: 'myextension-event-list'
+      title: 'LLL:EXT:my_extension/Resources/Private/Language/locallang.xlf:wizard.event_list.title'
+      description: 'LLL:EXT:my_extension/Resources/Private/Language/locallang.xlf:wizard.event_list.description'
+      iconIdentifier: 'ext-myextension-event-list'
+      tt_content_defValues:
+        CType: 'list_type'
+        list_type: 'myextension_eventlist'
