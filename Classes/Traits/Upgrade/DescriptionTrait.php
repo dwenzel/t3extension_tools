@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Traits\Upgrade;
 
 /***************************************************************
@@ -18,8 +20,20 @@ namespace DWenzel\T3extensionTools\Traits\Upgrade;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+/**
+ * Trait DescriptionTrait
+ *
+ * Provides getDescription() method implementation for UpgradeWizardInterface.
+ * Requires DESCRIPTION constant to be defined in the using class.
+ */
 trait DescriptionTrait
 {
+    /**
+     * Return the description for this wizard
+     *
+     * @return string The wizard description from DESCRIPTION constant
+     */
     public function getDescription(): string
     {
         return static::DESCRIPTION;

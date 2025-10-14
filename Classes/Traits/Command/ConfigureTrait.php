@@ -6,7 +6,6 @@ use DWenzel\T3extensionTools\Command\Argument\InputArgumentInterface;
 use DWenzel\T3extensionTools\Command\ArgumentAwareInterface;
 use DWenzel\T3extensionTools\Command\Option\InputOptionInterface;
 use DWenzel\T3extensionTools\Command\OptionAwareInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 /***************************************************************
  *  Copyright notice
@@ -48,6 +47,7 @@ trait ConfigureTrait
             }
         }
         if ($this instanceof OptionAwareInterface) {
+            // @extensionScannerIgnoreLine
             foreach ($this->getOptions() as $option) {
                 if (!in_array(InputOptionInterface::class, class_implements($option), true)) {
                     continue;
@@ -67,16 +67,4 @@ trait ConfigureTrait
 
     abstract public function setHelp(string $help);
 
-    /**
-     * Adds an option.
-     *
-     * @param string $name The option name
-     * @param string|array|null $shortcut The shortcuts, can be null, a string of shortcuts delimited by | or an array of shortcuts
-     * @param int|null $mode The option mode: One of the InputOption::VALUE_* constants
-     * @param string $description A description text
-     * @param mixed $default The default value (must be null for InputOption::VALUE_NONE)
-     *
-     * @return $this
-     */
-    //abstract public function addOption($name, $shortcut = null, $mode = null, $description = '', $default = null);
 }

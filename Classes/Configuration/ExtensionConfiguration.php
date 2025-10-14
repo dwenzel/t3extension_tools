@@ -28,31 +28,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ExtensionConfiguration
 {
     public const EXTENSION_KEY = 't3extension_tools';
-    /**
-     * @deprecated  use UPDATE_WIZARDS_TO_REGISTER instead
-     */
-    public const UPDATE_WIZARDS = [];
-
-    /**
-     * Array of Update wizard to register during extension configuration.
-     * [
-     *   <Identifier> => <Fully Qualified Class Name>
-     * ]
-     */
-    public const UPDATE_WIZARDS_TO_REGISTER = [];
-    /**
-     * [
-     *  <tableName>,
-     *  <otherTable>
-     * ]
-     */
-    public const TABLES_ALLOWED_ON_STANDARD_PAGES = [];
-    /**
-     * [
-     *  <tableName:<pathToLocalizedHelpFile>
-     * ]
-     */
-    public const LOCALIZED_TABLE_DESCRIPTION = [];
 
     /**
      * Bitmap icons to register with IconRegistry
@@ -71,15 +46,6 @@ class ExtensionConfiguration
     protected const SVG_ICONS_TO_REGISTER = [];
 
     /**
-     * Array of strings to add as TSconfig content.
-     * [
-     *  <Page TsConfig string to add>
-     * ]
-     * @var string[]
-     */
-    protected const ADD_PAGE_TSCONFIG = [];
-
-    /**
      * TsConfig files to register with registerPageTSConfigFile IconRegistry
      * [
      *  <pathToTsConfigFile> => <label>
@@ -87,22 +53,6 @@ class ExtensionConfiguration
      * @var string[]
      */
     protected const REGISTER_PAGE_TSCONFIG_FILES = [];
-
-    /**
-     * Register update wizards
-     */
-    public static function registerUpdateWizards(): void
-    {
-        foreach (static::UPDATE_WIZARDS as $class) {
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][$class]
-                = $class;
-        }
-
-        foreach (static::UPDATE_WIZARDS_TO_REGISTER as $identifier => $class) {
-            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][$identifier]
-                = $class;
-        }
-    }
 
     /**
      * Register icons
@@ -147,45 +97,6 @@ class ExtensionConfiguration
                 $iconProviderClass,
                 ['source' => $path]
             );
-        }
-    }
-
-    /**
-     * @deprecated allowTablesOnStandardPages will be removed in TYPO3 v13.0. Use $GLOBALS['TCA'][$table]['ctrl']['security']['ignorePageTypeRestriction'] instead.
-     * @deprecated addLocalizedTableDescriptionThe functionality has been removed in v12. The method will be removed in TYPO3 v13.
-     */
-    public static function configureTables(): void
-    {
-        self::allowTablesOnStandardPages();
-        self::addLocalizedTableDescription();
-    }
-
-    /**
-     * @deprecated will be removed in TYPO3 v13.0. Use $GLOBALS['TCA'][$table]['ctrl']['security']['ignorePageTypeRestriction'] instead.
-     */
-    protected static function allowTablesOnStandardPages(): void
-    {
-        foreach (static::TABLES_ALLOWED_ON_STANDARD_PAGES as $table) {
-            ExtensionManagementUtility::allowTableOnStandardPages($table);
-        }
-    }
-
-    /**
-     * @deprecated functionality has been removed in v12. The method will be removed in TYPO3 v13.
-     */
-    protected static function addLocalizedTableDescription(): void
-    {
-        foreach (static::LOCALIZED_TABLE_DESCRIPTION as $table => $file) {
-        }
-    }
-
-    /**
-     * Add page TSconfig content
-     */
-    public static function addPageTSconfig(): void
-    {
-        foreach (static::ADD_PAGE_TSCONFIG as $TsConfig) {
-            ExtensionManagementUtility::addPageTSConfig($TsConfig);
         }
     }
 
