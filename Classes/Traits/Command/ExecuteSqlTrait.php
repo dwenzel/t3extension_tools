@@ -42,7 +42,7 @@ trait ExecuteSqlTrait
      * @param string|null $name
      */
     public function __construct(
-        string $name = null
+        ?string $name = null
     ) {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
