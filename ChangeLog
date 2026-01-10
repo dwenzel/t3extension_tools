@@ -1,3 +1,7 @@
+2026-01-10         [RELEASE] Release of t3extension_tools 5.0.1 (Vladimir Falcón Piva)
+2026-01-08 4ae0343 [TASK] Remove unused import (Florian Grell)
+2026-01-08 f57f07c [TASK] Fix deprecation warning "Implicitly marking parameter $name as nullable is deprecated" (Florian Grell)
+
 2025-10-14         [RELEASE] Release of t3extension-tools 5.0.0 (Vladimir Falcón Piva)
 2025-10-14 ff9f303 Removed obsolete tests for deprecated methods removed (Vladimir Falcón Piva)
 2025-07-04 b7c9a0d Fix phpstan error (Vladimir Falcón Piva)

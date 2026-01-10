@@ -7,7 +7,6 @@ use Helhum\Typo3Console\Database\Process\MysqlCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
@@ -42,7 +41,7 @@ trait ExecuteSqlTrait
      * @param string|null $name
      */
     public function __construct(
-        string $name = null
+        ?string $name = null
     ) {
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
