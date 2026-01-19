@@ -15,7 +15,7 @@ return FractorConfiguration::configure()
         __DIR__ . '/Resources/',
     ])
     ->withSets([
-        Typo3LevelSetList::UP_TO_TYPO3_13
+        Typo3LevelSetList::UP_TO_TYPO3_13,
     ])
     ->withOptions([
         TypoScriptProcessorOption::INDENT_SIZE => 2,
