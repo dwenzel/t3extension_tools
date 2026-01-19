@@ -1,3 +1,6 @@
+2026-01-19         [RELEASE] Release of t3extension-tools 5.0.2 (Dirk Wenzel)
+2026-01-19 e2c373c php coding style fixes applied (Dirk Wenzel)
+
 2026-01-10         [RELEASE] Release of t3extension_tools 5.0.1 (Vladimir Falcón Piva)
 2026-01-08 4ae0343 [TASK] Remove unused import (Florian Grell)
 2026-01-08 f57f07c [TASK] Fix deprecation warning "Implicitly marking parameter $name as nullable is deprecated" (Florian Grell)
