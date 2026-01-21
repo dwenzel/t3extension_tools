@@ -21,7 +21,7 @@
     "armin/editorconfig-cli": "^2.0",
     "ergebnis/composer-normalize": "^2.45",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^11.0",
+    "phpunit/phpunit": "^12.5",
     "roave/security-advisories": "dev-latest",
     "ssch/typo3-rector": "^3.5",
     "typo3/coding-standards": "^0.8.0",
