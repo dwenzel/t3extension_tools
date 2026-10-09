@@ -31,3 +31,5 @@ coverage.xml
 /auth.json
 /.env
 /.envrc
+/.specify/
+/.claude/
