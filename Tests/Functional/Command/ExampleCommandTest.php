@@ -32,7 +32,6 @@ class ExampleCommandTest extends FunctionalTestCase
 {
     private const EXIT_MISSING_CONNECTION = 1_641_390_076;
     private const EXIT_SQL_FAILED = 1_641_390_086;
-    private const EXIT_INVALID_OUTPUT = 1_641_390_077;
     private const TABLE = 'tx_t3extensiontools_baseline';
 
     protected array $testExtensionsToLoad = ['t3extension_tools'];
@@ -106,20 +105,15 @@ class ExampleCommandTest extends FunctionalTestCase
         self::assertSame(self::EXIT_SQL_FAILED, $exitCode);
     }
 
-    /**
-     * Console 8 only: output must be a ConsoleOutput. Console 9 accepts any
-     * OutputInterface, so with 6.0 this test is replaced by one asserting
-     * successful execution with a StreamOutput.
-     */
     #[Test]
-    public function nonConsoleOutputIsRejectedWithConsole8(): void
+    public function exampleSqlFileIsExecutedWithNonConsoleOutput(): void
     {
         $exitCode = (new ExampleCommand())->run(
             new ArrayInput([]),
             new StreamOutput(fopen('php://memory', 'w+'))
         );
 
-        self::assertSame(self::EXIT_INVALID_OUTPUT, $exitCode);
+        self::assertSame(0, $exitCode);
     }
 
     private function createConsoleOutput(): ConsoleOutput
