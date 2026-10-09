@@ -37,6 +37,12 @@
       "typo3/class-alias-loader": true,
       "typo3/cms-composer-installers": true
     },
+    "audit": {
+      "ignore-abandoned": {
+        "doctrine/annotations": "Required by TYPO3 core",
+        "symplify/rule-doc-generator-contracts": "Required by fractor"
+      }
+    },
     "bin-dir": ".Build/bin",
     "vendor-dir": ".Build/vendor"
   },
