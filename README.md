@@ -157,6 +157,7 @@ composer sca:php
 ## Documentation
 
 * [Interfaces and Traits](docs/Interfaces.md) - Complete interface documentation
+* [Upgrade from 5.x to 6.x](docs/UpgradeTo6.md) - typo3-console 9 only
 * [CLAUDE.md](CLAUDE.md) - AI assistant development guide
 
 ## Contributing
