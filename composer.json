@@ -17,14 +17,12 @@
     "typo3/cms-install": "^13.4"
   },
   "require-dev": {
-    "a9f/typo3-fractor": "^0.5",
+    "a9f/typo3-fractor": "^1.0",
     "armin/editorconfig-cli": "^2.0",
     "ergebnis/composer-normalize": "^2.45",
-    "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^11.0",
     "roave/security-advisories": "dev-latest",
     "ssch/typo3-rector": "^3.5",
-    "typo3/coding-standards": "^0.8.0",
+    "typo3/coding-standards": "^0.9.0",
     "typo3/testing-framework": "^7.1 || ^8.2 || ^9.2"
   },
   "autoload": {
