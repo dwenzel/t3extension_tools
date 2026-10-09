@@ -119,9 +119,19 @@ The extension includes comprehensive code quality tools:
 
 ### Testing
 
+Tests run in DDEV (see [Running the Tests](docs/Development.md#running-the-tests)):
+
 ```bash
-# Run all tests
-composer test
+ddev start
+ddev composer install
+ddev composer test
+```
+
+Without DDEV only the unit tests run (the functional tests need a database):
+
+```bash
+# Run unit tests
+composer test:unit
 
 # Run specific test
 phpunit -c Tests/Build/UnitTests.xml --filter TestName

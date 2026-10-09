@@ -50,8 +50,8 @@ final class ExampleUpgradeWizard implements UpgradeWizardInterface
     /**
      * The wizard description explaining what it does
      */
-    public const DESCRIPTION = 'This is an example upgrade wizard demonstrating the usage of upgrade wizard traits. ' .
-        'It shows how to implement a TYPO3 upgrade wizard using the reusable components from t3extension-tools.';
+    public const DESCRIPTION = 'This is an example upgrade wizard demonstrating the usage of upgrade wizard traits. '
+        . 'It shows how to implement a TYPO3 upgrade wizard using the reusable components from t3extension-tools.';
 
     /**
      * Prerequisites that must be fulfilled before this wizard can run

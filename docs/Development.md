@@ -7,6 +7,7 @@ This guide provides comprehensive information for developers working with or ext
 - [Development Setup](#development-setup)
 - [Code Quality Workflow](#code-quality-workflow)
 - [Testing Strategy](#testing-strategy)
+- [Running the Tests](#running-the-tests)
 - [Architecture Patterns](#architecture-patterns)
 - [Extension Integration](#extension-integration)
 - [Contributing Guidelines](#contributing-guidelines)
@@ -145,7 +146,7 @@ class ExampleCommandTest extends TestCase
 composer test
 
 # Run specific test class
-.Build/bin/phpunit -c Tests/Build/UnitTests.xml --filter ExampleCommandTest
+.Build/bin/phpunit -c Tests/Build/UnitTests.xml --filter DeleteLogsTest
 
 # Run with coverage
 XDEBUG_MODE=coverage .Build/bin/phpunit -c Tests/Build/UnitTests.xml --coverage-html coverage/
@@ -156,6 +157,69 @@ XDEBUG_MODE=coverage .Build/bin/phpunit -c Tests/Build/UnitTests.xml --coverage-
 - **Minimum Coverage**: 80%
 - **Critical Components**: 95%
 - **Interfaces**: 100% (through implementation tests)
+
+## Running the Tests
+
+Unit and functional tests run in a [DDEV](https://ddev.readthedocs.io/) environment that targets TYPO3 13.4 and PHP 8.4. The functional tests create and drop their own databases on the DDEV `db` service, so no manual database setup is needed.
+
+### Prerequisites
+
+- DDEV and Docker (DDEV is the only requirement on the host, PHP and Composer run inside the container)
+
+### Setup
+
+```bash
+ddev start
+ddev composer install
+```
+
+### Run the tests
+
+```bash
+# Unit tests
+ddev composer test:unit
+
+# Functional tests
+ddev composer test:functional
+
+# Both suites
+ddev composer test
+```
+
+Run a single test class or method with the matching PHPUnit configuration:
+
+```bash
+ddev exec .Build/bin/phpunit -c Tests/Build/UnitTests.xml --filter DeleteLogsTest
+ddev exec .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml --filter ExtensionLoadedTest
+```
+
+`composer test:phpstan` is an alias of `composer sca:php`.
+
+### Coverage
+
+Coverage uses PCOV, which is installed in the DDEV web container. Each command prints a text summary and writes an HTML report to `.Build/log/coverage/html/`:
+
+```bash
+ddev composer test:coverage:unit
+ddev composer test:coverage:functional
+```
+
+### Cleanup
+
+The testing framework does not remove the databases and instance folders it creates. Remove them when they pile up:
+
+```bash
+ddev mysql -uroot -proot -N -e "SHOW DATABASES LIKE 'func\_test\_ft%';" \
+  | xargs -I{} ddev mysql -uroot -proot -e "DROP DATABASE \`{}\`;"
+rm -rf .Build/Web/typo3temp/var/tests
+```
+
+### Troubleshooting
+
+- **`Access denied for user 'db'@'%'`**: the functional tests must connect as `root`. The credentials come from `web_environment` in `.ddev/config.yaml`; do not override them with the default `db` user.
+- **`No code coverage driver available`**: run the coverage through the `test:coverage:*` scripts inside DDEV, where PCOV is available. Outside DDEV install PCOV or Xdebug and set `XDEBUG_MODE=coverage`.
+- **No tests executed**: the test scripts fail on an empty suite. Check the `<directory>` paths in `Tests/Build/UnitTests.xml` and `Tests/Build/FunctionalTests.xml`.
+- **`Unable to determine path to entry script`**: the web root `.Build/Web` is missing or empty. Run `ddev composer install` to recreate it, then run the tests again. DDEV creates an empty `.Build/Web` itself, so `ddev start` works before the first install.
 
 ## Architecture Patterns
 

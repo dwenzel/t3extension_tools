@@ -74,7 +74,7 @@ class ExtensionConfiguration
 
     /**
      * Registers icons with a provider class
-     * @param array $icons
+     * @param array<string, string> $icons
      * @param string $iconProviderClass
      * @throws InvalidConfigurationException
      */
@@ -85,8 +85,8 @@ class ExtensionConfiguration
         }
         if (!in_array(IconProviderInterface::class, class_implements($iconProviderClass), true)) {
             throw new InvalidConfigurationException(
-                "Invalid IconProvider '$iconProviderClass'. Provider class must implement " .
-                IconProviderInterface::class,
+                "Invalid IconProvider '$iconProviderClass'. Provider class must implement "
+                . IconProviderInterface::class,
                 1_565_689_093
             );
         }

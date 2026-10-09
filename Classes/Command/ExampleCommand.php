@@ -50,11 +50,6 @@ class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAw
     public const string MESSAGE_STARTING = 'Start doing nothing...';
     public const array DEFAULT_MYSQL_ARGUMENTS = ['--skip-column-names'];
 
-    /**
-     * @var string
-     */
-    protected static string $defaultName = self::DEFAULT_NAME;
-
     protected const array OPTIONS = [
         ExampleOption::class,
         ConnectionOption::class,
@@ -63,6 +58,11 @@ class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAw
     protected const array ARGUMENTS = [
         ExampleArgument::class,
     ];
+
+    /**
+     * @var string
+     */
+    protected static string $defaultName = self::DEFAULT_NAME;
 
     /**
      * @var array|string[]

@@ -81,8 +81,7 @@ readonly class YamlPluginRegistrationService implements SingletonInterface
                 if (!empty($config->getFlexForm())) {
                     $listType = strtolower($config->getExtensionName() . '_' . GeneralUtility::camelCaseToLowerCaseUnderscored($config->getPluginName()));
 
-                    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
-                    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key,pages,recursive';
+                    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;Configuration,pi_flexform,', $listType, 'after:subheader');
 
                     if (substr($config->getFlexForm(), 0, 5) === 'FILE:') {
                         $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds'][$listType] = $config->getFlexForm();

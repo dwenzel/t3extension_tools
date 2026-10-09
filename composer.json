@@ -23,7 +23,7 @@
     "roave/security-advisories": "dev-latest",
     "ssch/typo3-rector": "^3.5",
     "typo3/coding-standards": "^0.9.0",
-    "typo3/testing-framework": "^7.1 || ^8.2 || ^9.2"
+    "typo3/testing-framework": "^9.2"
   },
   "autoload": {
     "psr-4": {
@@ -80,11 +80,16 @@
     ],
     "sca:php": "phpstan analyse --memory-limit=1G",
     "test": [
-      "@test:unit"
+      "@test:unit",
+      "@test:functional"
     ],
     "test:coverage": "phpunit -c Tests/Build/UnitTests.xml --coverage-html .Build/log/coverage/",
     "test:coverage-clover": "phpunit -c Tests/Build/UnitTests.xml --coverage-clover .Build/log/coverage/clover.xml",
-    "test:unit": "phpunit -c Tests/Build/UnitTests.xml"
+    "test:coverage:functional": "phpunit -c Tests/Build/FunctionalTests.xml --fail-on-empty-test-suite --coverage-text --colors=never --coverage-html .Build/log/coverage/html/functional",
+    "test:coverage:unit": "phpunit -c Tests/Build/UnitTests.xml --fail-on-empty-test-suite --coverage-text --colors=never --coverage-html .Build/log/coverage/html/unit",
+    "test:functional": "phpunit -c Tests/Build/FunctionalTests.xml --fail-on-empty-test-suite",
+    "test:phpstan": "@sca:php",
+    "test:unit": "phpunit -c Tests/Build/UnitTests.xml --fail-on-empty-test-suite"
   },
   "scripts-descriptions": {
     "fix": "Fix all code quality issues reported by the registered linters",
@@ -104,6 +109,10 @@
     "test": "Run all configured test suites",
     "test:coverage": "Run unit tests with HTML coverage report",
     "test:coverage-clover": "Run unit tests with Clover coverage report",
+    "test:coverage:functional": "Run functional tests with text and HTML coverage report",
+    "test:coverage:unit": "Run unit tests with text and HTML coverage report",
+    "test:functional": "Run functional tests for the extension",
+    "test:phpstan": "Analyze all PHP files by using PHPStan (alias of sca:php)",
     "test:unit": "Run unit tests for the extension"
   }
 }

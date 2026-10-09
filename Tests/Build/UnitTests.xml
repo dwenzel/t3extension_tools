@@ -9,14 +9,7 @@
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
-         xsi:noNamespaceSchemaLocation=".Build/vendor/phpunit/phpunit/phpunit.xsd">
-    <coverage>
-        <report>
-            <php outputFile=".Build/coverage/php/unit.cov"/>
-            <html outputDirectory=".Build/coverage/html/unit/"/>
-            <text outputFile="php://stdout" showOnlySummary="true"/>
-        </report>
-    </coverage>
+         xsi:noNamespaceSchemaLocation="../../.Build/vendor/phpunit/phpunit/phpunit.xsd">
     <testsuites>
         <testsuite name="EXT:t3extension_tools tests">
             <directory>../Unit/</directory>
@@ -28,6 +21,6 @@
         </include>
     </source>
     <logging>
-        <junit outputFile=".Build/log/coverage/junit/unit.xml"/>
+        <junit outputFile="../../.Build/log/coverage/junit/unit.xml"/>
     </logging>
 </phpunit>
