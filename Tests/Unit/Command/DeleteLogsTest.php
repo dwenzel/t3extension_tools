@@ -23,7 +23,7 @@ class DeleteLogsTest extends TestCase
     {
         parent::setUp();
 
-        $this->subject = new class () extends DeleteLogs {
+        $this->subject = new class extends DeleteLogs {
             // Make protected methods testable
             public function isDatePrefixedPattern(string $pattern): bool
             {
@@ -63,11 +63,11 @@ class DeleteLogsTest extends TestCase
         $expectedPath = '/var/log';
 
         // Mock Environment class
-        Environment::expects(self::once())
+        Environment::expects($this->once())
             ->method('getVarPath')
             ->willReturn('/var');
 
-        $this->inputMock->expects(self::once())
+        $this->inputMock->expects($this->once())
             ->method('getArgument')
             ->with(DirectoryArgument::NAME)
             ->willReturn(DirectoryArgument::DEFAULT);
@@ -82,7 +82,7 @@ class DeleteLogsTest extends TestCase
     {
         $absolutePath = '/absolute/path/to/logs';
 
-        $this->inputMock->expects(self::once())
+        $this->inputMock->expects($this->once())
             ->method('getArgument')
             ->with(DirectoryArgument::NAME)
             ->willReturn($absolutePath);
@@ -101,7 +101,7 @@ class DeleteLogsTest extends TestCase
         $relativePath = 'relative/path';
         $expectedPath = '/public/relative/path';
 
-        $this->inputMock->expects(self::once())
+        $this->inputMock->expects($this->once())
             ->method('getArgument')
             ->with(DirectoryArgument::NAME)
             ->willReturn($relativePath);

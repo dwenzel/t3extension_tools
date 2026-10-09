@@ -18,7 +18,7 @@ class ExtensionConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
 
         // Create a test class extending ExtensionConfiguration
-        $testClass = new class () extends ExtensionConfiguration {
+        $testClass = new class extends ExtensionConfiguration {
             public static function testRegisterWithInvalidProvider(): void
             {
                 self::registerIconsWithProvider(['test' => 'path/to/icon.png'], InvalidIconProviderClass::class);
@@ -32,11 +32,11 @@ class ExtensionConfigurationTest extends TestCase
     {
         // Create a mock for IconRegistry
         $iconRegistryMock = $this->createMock(IconRegistry::class);
-        $iconRegistryMock->expects(self::never())
+        $iconRegistryMock->expects($this->never())
             ->method('registerIcon');
 
         // Create a test class extending ExtensionConfiguration
-        $testClass = new class () extends ExtensionConfiguration {
+        $testClass = new class extends ExtensionConfiguration {
             public static function testRegisterWithEmptyArray(): void
             {
                 self::registerIconsWithProvider([], SvgIconProvider::class);
