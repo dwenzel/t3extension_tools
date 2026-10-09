@@ -28,3 +28,6 @@ coverage.xml
 
 # PHP CS Fixer
 .php-cs-fixer.cache
+/auth.json
+/.env
+/.envrc
