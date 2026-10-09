@@ -29,6 +29,9 @@ trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
+    /** Console scope whose commandOptions apply to the mysql client. */
+    protected const CONSOLE_SCOPE_DATABASE_IMPORT = 'database:import';
+
     protected ?ConnectionConfigurationFactory $connectionConfigurationFactory = null;
 
     /**
@@ -37,7 +40,7 @@ trait ExecuteSqlTrait
     protected string $sqlToExecute = '';
 
     /**
-     * SyncInstitutionPlaceFlatCommand constructor.
+     * ExecuteSqlTrait constructor.
      * @param string|null $name
      */
     public function __construct(
@@ -70,7 +73,7 @@ trait ExecuteSqlTrait
             $this->io->error(self::ERROR_MISSING_CONNECTION);
             return 1_641_390_076;
         }
-        $dbConfig = $this->connectionConfigurationFactory->build($connection, 'database:import');
+        $dbConfig = $this->connectionConfigurationFactory->build($connection, self::CONSOLE_SCOPE_DATABASE_IMPORT);
 
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
         $mysqlCommand = new MysqlCommand($dbConfig, $output);

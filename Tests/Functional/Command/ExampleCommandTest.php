@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Process\ExecutableFinder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -35,6 +36,19 @@ class ExampleCommandTest extends FunctionalTestCase
     private const TABLE = 'tx_t3extensiontools_baseline';
 
     protected array $testExtensionsToLoad = ['t3extension_tools'];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $driver = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] ?? '';
+        if (!str_contains($driver, 'mysql')) {
+            self::markTestSkipped('Test database driver is not a mysql driver.');
+        }
+        if ((new ExecutableFinder())->find('mysql') === null) {
+            self::markTestSkipped('The mysql client is not installed.');
+        }
+    }
 
     #[Test]
     public function commandDefinesConnectionOptionWithDefaultConnection(): void
@@ -82,7 +96,7 @@ class ExampleCommandTest extends FunctionalTestCase
     public function sqlStatementIsExecutedOnDefaultConnection(): void
     {
         $command = $this->createCommandWithSql(
-            'CREATE TABLE ' . self::TABLE . ' (uid INT PRIMARY KEY); INSERT INTO ' . self::TABLE . ' VALUES (42);'
+            'DROP TABLE IF EXISTS ' . self::TABLE . '; CREATE TABLE ' . self::TABLE . ' (uid INT PRIMARY KEY); INSERT INTO ' . self::TABLE . ' VALUES (42);'
         );
 
         $exitCode = $command->run(new ArrayInput([]), $this->createConsoleOutput());

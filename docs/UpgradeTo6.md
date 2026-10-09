@@ -34,4 +34,4 @@ TYPO3 stays at `typo3/cms-core ^13.4`.
 - Code or scripts that evaluate exit code `1_641_390_077` can drop that branch.
 - Constructor overrides keep working. The trait now creates the console 9 factory from TYPO3's `ConnectionPool` itself.
 - Connections are still offered only if their driver name contains `mysql`.
-- The MySQL options of the console scope `database:import` (`EXTCONF/typo3_console/commandOptions`) apply to the SQL import.
+- The MySQL options of the console scope `database:import` (`EXTCONF/typo3_console/commandOptions`) apply to the SQL import. The scope is defined by the trait constant `CONSOLE_SCOPE_DATABASE_IMPORT`.
