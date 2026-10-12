@@ -2,11 +2,11 @@
 
 namespace DWenzel\T3extensionTools\Traits\Command;
 
-use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
+use Helhum\Typo3Console\Database\Configuration\ConnectionConfigurationFactory;
 use Helhum\Typo3Console\Database\Process\MysqlCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
@@ -29,7 +29,10 @@ trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
-    protected ?ConnectionConfiguration $connectionConfiguration =  null;
+    /** Console scope whose commandOptions apply to the mysql client. */
+    protected const CONSOLE_SCOPE_DATABASE_IMPORT = 'database:import';
+
+    protected ?ConnectionConfigurationFactory $connectionConfigurationFactory = null;
 
     /**
      * @var string
@@ -37,7 +40,7 @@ trait ExecuteSqlTrait
     protected string $sqlToExecute = '';
 
     /**
-     * SyncInstitutionPlaceFlatCommand constructor.
+     * ExecuteSqlTrait constructor.
      * @param string|null $name
      */
     public function __construct(
@@ -46,8 +49,8 @@ trait ExecuteSqlTrait
         $this->sqlToExecute = file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
         );
-        $this->connectionConfiguration = GeneralUtility::makeInstance(
-            ConnectionConfiguration::class
+        $this->connectionConfigurationFactory = new ConnectionConfigurationFactory(
+            GeneralUtility::makeInstance(ConnectionPool::class)
         );
         parent::__construct($name);
     }
@@ -64,18 +67,14 @@ trait ExecuteSqlTrait
         $connection = (string)$input->getOption(self::OPTION_CONNECTION);
 
         $this->io->comment(self::MESSAGE_STARTING);
-        $availableConnections = $this->connectionConfiguration->getAvailableConnectionNames(self::CONNECTION_TYPE_MYSQL);
+        $availableConnections = $this->connectionConfigurationFactory->getAvailableConnectionNames();
 
         if (empty($availableConnections) || !in_array($connection, $availableConnections, true)) {
             $this->io->error(self::ERROR_MISSING_CONNECTION);
             return 1_641_390_076;
         }
-        $dbConfig = $this->connectionConfiguration->build($connection);
+        $dbConfig = $this->connectionConfigurationFactory->build($connection, self::CONSOLE_SCOPE_DATABASE_IMPORT);
 
-        if (!$output instanceof ConsoleOutput) {
-            $this->io->error('Invalid output type. Please use ConsoleOutput.');
-            return 1_641_390_077;
-        }
         // this is clumsy: MysqlCommand only allows configuration as constructor argument.
         $mysqlCommand = new MysqlCommand($dbConfig, $output);
 

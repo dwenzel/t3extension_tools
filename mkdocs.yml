@@ -8,4 +8,5 @@ pages:
     - Home: README.md
     - PluginCache: PluginCache.md
     - Interfaces: Interfaces.md
+    - Upgrade to 6.x: UpgradeTo6.md
 theme: readthedocs
