@@ -8,17 +8,15 @@
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-    <coverage includeUncoveredFiles="true">
-        <report>
-            <text outputFile="php://stdout" showUncoveredFiles="true"/>
-        </report>
-    </coverage>
+         xsi:noNamespaceSchemaLocation="../../.Build/vendor/phpunit/phpunit/phpunit.xsd">
     <testsuites>
         <testsuite name="Functional Tests">
             <directory>../Functional/</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="TYPO3_CONTEXT" value="Testing"/>
+    </php>
     <logging>
         <junit outputFile="../../.Build/log/coverage/junit/functional.xml"/>
     </logging>

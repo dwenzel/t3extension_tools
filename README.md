@@ -119,9 +119,19 @@ The extension includes comprehensive code quality tools:
 
 ### Testing
 
+Tests run in DDEV (see [Running the Tests](docs/Development.md#running-the-tests)):
+
 ```bash
-# Run all tests
-composer test
+ddev start
+ddev composer install
+ddev composer test
+```
+
+Without DDEV only the unit tests run (the functional tests need a database):
+
+```bash
+# Run unit tests
+composer test:unit
 
 # Run specific test
 phpunit -c Tests/Build/UnitTests.xml --filter TestName
@@ -147,6 +157,7 @@ composer sca:php
 ## Documentation
 
 * [Interfaces and Traits](docs/Interfaces.md) - Complete interface documentation
+* [Upgrade from 5.x to 6.x](docs/UpgradeTo6.md) - typo3-console 9 only
 * [CLAUDE.md](CLAUDE.md) - AI assistant development guide
 
 ## Contributing

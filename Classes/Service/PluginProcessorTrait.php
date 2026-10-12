@@ -20,6 +20,9 @@ namespace DWenzel\T3extensionTools\Service;
  ***************************************************************/
 trait PluginProcessorTrait
 {
+    /**
+     * @param iterable<class-string|object> $plugins
+     */
     private function processPlugins(iterable $plugins, callable $callback, string $interface): void
     {
         foreach ($plugins as $pluginClass) {

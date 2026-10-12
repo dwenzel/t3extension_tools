@@ -38,7 +38,7 @@ class PluginConfigurationScanner
     /**
      * Finds all extensions with plugin configuration files in YAML format
      *
-     * @return array Array of extension keys with their plugin configuration files
+     * @return array<string, list<string>> Array of extension keys with their plugin configuration files
      */
     //...
     public function findExtensionsWithPluginConfigurations(): array
@@ -55,6 +55,9 @@ class PluginConfigurationScanner
         return $extensionsWithPlugins;
     }
 
+    /**
+     * @return list<string>
+     */
     private function getPluginFiles(string $pluginsPath): array
     {
         $finder = $this->createFinder($pluginsPath);

@@ -1,3 +1,15 @@
+2026-10-12         [RELEASE] Release of t3extension-tools 6.0.0 (Vladimir Falcón Piva)
+2026-10-09 12e923c [TASK] Address review findings for ExecuteSqlTrait and functional tests (Vladimir Falcón Piva)
+2026-10-09 0cfe5a5 [TASK] Prepare release 6.0.0 (Vladimir Falcón Piva)
+2026-10-09 5ed7137 [TASK] Add upgrade notes for 6.0.0 (Vladimir Falcón Piva)
+2026-10-09 a8abe91 [TASK] Require typo3-console ^9 and port ExecuteSqlTrait (Vladimir Falcón Piva)
+2026-10-09 3033f68 [TASK] Add baseline functional tests for ExampleCommand (Vladimir Falcón Piva)
+2026-10-09 2daa3bd [TASK] Ignore abandoned packages in composer audit (Vladimir Falcón Piva)
+2026-10-09 984590e [TASK] Add DDEV test environment and enable PHPStan level 6 (Vladimir Falcón Piva)
+2026-10-09 938a602 [TASK] Update gitignore and dev dependencies (Vladimir Falcón Piva)
+2026-10-09 4802de4 [TASK] Update gitignore (Vladimir Falcón Piva)
+2026-10-09 fd081bd [TASK] Update git ignore (Vladimir Falcón Piva)
+
 2026-01-19         [RELEASE] Release of t3extension-tools 5.0.2 (Dirk Wenzel)
 2026-01-19 e2c373c php coding style fixes applied (Dirk Wenzel)
 

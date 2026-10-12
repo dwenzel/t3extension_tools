@@ -66,11 +66,14 @@ class PluginConfigurationParser
 
         // Create anonymous class implementing the required interfaces
         return new class ($config) implements PluginConfigurationInterface, PluginRegistrationInterface {
+            /** @var array<string, mixed> */
             protected array $config;
             protected string $extensionName;
             protected string $pluginName;
             protected string $pluginType;
+            /** @var array<string, string|list<string>> */
             protected array $controllerActions;
+            /** @var array<string, string|list<string>> */
             protected array $nonCacheableControllerActions;
             protected string $pluginTitle = '';
             protected string $pluginDescription = '';
@@ -78,6 +81,7 @@ class PluginConfigurationParser
             protected string $pluginGroup = '';
             protected string $flexForm = '';
 
+            /** @param array<string, mixed> $config */
             public function __construct(array $config)
             {
                 $this->config = $config;
@@ -97,6 +101,10 @@ class PluginConfigurationParser
                 }
             }
 
+            /**
+             * @param array<string, string|list<string>> $actions
+             * @return array<string, string|list<string>>
+             */
             protected function parseControllerActions(array $actions): array
             {
                 $parsed = [];

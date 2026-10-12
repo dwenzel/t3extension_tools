@@ -19,7 +19,7 @@ class DeleteLogsCommandTest extends TestCase
     {
         parent::setUp();
 
-        $this->subject = new class () extends DeleteLogs {
+        $this->subject = new class extends DeleteLogs {
             public function executeTest(ArrayInput $input, BufferedOutput $output): int
             {
                 $this->initialize($input, $output);

@@ -59,24 +59,24 @@ class PluginConfigurationScannerTest extends TestCase
         ]);
 
         // Mock the Finder
-        $finderMock = $this->getMockBuilder('Symfony\Component\Finder\Finder')
+        $finderMock = $this->getMockBuilder(\Symfony\Component\Finder\Finder::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         // Mock a SplFileInfo for Plugin1.yaml
-        $file1Mock = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')
+        $file1Mock = $this->getMockBuilder(\Symfony\Component\Finder\SplFileInfo::class)
             ->disableOriginalConstructor()
             ->getMock();
         $file1Mock->method('getRelativePathname')->willReturn('Plugin1.yaml');
 
         // Mock a SplFileInfo for Plugin2.yaml
-        $file2Mock = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')
+        $file2Mock = $this->getMockBuilder(\Symfony\Component\Finder\SplFileInfo::class)
             ->disableOriginalConstructor()
             ->getMock();
         $file2Mock->method('getRelativePathname')->willReturn('Plugin2.yaml');
 
         // Mock a SplFileInfo for Plugin3.yaml in ext3
-        $file3Mock = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')
+        $file3Mock = $this->getMockBuilder(\Symfony\Component\Finder\SplFileInfo::class)
             ->disableOriginalConstructor()
             ->getMock();
         $file3Mock->method('getRelativePathname')->willReturn('Plugin3.yaml');
@@ -160,7 +160,8 @@ class PluginConfigurationScannerTest extends TestCase
         $package->method('getPackagePath')->willReturn('/virtual/ext1/');
 
         // Setup PackageManager mock
-        $this->packageManagerMock->method('getPackage')
+        $this->packageManagerMock->expects($this->any())
+            ->method('getPackage')
             ->with($extensionKey)
             ->willReturn($package);
 
