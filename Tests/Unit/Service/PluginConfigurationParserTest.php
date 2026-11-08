@@ -96,7 +96,8 @@ YAML;
 
         $result = $this->subject->parseYaml($yamlContent);
 
-        self::assertEquals(ExtensionUtility::PLUGIN_TYPE_PLUGIN, $result->getPluginType());
+        // ExtensionUtility::PLUGIN_TYPE_PLUGIN ('list_type') does not exist in TYPO3 14
+        self::assertEquals('list_type', $result->getPluginType());
     }
 
     #[Test] public function parseYamlSetsCorrectRegistrationValues(): void

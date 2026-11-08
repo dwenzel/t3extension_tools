@@ -35,6 +35,7 @@ class ExampleCommandTest extends FunctionalTestCase
     private const EXIT_SQL_FAILED = 1_641_390_086;
     private const TABLE = 'tx_t3extensiontools_baseline';
 
+    protected array $coreExtensionsToLoad = ['install'];
     protected array $testExtensionsToLoad = ['t3extension_tools'];
 
     protected function setUp(): void
