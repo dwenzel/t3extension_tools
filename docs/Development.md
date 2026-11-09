@@ -17,7 +17,7 @@ This guide provides comprehensive information for developers working with or ext
 ### Prerequisites
 
 - **PHP**: 8.3 - 8.4
-- **TYPO3**: 13.4.0 - 13.4.99
+- **TYPO3**: 13.4.0 - 14.3.99
 - **Composer**: 2.0+
 - **Git**: Latest stable version
 
@@ -160,7 +160,7 @@ XDEBUG_MODE=coverage .Build/bin/phpunit -c Tests/Build/UnitTests.xml --coverage-
 
 ## Running the Tests
 
-Unit and functional tests run in a [DDEV](https://ddev.readthedocs.io/) environment that targets TYPO3 13.4 and PHP 8.4. The functional tests create and drop their own databases on the DDEV `db` service, so no manual database setup is needed.
+Unit and functional tests run in a [DDEV](https://ddev.readthedocs.io/) environment that targets TYPO3 13.4 and PHP 8.4 (TYPO3 14.3: `ddev composer update -W --with typo3/cms-core:^14.3`). The functional tests create and drop their own databases on the DDEV `db` service, so no manual database setup is needed.
 
 ### Prerequisites
 

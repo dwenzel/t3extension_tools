@@ -20,6 +20,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ExtensionLoadedTest extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['install'];
     protected array $testExtensionsToLoad = ['t3extension_tools'];
 
     #[Test]

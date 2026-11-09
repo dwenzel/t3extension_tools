@@ -34,3 +34,6 @@ coverage.xml
 /.specify/
 /.claude/
 /specs/
+
+# TYPO3 var directory created by tests
+/var/
