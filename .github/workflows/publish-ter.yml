@@ -1,0 +1,93 @@
+name: Publish to TER
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to publish, e.g. 4.1.0'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    name: Publish to TER
+    runs-on: ubuntu-latest
+    env:
+      TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
+      TYPO3_EXCLUDE_FROM_PACKAGING: ${{ github.workspace }}/.github/tailor/ExcludeFromPackaging.php
+      EXTENSION_KEY: t3extension_tools
+
+    steps:
+      - name: Get version
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          VERSION="${INPUT_TAG:-$GITHUB_REF_NAME}"
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::'$VERSION' is not a version tag"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      # Workflow files (exclusion list) from the triggering ref, extension code from the tag
+      - name: Checkout workflow files
+        uses: actions/checkout@v4
+
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.VERSION }}
+          path: extension
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, mbstring, json, zip, curl
+          tools: composer:v2
+
+      - name: Check version
+        working-directory: extension
+        run: |
+          EMCONF_VERSION=$(php -r '$_EXTKEY = getenv("EXTENSION_KEY"); include "ext_emconf.php"; echo $EM_CONF[$_EXTKEY]["version"];')
+          COMPOSER_VERSION=$(jq -r '.extra["typo3/cms"].version // empty' composer.json)
+          if [ "$EMCONF_VERSION" != "$VERSION" ]; then
+            echo "::error::ext_emconf.php declares $EMCONF_VERSION, tag is $VERSION"
+            exit 1
+          fi
+          if [ -n "$COMPOSER_VERSION" ] && [ "$COMPOSER_VERSION" != "$VERSION" ]; then
+            echo "::error::composer.json declares $COMPOSER_VERSION, tag is $VERSION"
+            exit 1
+          fi
+
+      - name: Get comment
+        working-directory: extension
+        run: |
+          # Commit subjects of the ChangeLog section of this version, without date, hash and author
+          COMMENT=$(awk -v v="$VERSION" '
+            index($0, "Release of t3extension_tools " v " ") || index($0, "Release of t3extension-tools " v " ") { found = 1; next }
+            found && /^$/ { exit }
+            found { $1 = ""; $2 = ""; sub(/^ +/, ""); sub(/ \([^)]*\)$/, ""); print }
+          ' ChangeLog | paste -sd ';' - | sed 's/;/; /g')
+          if [ -z "$COMMENT" ]; then
+            COMMENT="Released version $VERSION"
+          fi
+          echo "COMMENT=$COMMENT" >> "$GITHUB_ENV"
+          echo "$COMMENT"
+
+      - name: Install tailor
+        run: composer global require typo3/tailor --prefer-dist --no-progress
+
+      - name: Publish to TER
+        run: |
+          if [ -z "$TYPO3_API_TOKEN" ]; then
+            echo "::error::Secret TYPO3_API_TOKEN is not configured"
+            exit 1
+          fi
+          "$(composer global config bin-dir --absolute --quiet)/tailor" ter:publish \
+            --path="$GITHUB_WORKSPACE/extension" \
+            --comment "$COMMENT" \
+            "$VERSION" "$EXTENSION_KEY"
