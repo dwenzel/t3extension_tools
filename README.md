@@ -150,7 +150,7 @@ composer sca:php
 
 ## Requirements
 
-* **TYPO3**: 13.4.0 - 13.4.99
+* **TYPO3**: 13.4.0 - 14.3.99
 * **PHP**: 8.3 - 8.4
 * **Composer**: 2.0+
 

@@ -12,9 +12,9 @@
   ],
   "require": {
     "helhum/typo3-console": "^9",
-    "typo3/cms-backend": "^13.4",
-    "typo3/cms-core": "^13.4",
-    "typo3/cms-install": "^13.4"
+    "typo3/cms-backend": "^13.4 || ^14.3",
+    "typo3/cms-core": "^13.4 || ^14.3",
+    "typo3/cms-install": "^13.4 || ^14.3"
   },
   "require-dev": {
     "a9f/typo3-fractor": "^1.0",
@@ -48,8 +48,12 @@
   },
   "extra": {
     "typo3/cms": {
+      "Package": {
+        "providesPackages": {}
+      },
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "extension-key": "t3extension_tools",
+      "version": "6.0.0",
       "web-dir": ".Build/Web"
     }
   },
