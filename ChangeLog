@@ -1,3 +1,7 @@
+2026-11-09         [RELEASE] Release of t3extension_tools 6.1.1 (Dirk Wenzel)
+2026-11-09 748e6ac [TASK] Set version 6.1.1 (Dirk Wenzel)
+2026-11-09 a252611 [CI] Trigger release workflow on tags without v prefix (Dirk Wenzel)
+
 2026-11-09         [RELEASE] Release of t3extension_tools 6.1.0 (Dirk Wenzel)
 2026-11-08 763af23 [DOC] Mention TYPO3 14.3 in requirements (Dirk Wenzel)
 2026-11-08 dfc323d [TASK] Support TYPO3 14.3 (Dirk Wenzel)
