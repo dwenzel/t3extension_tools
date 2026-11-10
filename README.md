@@ -17,7 +17,7 @@ composer require dwenzel/t3extension-tools
 * **Console Commands**: Extensible command framework with modular argument/option handling
 * **Configuration Management**: Interfaces and services for extension configuration
 * **Upgrade Wizards**: Traits for TYPO3 version migration support
-* **Icon Registration**: Utilities for bitmap and SVG icon registration
+* **Icon Registration**: Utilities for bitmap and SVG icon registration (deprecated since 6.2, use `Configuration/Icons.php`)
 
 ### Development Tools
 * **Code Quality**: Comprehensive linting and formatting tools (PHP-CS-Fixer, PHPStan, Rector)

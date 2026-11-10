@@ -66,6 +66,7 @@ class ExtensionConfigurationTest extends TestCase
                 }
             );
         GeneralUtility::setSingletonInstance(IconRegistry::class, $iconRegistryMock);
+        $this->expectUserDeprecationMessageMatches('/registerIcons\(\) is deprecated/');
 
         $testClass = new class extends ExtensionConfiguration {
             protected const BITMAP_ICONS_TO_REGISTER = ['bitmap-icon' => 'path/to/icon.png'];
@@ -81,5 +82,17 @@ class ExtensionConfigurationTest extends TestCase
             ],
             $registered
         );
+    }
+
+    #[Test] public function registerIconsTriggersDeprecation(): void
+    {
+        $this->expectUserDeprecationMessage(
+            'DWenzel\\T3extensionTools\\Configuration\\ExtensionConfiguration::registerIcons() is deprecated'
+            . ' since t3extension_tools 6.2 and will be removed in 7.0. Register icons in Configuration/Icons.php instead.'
+        );
+
+        $testClass = new class extends ExtensionConfiguration {};
+
+        $testClass::registerIcons();
     }
 }
