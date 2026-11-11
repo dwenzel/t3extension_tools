@@ -1,3 +1,7 @@
+2026-11-11         [RELEASE] Release of t3extension_tools 6.2.0 (Dirk Wenzel)
+2026-11-10 7296800 [TASK] Deprecate ExtensionConfiguration::registerIcons() (Dirk Wenzel)
+2026-11-10 84bf8a5 [BUGFIX] Register icons with the icons passed to registerIconsWithProvider() (Dirk Wenzel)
+
 2026-11-09         [RELEASE] Release of t3extension_tools 6.1.1 (Dirk Wenzel)
 2026-11-09 748e6ac [TASK] Set version 6.1.1 (Dirk Wenzel)
 2026-11-09 a252611 [CI] Trigger release workflow on tags without v prefix (Dirk Wenzel)
