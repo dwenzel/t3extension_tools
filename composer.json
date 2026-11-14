@@ -11,19 +11,22 @@
     }
   ],
   "require": {
-    "helhum/typo3-console": "^9",
-    "typo3/cms-backend": "^13.4 || ^14.3",
-    "typo3/cms-core": "^13.4 || ^14.3",
-    "typo3/cms-install": "^13.4 || ^14.3"
+    "typo3/cms-backend": "^13.4 || ^14.3 || ^15.0",
+    "typo3/cms-core": "^13.4 || ^14.3 || ^15.0",
+    "typo3/cms-install": "^13.4 || ^14.3 || ^15.0"
   },
   "require-dev": {
     "a9f/typo3-fractor": "^1.0",
     "armin/editorconfig-cli": "^2.0",
     "ergebnis/composer-normalize": "^2.45",
+    "helhum/typo3-console": "^9",
     "roave/security-advisories": "dev-latest",
     "ssch/typo3-rector": "^3.5",
     "typo3/coding-standards": "^0.9.0",
     "typo3/testing-framework": "^9.2"
+  },
+  "suggest": {
+    "helhum/typo3-console": "Required by ExecuteSqlTrait and the example command t3extension-tools:example (^9)"
   },
   "autoload": {
     "psr-4": {

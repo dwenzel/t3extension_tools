@@ -7,13 +7,8 @@ services:
 
   DWenzel\T3extensionTools\:
     resource: '../Classes/*'
-
-  DWenzel\T3extensionTools\Command\ExampleCommand:
-    tags:
-      - name: 'console.command'
-        command: 't3extension-tools:example'
-        description: 'Download file to location'
-        schedulable: false
+    # Registered in Services.php, only when helhum/typo3-console is installed
+    exclude: '../Classes/Command/ExampleCommand.php'
 
   DWenzel\T3extensionTools\Command\DeleteLogs:
     tags:
