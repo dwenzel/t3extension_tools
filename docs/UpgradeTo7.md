@@ -2,14 +2,14 @@
 
 Version 7.0.0 no longer depends on `helhum/typo3-console`. `ExecuteSqlTrait`
 executes the SQL file through Doctrine DBAL instead of the `mysql` command-line
-client. TYPO3 15 (development versions) is allowed in addition to 13.4 and 14.3.
+client.
 
 ## Why
 
 In 6.x, `ExecuteSqlTrait` created the console's `MysqlCommand`, which started the
 `mysql` client as a separate process and piped the SQL file into it. This needed:
 
-* `helhum/typo3-console`, which has no version for TYPO3 15
+* `helhum/typo3-console`, which has no version for TYPO3 15 so far
 * a `mysql` or `mariadb` client binary on the machine that runs the command,
   which is often missing in production containers
 * a MySQL connection; other drivers were refused
