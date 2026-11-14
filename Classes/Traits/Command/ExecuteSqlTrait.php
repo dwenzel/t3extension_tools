@@ -2,8 +2,7 @@
 
 namespace DWenzel\T3extensionTools\Traits\Command;
 
-use Helhum\Typo3Console\Database\Configuration\ConnectionConfigurationFactory;
-use Helhum\Typo3Console\Database\Process\MysqlCommand;
+use Doctrine\DBAL\Exception as DbalException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -25,74 +24,96 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+/**
+ * Executes the SQL file SQL_FILE_PATH on a TYPO3 database connection.
+ *
+ * The statements are executed one by one through Doctrine DBAL. No database
+ * client binary is needed. Format of the SQL file: every statement ends with
+ * a semicolon at the end of a line; lines starting with '#' or '--' and
+ * C-style comment blocks are skipped. Client commands like DELIMITER or
+ * SOURCE are not supported. Execution stops at the first failing statement;
+ * statements executed before it are not rolled back.
+ */
 trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
-    /** Console scope whose commandOptions apply to the mysql client. */
-    protected const CONSOLE_SCOPE_DATABASE_IMPORT = 'database:import';
-
-    protected ?ConnectionConfigurationFactory $connectionConfigurationFactory = null;
-
-    /**
-     * @var string
-     */
     protected string $sqlToExecute = '';
 
-    /**
-     * ExecuteSqlTrait constructor.
-     * @param string|null $name
-     */
     public function __construct(
         ?string $name = null
     ) {
-        $this->sqlToExecute = file_get_contents(
+        $this->sqlToExecute = (string)file_get_contents(
             GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
-        );
-        $this->connectionConfigurationFactory = new ConnectionConfigurationFactory(
-            GeneralUtility::makeInstance(ConnectionPool::class)
         );
         parent::__construct($name);
     }
 
-    /**
-     * Execute task
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $connection = (string)$input->getOption(self::OPTION_CONNECTION);
+        $connectionName = (string)$input->getOption(self::OPTION_CONNECTION);
 
         $this->io->comment(self::MESSAGE_STARTING);
-        $availableConnections = $this->connectionConfigurationFactory->getAvailableConnectionNames();
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 
-        if (empty($availableConnections) || !in_array($connection, $availableConnections, true)) {
+        if (!in_array($connectionName, $connectionPool->getConnectionNames(), true)) {
             $this->io->error(self::ERROR_MISSING_CONNECTION);
             return 1_641_390_076;
         }
-        $dbConfig = $this->connectionConfigurationFactory->build($connection, self::CONSOLE_SCOPE_DATABASE_IMPORT);
 
-        // this is clumsy: MysqlCommand only allows configuration as constructor argument.
-        $mysqlCommand = new MysqlCommand($dbConfig, $output);
-
-        $inputStream = fopen('php://temp', 'r+');
-        fwrite($inputStream, $this->sqlToExecute);
-        rewind($inputStream);
-
-        $exitCode = $mysqlCommand->mysql(
-            self::DEFAULT_MYSQL_ARGUMENTS,
-            $inputStream
-        );
-
-        if ($exitCode) {
-            $this->io->error(self::ERROR_SQL_EXECUTION_FAILED);
+        try {
+            $connection = $connectionPool->getConnectionByName($connectionName);
+            foreach ($this->splitSqlStatements($this->sqlToExecute) as $statement) {
+                $connection->executeStatement($statement);
+            }
+        } catch (DbalException $exception) {
+            $this->io->error([self::ERROR_SQL_EXECUTION_FAILED, $exception->getMessage()]);
             return 1_641_390_086;
         }
 
         $this->io->success(self::MESSAGE_SUCCESS);
         return 0;
+    }
+
+    /**
+     * Splits SQL into single statements: a statement ends with a semicolon
+     * at the end of a line. Comment lines are skipped.
+     *
+     * @return list<string>
+     */
+    protected function splitSqlStatements(string $sql): array
+    {
+        $statements = [];
+        $current = '';
+        $isInComment = false;
+        foreach (preg_split('/\R/', $sql) ?: [] as $line) {
+            $line = trim($line);
+            if ($isInComment) {
+                $isInComment = !str_ends_with($line, '*/');
+                continue;
+            }
+            if ($line === '' || str_starts_with($line, '#') || str_starts_with($line, '--')) {
+                continue;
+            }
+            if (str_starts_with($line, '/*')) {
+                $isInComment = !str_ends_with($line, '*/');
+                continue;
+            }
+            $current .= ($current === '' ? '' : ' ') . $line;
+            if (str_ends_with($line, ';')) {
+                $statement = trim(rtrim($current, ';'));
+                if ($statement !== '') {
+                    $statements[] = $statement;
+                }
+                $current = '';
+            }
+        }
+        $statement = trim($current);
+        if ($statement !== '') {
+            $statements[] = $statement;
+        }
+
+        return $statements;
     }
 }

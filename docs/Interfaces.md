@@ -55,7 +55,7 @@ The extension follows a strict **Interface-Trait Pattern** where each major feat
 | Trait | Purpose | Used By |
 |-------|---------|---------|
 | [`ConfigureTrait`][ConfigureTrait] | Command configuration helpers | [`ExampleCommand`][ExampleCommand] |
-| [`ExecuteSqlTrait`][ExecuteSqlTrait] | SQL execution utilities | [`DeleteLogs`][DeleteLogs] |
+| [`ExecuteSqlTrait`][ExecuteSqlTrait] | Executes an SQL file through Doctrine DBAL | [`ExampleCommand`][ExampleCommand] |
 | [`InitializeTrait`][InitializeTrait] | Command initialization | Various commands |
 | [`InputPropertiesTrait`][InputPropertiesTrait] | Input property management | Command classes |
 

@@ -18,16 +18,15 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Process\ExecutableFinder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Baseline for ExampleCommand and ExecuteSqlTrait.
+ * ExampleCommand and ExecuteSqlTrait.
  *
- * Asserts behaviour only (exit codes, database effects), so the tests
- * stay valid across the typo3-console 8 to 9 port.
+ * Asserts behaviour only (exit codes, database effects). The trait executes
+ * the SQL through Doctrine DBAL, so no database client binary is needed.
  */
 class ExampleCommandTest extends FunctionalTestCase
 {
@@ -37,19 +36,6 @@ class ExampleCommandTest extends FunctionalTestCase
 
     protected array $coreExtensionsToLoad = ['install'];
     protected array $testExtensionsToLoad = ['t3extension_tools'];
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $driver = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] ?? '';
-        if (!str_contains($driver, 'mysql')) {
-            self::markTestSkipped('Test database driver is not a mysql driver.');
-        }
-        if ((new ExecutableFinder())->find('mysql') === null) {
-            self::markTestSkipped('The mysql client is not installed.');
-        }
-    }
 
     #[Test]
     public function commandDefinesConnectionOptionWithDefaultConnection(): void
@@ -78,14 +64,6 @@ class ExampleCommandTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function defaultConnectionIsAvailableAsMysqlConnection(): void
-    {
-        $driver = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] ?? '';
-
-        self::assertStringContainsString('mysql', $driver);
-    }
-
-    #[Test]
     public function exampleSqlFileIsExecutedSuccessfully(): void
     {
         $exitCode = (new ExampleCommand())->run(new ArrayInput([]), $this->createConsoleOutput());
@@ -97,17 +75,55 @@ class ExampleCommandTest extends FunctionalTestCase
     public function sqlStatementIsExecutedOnDefaultConnection(): void
     {
         $command = $this->createCommandWithSql(
-            'DROP TABLE IF EXISTS ' . self::TABLE . '; CREATE TABLE ' . self::TABLE . ' (uid INT PRIMARY KEY); INSERT INTO ' . self::TABLE . ' VALUES (42);'
+            'DROP TABLE IF EXISTS ' . self::TABLE . ';' . "\n"
+            . 'CREATE TABLE ' . self::TABLE . ' (uid INT PRIMARY KEY);' . "\n"
+            . 'INSERT INTO ' . self::TABLE . ' VALUES (42);'
         );
 
         $exitCode = $command->run(new ArrayInput([]), $this->createConsoleOutput());
 
         self::assertSame(0, $exitCode);
-        $rows = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionByName('Default')
-            ->executeQuery('SELECT uid FROM ' . self::TABLE)
-            ->fetchFirstColumn();
-        self::assertEquals([42], $rows);
+        self::assertEquals([42], $this->selectUids());
+    }
+
+    #[Test]
+    public function commentsAndMultiLineStatementsAreSupported(): void
+    {
+        $command = $this->createCommandWithSql(implode("\n", [
+            '# hash comment',
+            '-- dash comment',
+            '/* block',
+            '   comment; */',
+            'DROP TABLE IF EXISTS ' . self::TABLE . ';',
+            'CREATE TABLE ' . self::TABLE . ' (',
+            '  uid INT PRIMARY KEY',
+            ');',
+            'INSERT INTO ' . self::TABLE . ' VALUES (1), (2);',
+        ]));
+
+        $exitCode = $command->run(new ArrayInput([]), $this->createConsoleOutput());
+
+        self::assertSame(0, $exitCode);
+        self::assertEquals([1, 2], $this->selectUids());
+    }
+
+    #[Test]
+    public function executionStopsAtFirstFailingStatement(): void
+    {
+        $command = $this->createCommandWithSql(implode("\n", [
+            'DROP TABLE IF EXISTS ' . self::TABLE . ';',
+            'CREATE TABLE ' . self::TABLE . ' (uid INT PRIMARY KEY);',
+            'INSERT INTO ' . self::TABLE . ' VALUES (1);',
+            'THIS IS NOT VALID SQL;',
+            'INSERT INTO ' . self::TABLE . ' VALUES (2);',
+        ]));
+        $output = new StreamOutput(fopen('php://memory', 'w+'));
+
+        $exitCode = $command->run(new ArrayInput([]), $output);
+
+        self::assertSame(self::EXIT_SQL_FAILED, $exitCode);
+        self::assertStringContainsString(ExampleCommand::ERROR_SQL_EXECUTION_FAILED, $this->readOutput($output));
+        self::assertEquals([1], $this->selectUids());
     }
 
     #[Test]
@@ -143,6 +159,20 @@ class ExampleCommandTest extends FunctionalTestCase
         $property->setValue($command, $sql);
 
         return $command;
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function selectUids(): array
+    {
+        return array_map(
+            'intval',
+            GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getConnectionByName('Default')
+                ->executeQuery('SELECT uid FROM ' . self::TABLE . ' ORDER BY uid')
+                ->fetchFirstColumn()
+        );
     }
 
     private function readOutput(StreamOutput $output): string
