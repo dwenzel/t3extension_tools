@@ -20,21 +20,26 @@ class StatusTest extends TestCase
     }
 
     /**
-     * @return array<string, array{int, int}>
+     * @return array<string, array{string, int}>
      */
     public static function statusDataProvider(): array
     {
         return [
-            'success' => [Status::success(), Command::SUCCESS],
-            'failure' => [Status::failure(), Command::FAILURE],
-            'invalid' => [Status::invalid(), Command::INVALID],
+            'success' => ['success', Command::SUCCESS],
+            'failure' => ['failure', Command::FAILURE],
+            'invalid' => ['invalid', Command::INVALID],
         ];
     }
 
     #[Test]
     #[DataProvider('statusDataProvider')]
-    public function statusMethodReturnsSymfonyStatusCode(int $status, int $expected): void
+    public function statusMethodReturnsSymfonyStatusCodeAndIsDeprecated(string $method, int $expected): void
     {
-        self::assertSame($expected, $status);
+        $this->expectUserDeprecationMessage(
+            Status::class . '::' . $method . '() is deprecated since t3extension_tools 7.0 and will be removed in 8.0.'
+            . ' Use ' . Command::class . '::' . strtoupper($method) . ' instead.'
+        );
+
+        self::assertSame($expected, Status::$method());
     }
 }
