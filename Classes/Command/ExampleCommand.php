@@ -44,11 +44,9 @@ class ExampleCommand extends Command implements ArgumentAwareInterface, OptionAw
     public const string OPTION_CONNECTION = ConnectionOption::NAME;
     public const string OPTION_EXAMPLE = ExampleOption::NAME;
     public const string OPTION_CONNECTION_DEFAULT = 'Default';
-    public const string CONNECTION_TYPE_MYSQL = 'mysql';
-    public const string ERROR_MISSING_CONNECTION = 'No suitable MySQL connection found.';
+    public const string ERROR_MISSING_CONNECTION = 'No database connection with this name found.';
     public const string ERROR_SQL_EXECUTION_FAILED = 'Execution of SQL statement failed';
     public const string MESSAGE_STARTING = 'Start doing nothing...';
-    public const array DEFAULT_MYSQL_ARGUMENTS = ['--skip-column-names'];
 
     protected const array OPTIONS = [
         ExampleOption::class,

@@ -150,13 +150,14 @@ composer sca:php
 
 ## Requirements
 
-* **TYPO3**: 13.4.0 - 14.3.99
+* **TYPO3**: 13.4.0 - 14.3.99, 15 (development versions)
 * **PHP**: 8.3 - 8.4
 * **Composer**: 2.0+
 
 ## Documentation
 
 * [Interfaces and Traits](docs/Interfaces.md) - Complete interface documentation
+* [Upgrade from 6.x to 7.x](docs/UpgradeTo7.md) - no typo3-console, `ExecuteSqlTrait` uses Doctrine DBAL
 * [Upgrade from 5.x to 6.x](docs/UpgradeTo6.md) - typo3-console 9 only
 * [CLAUDE.md](CLAUDE.md) - AI assistant development guide
 
