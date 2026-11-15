@@ -1,56 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Tests\Unit\Command;
 
 use DWenzel\T3extensionTools\Command\Status;
 use DWenzel\T3extensionTools\Command\StatusAwareInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 
 class StatusTest extends TestCase
 {
-    #[Test] public function implementsStatusAwareInterface(): void
+    #[Test]
+    public function implementsStatusAwareInterface(): void
     {
-        self::assertInstanceOf(
-            StatusAwareInterface::class,
-            new Status()
-        );
+        self::assertInstanceOf(StatusAwareInterface::class, new Status());
     }
 
-    #[Test] public function successReturnsCorrectStatusCode(): void
+    /**
+     * @return array<string, array{int, int}>
+     */
+    public static function statusDataProvider(): array
     {
-        $expectedStatusCode = defined(Command::class . 'Command::class' . '::SUCCESS')
-            ? Command::SUCCESS
-            : StatusAwareInterface::SUCCESS;
-
-        self::assertEquals(
-            $expectedStatusCode,
-            Status::success()
-        );
+        return [
+            'success' => [Status::success(), Command::SUCCESS],
+            'failure' => [Status::failure(), Command::FAILURE],
+            'invalid' => [Status::invalid(), Command::INVALID],
+        ];
     }
 
-    #[Test] public function failureReturnsCorrectStatusCode(): void
+    #[Test]
+    #[DataProvider('statusDataProvider')]
+    public function statusMethodReturnsSymfonyStatusCode(int $status, int $expected): void
     {
-        $expectedStatusCode = defined(Command::class . 'Command::class' . '::FAILURE')
-            ? Command::FAILURE
-            : StatusAwareInterface::FAILURE;
-
-        self::assertEquals(
-            $expectedStatusCode,
-            Status::failure()
-        );
-    }
-
-    #[Test] public function invalidReturnsCorrectStatusCode(): void
-    {
-        $expectedStatusCode = defined(Command::class . 'Command::class' . '::INVALID')
-            ? Command::INVALID
-            : StatusAwareInterface::INVALID;
-
-        self::assertEquals(
-            $expectedStatusCode,
-            Status::invalid()
-        );
+        self::assertSame($expected, $status);
     }
 }

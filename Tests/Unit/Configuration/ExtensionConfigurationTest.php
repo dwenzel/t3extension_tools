@@ -42,6 +42,7 @@ class ExtensionConfigurationTest extends TestCase
         $iconRegistryMock = $this->createMock(IconRegistry::class);
         $iconRegistryMock->expects($this->never())
             ->method('registerIcon');
+        GeneralUtility::setSingletonInstance(IconRegistry::class, $iconRegistryMock);
 
         // Create a test class extending ExtensionConfiguration
         $testClass = new class extends ExtensionConfiguration {
