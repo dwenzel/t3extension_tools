@@ -37,12 +37,20 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
     use ConfigureTrait;
     use InitializeTrait;
 
-    public const DEFAULT_NAME = 't3extension-tools:delete-logs:delete-logs';
+    public const DEFAULT_NAME = 't3extension-tools:delete-logs';
     public const MESSAGE_DESCRIPTION_COMMAND = 'Deletes a file according to retention policy.';
     public const MESSAGE_HELP_COMMAND = 'Delete log file';
     public const MESSAGE_SUCCESS = '%s file(s) successfully deleted';
     public const MESSAGE_STARTING = 'Start to delete log files';
     public const WARNING_MISSING_PARAMETER = 'Parameter "%s" must not be omitted';
+    public const ERROR_INVALID_AGE = 'Invalid age "%s". The age must be a number of days (0 or more).';
+    public const ERROR_INVALID_PATTERN = 'Invalid file pattern "%s". The pattern must be a regular expression including delimiters.';
+    public const ERROR_INVALID_PATH = 'Invalid log file path %s';
+    public const ERROR_DELETE_FAILED = 'Could not delete file %s';
+
+    protected const DATE_PREFIX_PATTERN = '^[0-9]{4}-[0-9]{2}-[0-9]{2}';
+    protected const DATE_FORMAT = 'Y-m-d';
+    protected const SECONDS_PER_DAY = 86400;
 
     protected const ARGUMENTS = [
         AgeArgument::class,
@@ -55,75 +63,78 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
      */
     protected static array $argumentsToConfigure = self::ARGUMENTS;
 
-    /**
-     * @throws \Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $filePattern = $input->getArgument(FilePatternArgument::NAME);
-        $maxAge = (int)$input->getArgument(AgeArgument::NAME);
+        $filePattern = (string)$input->getArgument(FilePatternArgument::NAME);
+        $maxAge = (string)$input->getArgument(AgeArgument::NAME);
 
-        // [0-9]{4}-[0-9]{2}-[0-9]{2}_requests\.log
+        if ($filePattern === '') {
+            $this->io->error(sprintf(self::WARNING_MISSING_PARAMETER, FilePatternArgument::NAME));
+            return self::INVALID;
+        }
+        // preg_match() returns false and raises a warning for an invalid pattern
+        if (@preg_match($filePattern, '') === false) {
+            $this->io->error(sprintf(self::ERROR_INVALID_PATTERN, $filePattern));
+            return self::INVALID;
+        }
+        if (!ctype_digit($maxAge)) {
+            $this->io->error(sprintf(self::ERROR_INVALID_AGE, $maxAge));
+            return self::INVALID;
+        }
+
         $this->io->comment(static::MESSAGE_STARTING);
 
         $absDirectoryPath = $this->determineAbsoluteDirectoryPath($input);
         if (
             !(GeneralUtility::isAllowedAbsPath($absDirectoryPath)
                 || PathUtility::isAllowedAdditionalPath($absDirectoryPath))
+            || !is_dir($absDirectoryPath)
         ) {
-            $this->io->error(
-                sprintf('Invalid log file path %s', $absDirectoryPath)
-            );
-
-            return 1;
+            $this->io->error(sprintf(self::ERROR_INVALID_PATH, $absDirectoryPath));
+            return self::FAILURE;
         }
 
-        $currentDate = new \DateTimeImmutable('today');
-        $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(AgeArgument::NAME)}D"));
-
-        $directoryIterator = new \DirectoryIterator($absDirectoryPath);
-        $fileList = new \RegexIterator($directoryIterator, $filePattern);
+        $useDatePrefix = $this->hasDatePrefix($filePattern);
         $deletedFilesCount = 0;
-        foreach ($fileList as $file) {
-            if (!$file instanceof \SplFileInfo) {
+        $failedFilesCount = 0;
+        foreach (new \RegexIterator(new \DirectoryIterator($absDirectoryPath), $filePattern) as $file) {
+            if (!$file instanceof \SplFileInfo || !$file->isFile()) {
                 continue;
             }
-            $age = 0;
-            if ($this->hasDatePrefix($filePattern)) {
-                // file pattern starts with expected date format (yyyy-mm-dd)
-                $dateString = substr($file->getFilename(), 0, 10);
-                $dateByPrefix = new \DateTimeImmutable($dateString);
-
-                // Calculate age properly - if file date is older than current, calculate days between
-                if ($dateByPrefix < $currentDate) {
-                    $age = $currentDate->diff($dateByPrefix)->days;
-                }
+            if ($this->determineAgeInDays($file, $useDatePrefix) <= (int)$maxAge) {
+                continue;
             }
-
-            // note: Most Unix OS do not record a files creation time
-            // CTime reflects the time of last metadata change (e.g. access rights)
-            if (!$this->hasDatePrefix($filePattern)
-            ) {
-                // Calculate age in days from current date
-                $ageInSeconds = time() - $file->getCTime();
-                $age = floor($ageInSeconds / 86400); // Convert seconds to days
+            // unlink() raises a warning and returns false on failure
+            if (!@unlink($file->getPathname())) {
+                $this->io->error(sprintf(self::ERROR_DELETE_FAILED, $file->getPathname()));
+                $failedFilesCount++;
+                continue;
             }
-
-            if ($age > $maxAge) {
-                $filePath = $file->getRealPath();
-                try {
-                    unlink($filePath);
-                    $deletedFilesCount++;
-                } catch (\Exception $exception) {
-                    $this->io->error($exception->getMessage());
-                    return self::FAILURE;
-                }
-            }
+            $deletedFilesCount++;
         }
 
         $this->io->info(sprintf(self::MESSAGE_SUCCESS, $deletedFilesCount));
 
-        return self::SUCCESS;
+        return $failedFilesCount > 0 ? self::FAILURE : self::SUCCESS;
+    }
+
+    /**
+     * Age in full days. Uses the date at the beginning of the file name
+     * (yyyy-mm-dd) if the pattern expects one and the file name starts
+     * with a valid date, otherwise the modification time.
+     */
+    protected function determineAgeInDays(\SplFileInfo $file, bool $useDatePrefix): int
+    {
+        if ($useDatePrefix) {
+            $prefix = substr($file->getFilename(), 0, 10);
+            $date = \DateTimeImmutable::createFromFormat('!' . self::DATE_FORMAT, $prefix);
+            if ($date instanceof \DateTimeImmutable && $date->format(self::DATE_FORMAT) === $prefix) {
+                $today = new \DateTimeImmutable('today');
+                return $date < $today ? (int)$today->diff($date)->days : 0;
+            }
+        }
+
+        return (int)floor((time() - $file->getMTime()) / self::SECONDS_PER_DAY);
     }
 
     /**
@@ -154,15 +165,15 @@ class DeleteLogs extends Command implements ArgumentAwareInterface
     }
 
     /**
-     * @param mixed $filePattern
-     * @return bool
+     * Whether the pattern expects file names starting with a date (yyyy-mm-dd),
+     * e.g. `/^[0-9]{4}-[0-9]{2}-[0-9]{2}_requests\.log/`. Any delimiter is accepted.
      */
     protected function hasDatePrefix(mixed $filePattern): bool
     {
-        return !empty($filePattern)
-            && str_contains(
-                haystack: $filePattern,
-                needle: '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_',
-            );
+        if (!is_string($filePattern) || strlen($filePattern) < 2) {
+            return false;
+        }
+
+        return str_starts_with(substr($filePattern, 1), self::DATE_PREFIX_PATTERN);
     }
 }

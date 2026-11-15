@@ -3,7 +3,7 @@
 namespace DWenzel\T3extensionTools\Command\Argument;
 
 use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
@@ -21,13 +21,13 @@ use Symfony\Component\Console\Input\InputOption;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ExampleArgument
+class ExampleArgument implements InputArgumentInterface
 {
     use InputArgumentTrait;
 
     public const NAME = 'exampleArgument';
     public const HELP = 'an example argument for an example command';
-    public const MODE = InputOption::VALUE_REQUIRED;
+    public const MODE = InputArgument::OPTIONAL;
     public const DESCRIPTION = 'example argument';
     public const SHORTCUT = 'eArg';
     public const DEFAULT = null;

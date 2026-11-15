@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace DWenzel\T3extensionTools\Tests\Functional\Command;
 
+use DWenzel\T3extensionTools\Command\Argument\ExampleArgument;
 use DWenzel\T3extensionTools\Command\ExampleCommand;
+use DWenzel\T3extensionTools\Command\Option\ExampleOption;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -47,6 +49,16 @@ class ExampleCommandTest extends FunctionalTestCase
             ExampleCommand::OPTION_CONNECTION_DEFAULT,
             $command->getDefinition()->getOption(ExampleCommand::OPTION_CONNECTION)->getDefault()
         );
+    }
+
+    #[Test]
+    public function commandDefinesExampleArgumentAndOption(): void
+    {
+        $definition = (new ExampleCommand())->getDefinition();
+
+        self::assertTrue($definition->hasArgument(ExampleArgument::NAME));
+        self::assertFalse($definition->getArgument(ExampleArgument::NAME)->isRequired());
+        self::assertTrue($definition->hasOption(ExampleOption::NAME));
     }
 
     #[Test]

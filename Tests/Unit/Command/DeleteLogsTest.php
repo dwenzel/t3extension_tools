@@ -80,7 +80,9 @@ class DeleteLogsTest extends TestCase
             'date prefix' => ['/^[0-9]{4}-[0-9]{2}-[0-9]{2}_test.log/', true],
             'date prefix without suffix' => ['/^[0-9]{4}-[0-9]{2}-[0-9]{2}_/', true],
             'date not at the start' => ['/test_[0-9]{4}-[0-9]{2}-[0-9]{2}.log/', false],
-            'date prefix with other delimiter' => ['#^[0-9]{4}-[0-9]{2}-[0-9]{2}_test.log#', false],
+            'date prefix with other delimiter' => ['#^[0-9]{4}-[0-9]{2}-[0-9]{2}_test.log#', true],
+            'date prefix without underscore' => ['/^[0-9]{4}-[0-9]{2}-[0-9]{2}\\.log/', true],
+            'delimiter only' => ['/', false],
             'empty string' => ['', false],
             'null' => [null, false],
         ];
