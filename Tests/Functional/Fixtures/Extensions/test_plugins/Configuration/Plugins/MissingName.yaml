@@ -1,0 +1,5 @@
+# invalid: plugin.name is missing, the file must be skipped
+plugin:
+  extensionName: 'TestPlugins'
+  controllerActions:
+    DWenzel\T3extensionTools\TestPlugins\Controller\ListController: 'list'

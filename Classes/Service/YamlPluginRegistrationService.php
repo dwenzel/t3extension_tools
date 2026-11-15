@@ -9,7 +9,6 @@ use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /***************************************************************
@@ -40,6 +39,7 @@ readonly class YamlPluginRegistrationService implements SingletonInterface
         private PluginConfigurationScanner $scanner,
         private PluginConfigurationParser $parser,
         private ?LoggerInterface $logger = null,
+        private PluginRegistrar $registrar = new PluginRegistrar(),
     ) {}
 
     /**
@@ -69,26 +69,7 @@ readonly class YamlPluginRegistrationService implements SingletonInterface
 
         foreach ($pluginConfigurations as $config) {
             if ($config instanceof PluginRegistrationInterface) {
-                ExtensionUtility::registerPlugin(
-                    $config->getExtensionName(),
-                    $config->getPluginName(),
-                    $config->getPluginTitle(),
-                    $config->getPluginIcon(),
-                    $config->getPluginGroup()
-                );
-
-                // Add flexform if specified
-                if (!empty($config->getFlexForm())) {
-                    $listType = strtolower($config->getExtensionName() . '_' . GeneralUtility::camelCaseToLowerCaseUnderscored($config->getPluginName()));
-
-                    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;Configuration,pi_flexform,', $listType, 'after:subheader');
-
-                    if (substr($config->getFlexForm(), 0, 5) === 'FILE:') {
-                        $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds'][$listType] = $config->getFlexForm();
-                    } else {
-                        $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds'][$listType] = $config->getFlexForm();
-                    }
-                }
+                $this->registrar->register($config);
             }
         }
     }
