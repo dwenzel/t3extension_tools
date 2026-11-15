@@ -1,141 +1,173 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Tests\Unit\Service;
 
 use DWenzel\T3extensionTools\Configuration\PluginConfigurationInterface;
 use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
 use DWenzel\T3extensionTools\Service\PluginConfigurationParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 class PluginConfigurationParserTest extends TestCase
 {
-    /**
-     * @var PluginConfigurationParser
-     */
-    protected $subject;
+    protected const FIXTURE_FILE = __DIR__ . '/../Fixtures/Packages/with_plugins/Configuration/Plugins/First.yaml';
+
+    protected PluginConfigurationParser $subject;
 
     protected function setUp(): void
     {
         $this->subject = new PluginConfigurationParser();
     }
 
-    #[Test] public function parseYamlReturnsPluginConfigurationInterfaceInstance(): void
+    /**
+     * @return array<string, array{string, array<string, mixed>}>
+     */
+    public static function pluginDataProvider(): array
     {
-        $yamlContent = <<<YAML
-plugin:
-  extensionName: 'TestExtension'
-  name: 'TestPlugin'
-  type: 'CType'
-  controllerActions:
-    Test: 'list,show'
-  nonCacheableControllerActions:
-    Test: 'list'
-YAML;
+        return [
+            'complete plugin section' => [
+                <<<YAML
+                plugin:
+                  extensionName: 'TestExtension'
+                  name: 'TestPlugin'
+                  type: 'CType'
+                  controllerActions:
+                    Test: 'list,show'
+                  nonCacheableControllerActions:
+                    Test: 'list'
+                YAML,
+                [
+                    'getExtensionName' => 'TestExtension',
+                    'getPluginName' => 'TestPlugin',
+                    'getPluginType' => ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
+                    'getControllerActions' => ['Test' => 'list,show'],
+                    'getNonCacheableControllerActions' => ['Test' => 'list'],
+                ],
+            ],
+            'type defaults to content element, actions to empty arrays' => [
+                <<<YAML
+                plugin:
+                  extensionName: 'TestExtension'
+                  name: 'TestPlugin'
+                YAML,
+                [
+                    'getPluginType' => ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
+                    'getControllerActions' => [],
+                    'getNonCacheableControllerActions' => [],
+                ],
+            ],
+            'type list_type is kept' => [
+                <<<YAML
+                plugin:
+                  extensionName: 'TestExtension'
+                  name: 'TestPlugin'
+                  type: 'list_type'
+                YAML,
+                ['getPluginType' => 'list_type'],
+            ],
+            'actions as list' => [
+                <<<YAML
+                plugin:
+                  extensionName: 'TestExtension'
+                  name: 'TestPlugin'
+                  controllerActions:
+                    Test: ['list', 'show']
+                YAML,
+                ['getControllerActions' => ['Test' => ['list', 'show']]],
+            ],
+            'complete registration section' => [
+                <<<YAML
+                plugin:
+                  extensionName: 'TestExtension'
+                  name: 'TestPlugin'
+                registration:
+                  title: 'Test Plugin'
+                  description: 'Test Description'
+                  icon: 'test-icon'
+                  group: 'test'
+                  flexForm: 'FILE:EXT:test/flexform.xml'
+                YAML,
+                [
+                    'getPluginTitle' => 'Test Plugin',
+                    'getPluginDescription' => 'Test Description',
+                    'getPluginIcon' => 'test-icon',
+                    'getPluginGroup' => 'test',
+                    'getFlexForm' => 'FILE:EXT:test/flexform.xml',
+                ],
+            ],
+            'registration values default to empty strings' => [
+                <<<YAML
+                plugin:
+                  extensionName: 'TestExtension'
+                  name: 'TestPlugin'
+                YAML,
+                [
+                    'getPluginTitle' => '',
+                    'getPluginDescription' => '',
+                    'getPluginIcon' => '',
+                    'getPluginGroup' => '',
+                    'getFlexForm' => '',
+                ],
+            ],
+        ];
+    }
 
-        $result = $this->subject->parseYaml($yamlContent);
+    /**
+     * @param array<string, mixed> $expectedValues getter => expected value
+     */
+    #[Test]
+    #[DataProvider('pluginDataProvider')]
+    public function parseYamlReturnsConfigurationWithExpectedValues(string $yaml, array $expectedValues): void
+    {
+        $result = $this->subject->parseYaml($yaml);
+
         self::assertInstanceOf(PluginConfigurationInterface::class, $result);
-    }
-
-    #[Test] public function parseYamlWithRegistrationReturnsPluginRegistrationInterfaceInstance(): void
-    {
-        $yamlContent = <<<YAML
-plugin:
-  extensionName: 'TestExtension'
-  name: 'TestPlugin'
-  type: 'CType'
-  controllerActions:
-    Test: 'list,show'
-  nonCacheableControllerActions:
-    Test: 'list'
-registration:
-  title: 'Test Plugin'
-  description: 'Test Description'
-  icon: 'test-icon'
-  group: 'test'
-  flexForm: 'EXT:test/flexform.xml'
-YAML;
-
-        $result = $this->subject->parseYaml($yamlContent);
         self::assertInstanceOf(PluginRegistrationInterface::class, $result);
+        foreach ($expectedValues as $getter => $expected) {
+            self::assertSame($expected, $result->$getter(), $getter);
+        }
     }
 
-    #[Test] public function parseYamlSetsCorrectPluginValues(): void
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function invalidYamlDataProvider(): array
     {
-        $yamlContent = <<<YAML
-plugin:
-  extensionName: 'TestExtension'
-  name: 'TestPlugin'
-  type: 'CType'
-  controllerActions:
-    Test: 'list,show'
-  nonCacheableControllerActions:
-    Test: 'list'
-YAML;
-
-        $result = $this->subject->parseYaml($yamlContent);
-
-        self::assertEquals('TestExtension', $result->getExtensionName());
-        self::assertEquals('TestPlugin', $result->getPluginName());
-        self::assertEquals(ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT, $result->getPluginType());
-        self::assertEquals(['Test' => 'list,show'], $result->getControllerActions());
-        self::assertEquals(['Test' => 'list'], $result->getNonCacheableControllerActions());
+        return [
+            'empty content' => [''],
+            'missing plugin section' => ["registration:\n  title: 'Test Plugin'"],
+            'invalid syntax' => ["plugin:\n  name: 'a\n - b"],
+        ];
     }
 
-    #[Test] public function parseYamlWithListTypePluginType(): void
-    {
-        $yamlContent = <<<YAML
-plugin:
-  extensionName: 'TestExtension'
-  name: 'TestPlugin'
-  type: 'list_type'
-  controllerActions:
-    Test: 'list,show'
-YAML;
-
-        $result = $this->subject->parseYaml($yamlContent);
-
-        // ExtensionUtility::PLUGIN_TYPE_PLUGIN ('list_type') does not exist in TYPO3 14
-        self::assertEquals('list_type', $result->getPluginType());
-    }
-
-    #[Test] public function parseYamlSetsCorrectRegistrationValues(): void
-    {
-        $yamlContent = <<<YAML
-plugin:
-  extensionName: 'TestExtension'
-  name: 'TestPlugin'
-  type: 'CType'
-  controllerActions:
-    Test: 'list,show'
-registration:
-  title: 'Test Plugin'
-  description: 'Test Description'
-  icon: 'test-icon'
-  group: 'test'
-  flexForm: 'FILE:EXT:test/flexform.xml'
-YAML;
-
-        $result = $this->subject->parseYaml($yamlContent);
-
-        self::assertInstanceOf(PluginRegistrationInterface::class, $result);
-        self::assertEquals('Test Plugin', $result->getPluginTitle());
-        self::assertEquals('Test Description', $result->getPluginDescription());
-        self::assertEquals('test-icon', $result->getPluginIcon());
-        self::assertEquals('test', $result->getPluginGroup());
-        self::assertEquals('FILE:EXT:test/flexform.xml', $result->getFlexForm());
-    }
-
-    #[Test] public function parseYamlThrowsExceptionOnMissingPluginSection(): void
+    #[Test]
+    #[DataProvider('invalidYamlDataProvider')]
+    public function parseYamlThrowsExceptionForInvalidContent(string $yaml): void
     {
         $this->expectException(\RuntimeException::class);
 
-        $yamlContent = <<<YAML
-registration:
-  title: 'Test Plugin'
-YAML;
+        $this->subject->parseYaml($yaml);
+    }
 
-        $this->subject->parseYaml($yamlContent);
+    #[Test]
+    public function parseFileReturnsConfigurationFromFile(): void
+    {
+        $result = $this->subject->parseFile(self::FIXTURE_FILE);
+
+        self::assertInstanceOf(PluginConfigurationInterface::class, $result);
+        self::assertSame('First', $result->getPluginName());
+    }
+
+    #[Test]
+    public function parseFileThrowsExceptionForMissingFile(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionCode(8656676970);
+
+        $this->subject->parseFile(__DIR__ . '/does-not-exist.yaml');
     }
 }
