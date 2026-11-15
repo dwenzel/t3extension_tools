@@ -141,6 +141,13 @@ class PluginConfigurationParserTest extends TestCase
             'empty content' => [''],
             'missing plugin section' => ["registration:\n  title: 'Test Plugin'"],
             'invalid syntax' => ["plugin:\n  name: 'a\n - b"],
+            'plugin section is not a map' => ["plugin: 'TestPlugin'"],
+            'missing extension name' => ["plugin:\n  name: 'TestPlugin'"],
+            'empty extension name' => ["plugin:\n  extensionName: ''\n  name: 'TestPlugin'"],
+            'missing plugin name' => ["plugin:\n  extensionName: 'TestExtension'"],
+            'plugin name is not a string' => ["plugin:\n  extensionName: 'TestExtension'\n  name: ['a']"],
+            'controller actions are not a map' => ["plugin:\n  extensionName: 'TestExtension'\n  name: 'TestPlugin'\n  controllerActions: 'list'"],
+            'registration section is not a map' => ["plugin:\n  extensionName: 'TestExtension'\n  name: 'TestPlugin'\nregistration: 'x'"],
         ];
     }
 
