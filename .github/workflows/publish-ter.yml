@@ -34,10 +34,10 @@ jobs:
 
       # Workflow files (exclusion list) from the triggering ref, extension code from the tag
       - name: Checkout workflow files
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: refs/tags/${{ env.VERSION }}
           path: extension
