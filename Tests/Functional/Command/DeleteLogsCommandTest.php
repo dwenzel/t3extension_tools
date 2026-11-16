@@ -1,208 +1,278 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DWenzel\T3extensionTools\Tests\Functional\Command;
 
 use DWenzel\T3extensionTools\Command\Argument\AgeArgument;
 use DWenzel\T3extensionTools\Command\Argument\DirectoryArgument;
 use DWenzel\T3extensionTools\Command\Argument\FilePatternArgument;
 use DWenzel\T3extensionTools\Command\DeleteLogs;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Tester\CommandTester;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-class DeleteLogsCommandTest extends TestCase
+/**
+ * Runs the real command against log files created below the test instance.
+ * Ages are given in days and applied to the modification time.
+ */
+class DeleteLogsCommandTest extends FunctionalTestCase
 {
-    protected DeleteLogs $subject;
-    protected string $testDir;
+    protected const LOG_DIRECTORY = 'fileadmin/logs';
+    protected const DATE_PREFIX_PATTERN = '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_requests\.log/';
+
+    protected array $coreExtensionsToLoad = ['install'];
+
+    protected array $testExtensionsToLoad = ['t3extension_tools'];
+
+    protected bool $initializeDatabase = false;
+
+    protected string $logPath;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->subject = new class extends DeleteLogs {
-            public function executeTest(ArrayInput $input, BufferedOutput $output): int
-            {
-                $this->initialize($input, $output);
-                return $this->executeForTest($input, $output);
-            }
-
-            public function configure(): void
-            {
-                parent::configure();
-            }
-
-            protected function executeForTest(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output): int
-            {
-                $filePattern = $input->getArgument(\DWenzel\T3extensionTools\Command\Argument\FilePatternArgument::NAME);
-                $maxAge = (int)$input->getArgument(\DWenzel\T3extensionTools\Command\Argument\AgeArgument::NAME);
-
-                $this->io->comment(static::MESSAGE_STARTING);
-
-                $absDirectoryPath = (string)$input->getArgument(\DWenzel\T3extensionTools\Command\Argument\DirectoryArgument::NAME);
-
-                // Skip TYPO3 path validation for testing
-                if (!is_dir($absDirectoryPath)) {
-                    $this->io->error(
-                        sprintf('Invalid log file path %s', $absDirectoryPath)
-                    );
-                    return 1;
-                }
-
-                $currentDate = new \DateTimeImmutable('today');
-                $keepUntilDate = $currentDate->sub(new \DateInterval("P{$input->getArgument(\DWenzel\T3extensionTools\Command\Argument\AgeArgument::NAME)}D"));
-
-                $directoryIterator = new \DirectoryIterator($absDirectoryPath);
-                $fileList = new \RegexIterator($directoryIterator, $filePattern);
-                $deletedFilesCount = 0;
-                foreach ($fileList as $file) {
-                    if (!$file instanceof \SplFileInfo) {
-                        continue;
-                    }
-
-                    $age = 0;
-                    if ($this->hasDatePrefix($filePattern)) {
-                        // file pattern starts with expected date format (yyyy-mm-dd)
-                        $dateString = substr($file->getFilename(), 0, 10);
-                        $dateByPrefix = new \DateTimeImmutable($dateString);
-
-                        // Calculate age properly - if file date is older than current, calculate days between
-                        if ($dateByPrefix < $currentDate) {
-                            $age = $currentDate->diff($dateByPrefix)->days;
-                        } else {
-                            $age = 0; // File is in the future, treat as new
-                        }
-                    }
-
-                    // note: Most Unix OS do not record a files creation time
-                    // Use modification time instead of change time for testing
-                    if (!$this->hasDatePrefix($filePattern)
-                    ) {
-                        // Calculate age in days from current date
-                        $ageInSeconds = time() - $file->getMTime();
-                        $age = floor($ageInSeconds / 86400); // Convert seconds to days
-                    }
-
-                    if ($age > $maxAge) {
-                        $filePath = $file->getRealPath();
-                        try {
-                            unlink($filePath);
-                            $deletedFilesCount++;
-                        } catch (\Exception $exception) {
-                            $this->io->error($exception->getMessage());
-                            return self::FAILURE;
-                        }
-                    }
-                }
-
-                $this->io->info(sprintf(self::MESSAGE_SUCCESS, $deletedFilesCount));
-
-                return self::SUCCESS;
-            }
-        };
-
-        // Create a temporary test directory for log files
-        $this->testDir = sys_get_temp_dir() . '/t3extension_tools_test_' . uniqid('', true);
-        mkdir($this->testDir, 0777, true);
-
+        $this->logPath = Environment::getPublicPath() . '/' . self::LOG_DIRECTORY;
+        $this->removeDirectory($this->logPath);
+        mkdir($this->logPath, 0777, true);
     }
 
     protected function tearDown(): void
     {
-        // Clean up any created test files
-        if (is_dir($this->testDir)) {
-            $files = new \DirectoryIterator($this->testDir);
-            foreach ($files as $file) {
-                if (!$file->isDot() && $file->isFile()) {
-                    unlink($file->getPathname());
-                }
-            }
-            rmdir($this->testDir);
-        }
-
+        $this->removeDirectory($this->logPath);
         parent::tearDown();
     }
 
-    private function createTestLogFile(string $filename, int $daysOld = 0): string
+    /**
+     * @return array<string, array{array<string, int>, array<string, string>, list<string>, list<string>}>
+     */
+    public static function deletionDataProvider(): array
     {
-        $filePath = $this->testDir . '/' . $filename;
-        file_put_contents($filePath, 'Test log content');
+        $today = date('Y-m-d');
 
-        if ($daysOld > 0) {
-            // Set the modification time to X days ago
-            touch($filePath, time() - ($daysOld * 86400));
+        return [
+            'files older than age are deleted by modification time' => [
+                ['old.log' => 100, 'recent.log' => 10],
+                [AgeArgument::NAME => '30', FilePatternArgument::NAME => '/\.log$/'],
+                ['old.log'],
+                ['recent.log'],
+            ],
+            'file exactly at the age limit is kept' => [
+                ['limit.log' => 30, 'older.log' => 31],
+                [AgeArgument::NAME => '30', FilePatternArgument::NAME => '/\.log$/'],
+                ['older.log'],
+                ['limit.log'],
+            ],
+            'files not matching the pattern are kept' => [
+                ['old.log' => 100, 'old.txt' => 100],
+                [AgeArgument::NAME => '30', FilePatternArgument::NAME => '/\.log$/'],
+                ['old.log'],
+                ['old.txt'],
+            ],
+            'date prefix in the file name determines the age' => [
+                ['2020-01-01_requests.log' => 0, $today . '_requests.log' => 400],
+                [AgeArgument::NAME => '365', FilePatternArgument::NAME => self::DATE_PREFIX_PATTERN],
+                ['2020-01-01_requests.log'],
+                [$today . '_requests.log'],
+            ],
+            'date prefix pattern with other delimiter' => [
+                ['2020-01-01_requests.log' => 0],
+                [AgeArgument::NAME => '365', FilePatternArgument::NAME => '#^[0-9]{4}-[0-9]{2}-[0-9]{2}_requests\.log#'],
+                ['2020-01-01_requests.log'],
+                [],
+            ],
+            'invalid date prefix falls back to modification time' => [
+                ['2020-13-45_requests.log' => 100, '2020-13-46_requests.log' => 1],
+                [AgeArgument::NAME => '30', FilePatternArgument::NAME => self::DATE_PREFIX_PATTERN],
+                ['2020-13-45_requests.log'],
+                ['2020-13-46_requests.log'],
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, int> $files file name => age in days
+     * @param array<string, string> $arguments
+     * @param list<string> $expectedDeleted
+     * @param list<string> $expectedKept
+     */
+    #[Test]
+    #[DataProvider('deletionDataProvider')]
+    public function commandDeletesFilesOlderThanAge(
+        array $files,
+        array $arguments,
+        array $expectedDeleted,
+        array $expectedKept,
+    ): void {
+        foreach ($files as $fileName => $ageInDays) {
+            $this->createLogFile($fileName, $ageInDays);
+        }
+        $tester = $this->createCommandTester();
+
+        $exitCode = $tester->execute([DirectoryArgument::NAME => self::LOG_DIRECTORY] + $arguments);
+
+        self::assertSame(Command::SUCCESS, $exitCode, $tester->getDisplay());
+        foreach ($expectedDeleted as $fileName) {
+            self::assertFileDoesNotExist($this->logPath . '/' . $fileName);
+        }
+        foreach ($expectedKept as $fileName) {
+            self::assertFileExists($this->logPath . '/' . $fileName);
+        }
+        self::assertStringContainsString(
+            sprintf(DeleteLogs::MESSAGE_SUCCESS, count($expectedDeleted)),
+            $tester->getDisplay()
+        );
+    }
+
+    #[Test]
+    public function directoryMatchingThePatternIsNotDeleted(): void
+    {
+        mkdir($this->logPath . '/archive.log');
+        touch($this->logPath . '/archive.log', time() - 100 * 86400);
+        $tester = $this->createCommandTester();
+
+        $exitCode = $tester->execute([
+            AgeArgument::NAME => '30',
+            DirectoryArgument::NAME => self::LOG_DIRECTORY,
+            FilePatternArgument::NAME => '/\.log$/',
+        ]);
+
+        self::assertSame(Command::SUCCESS, $exitCode, $tester->getDisplay());
+        self::assertDirectoryExists($this->logPath . '/archive.log');
+    }
+
+    #[Test]
+    public function fileThatCannotBeDeletedResultsInFailure(): void
+    {
+        $this->createLogFile('old.log', 100);
+        chmod($this->logPath, 0555);
+        $tester = $this->createCommandTester();
+
+        try {
+            $exitCode = $tester->execute([
+                AgeArgument::NAME => '30',
+                DirectoryArgument::NAME => self::LOG_DIRECTORY,
+                FilePatternArgument::NAME => '/\.log$/',
+            ]);
+        } finally {
+            chmod($this->logPath, 0777);
         }
 
-        return $filePath;
+        self::assertSame(Command::FAILURE, $exitCode, $tester->getDisplay());
+        self::assertStringContainsString('Could not delete file', $tester->getDisplay());
+        self::assertFileExists($this->logPath . '/old.log');
     }
 
-    public function testExecuteDeletesOldFiles(): void
+    #[Test]
+    public function defaultDirectoryIsVarLog(): void
     {
-        // Create test files with different ages
-        $oldFile = $this->createTestLogFile('old_log.log', 100);
-        $recentFile = $this->createTestLogFile('recent_log.log', 10);
+        $varLogPath = Environment::getVarPath() . '/log';
+        if (!is_dir($varLogPath)) {
+            mkdir($varLogPath, 0777, true);
+        }
+        $fileName = $varLogPath . '/delete-logs-test.log';
+        file_put_contents($fileName, 'log');
+        touch($fileName, time() - 100 * 86400);
+        $tester = $this->createCommandTester();
 
-        $input = new ArrayInput([
+        $exitCode = $tester->execute([
             AgeArgument::NAME => '30',
-            DirectoryArgument::NAME => $this->testDir,
-            FilePatternArgument::NAME => '/.*\.log/',
-        ], $this->subject->getDefinition());
-        $output = new BufferedOutput();
+            FilePatternArgument::NAME => '/^delete-logs-test\.log$/',
+        ]);
 
-        // Execute the command
-        // @phpstan-ignore method.notFound
-        $result = $this->subject->executeTest($input, $output);
-
-        // Check that the command executed successfully
-        self::assertEquals(0, $result);
-
-        // Verify old file was deleted and recent file still exists
-        self::assertFileDoesNotExist($oldFile);
-        self::assertFileExists($recentFile);
-
-        // Check that the output contains the success message
-        self::assertStringContainsString('1 file(s) successfully deleted', $output->fetch());
+        self::assertSame(Command::SUCCESS, $exitCode, $tester->getDisplay());
+        self::assertFileDoesNotExist($fileName);
     }
 
-    public function testExecuteHandlesDatePrefixedFiles(): void
+    /**
+     * @return array<string, array{array<string, string>, int, string}>
+     */
+    public static function invalidInputDataProvider(): array
     {
-        // Create date-prefixed files
-        $oldDatePrefixedFile = $this->createTestLogFile('2020-01-01_logs.log');
-        $recentDatePrefixedFile = $this->createTestLogFile(date('Y-m-d') . '_logs.log');
-
-        $input = new ArrayInput([
-            AgeArgument::NAME => '365', // 1 year
-            DirectoryArgument::NAME => $this->testDir,
-            FilePatternArgument::NAME => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}_logs\.log/',
-        ], $this->subject->getDefinition());
-        $output = new BufferedOutput();
-
-        // Execute the command
-        // @phpstan-ignore method.notFound
-        $result = $this->subject->executeTest($input, $output);
-
-        // Check that the command executed successfully
-        self::assertEquals(0, $result);
-
-        // Verify the old date-prefixed file was deleted
-        self::assertFileDoesNotExist($oldDatePrefixedFile);
-        self::assertFileExists($recentDatePrefixedFile);
+        return [
+            'missing pattern' => [
+                [AgeArgument::NAME => '30', DirectoryArgument::NAME => self::LOG_DIRECTORY],
+                Command::INVALID,
+                sprintf(DeleteLogs::WARNING_MISSING_PARAMETER, FilePatternArgument::NAME),
+            ],
+            'invalid pattern' => [
+                [AgeArgument::NAME => '30', DirectoryArgument::NAME => self::LOG_DIRECTORY, FilePatternArgument::NAME => '/[/'],
+                Command::INVALID,
+                'Invalid file pattern',
+            ],
+            'age not a number' => [
+                [AgeArgument::NAME => 'abc', DirectoryArgument::NAME => self::LOG_DIRECTORY, FilePatternArgument::NAME => '/\.log$/'],
+                Command::INVALID,
+                'Invalid age',
+            ],
+            'negative age' => [
+                [AgeArgument::NAME => '-1', DirectoryArgument::NAME => self::LOG_DIRECTORY, FilePatternArgument::NAME => '/\.log$/'],
+                Command::INVALID,
+                'Invalid age',
+            ],
+            'directory outside of allowed paths' => [
+                [AgeArgument::NAME => '30', DirectoryArgument::NAME => '/etc', FilePatternArgument::NAME => '/\.log$/'],
+                Command::FAILURE,
+                'Invalid log file path',
+            ],
+            'directory does not exist' => [
+                [AgeArgument::NAME => '30', DirectoryArgument::NAME => 'fileadmin/does-not-exist', FilePatternArgument::NAME => '/\.log$/'],
+                Command::FAILURE,
+                'Invalid log file path',
+            ],
+        ];
     }
 
-    public function testExecuteHandlesInvalidDirectory(): void
+    /**
+     * @param array<string, string> $arguments
+     */
+    #[Test]
+    #[DataProvider('invalidInputDataProvider')]
+    public function commandRejectsInvalidInput(array $arguments, int $expectedExitCode, string $expectedMessage): void
     {
-        $input = new ArrayInput([
-            AgeArgument::NAME => '30',
-            DirectoryArgument::NAME => '/non/existent/directory',
-            FilePatternArgument::NAME => '/.*\.log/',
-        ], $this->subject->getDefinition());
-        $output = new BufferedOutput();
+        $this->createLogFile('old.log', 100);
+        $tester = $this->createCommandTester();
 
-        // Execute the command - should fail with directory error
-        // @phpstan-ignore method.notFound
-        $result = $this->subject->executeTest($input, $output);
+        $exitCode = $tester->execute($arguments);
 
-        // Check that the command failed
-        self::assertEquals(1, $result);
-        self::assertStringContainsString('Invalid log file path', $output->fetch());
+        self::assertSame($expectedExitCode, $exitCode, $tester->getDisplay());
+        self::assertStringContainsString($expectedMessage, $tester->getDisplay());
+        self::assertFileExists($this->logPath . '/old.log');
+    }
+
+    #[Test]
+    public function commandNameMatchesRegisteredName(): void
+    {
+        self::assertSame('t3extension-tools:delete-logs', DeleteLogs::DEFAULT_NAME);
+    }
+
+    protected function createCommandTester(): CommandTester
+    {
+        return new CommandTester(new DeleteLogs(DeleteLogs::DEFAULT_NAME));
+    }
+
+    protected function createLogFile(string $fileName, int $ageInDays): void
+    {
+        $path = $this->logPath . '/' . $fileName;
+        file_put_contents($path, 'log');
+        touch($path, time() - $ageInDays * 86400);
+    }
+
+    protected function removeDirectory(string $path): void
+    {
+        if (!is_dir($path)) {
+            return;
+        }
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($iterator as $item) {
+            $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
+        }
+        rmdir($path);
     }
 }

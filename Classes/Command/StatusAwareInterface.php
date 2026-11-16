@@ -18,6 +18,9 @@ namespace DWenzel\T3extensionTools\Command;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+/**
+ * @deprecated since 7.0, will be removed in 8.0. Use the constants of Symfony's Command class.
+ */
 interface StatusAwareInterface
 {
     public const SUCCESS = 0;
