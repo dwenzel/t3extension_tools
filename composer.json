@@ -29,6 +29,12 @@
       "DWenzel\\T3extensionTools\\": "Classes/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "DWenzel\\T3extensionTools\\TestPlugins\\": "Tests/Functional/Fixtures/Extensions/test_plugins/Classes/",
+      "DWenzel\\T3extensionTools\\Tests\\": "Tests/"
+    }
+  },
   "config": {
     "allow-plugins": {
       "a9f/fractor-extension-installer": true,

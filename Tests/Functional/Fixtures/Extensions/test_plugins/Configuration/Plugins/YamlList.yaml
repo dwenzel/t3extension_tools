@@ -1,0 +1,13 @@
+plugin:
+  extensionName: 'TestPlugins'
+  name: 'YamlList'
+  controllerActions:
+    DWenzel\T3extensionTools\TestPlugins\Controller\ListController: 'list,show'
+  nonCacheableControllerActions:
+    DWenzel\T3extensionTools\TestPlugins\Controller\ListController: 'show'
+registration:
+  title: 'YAML list plugin'
+  description: 'Plugin defined in YAML'
+  icon: 'content-plugin'
+  group: 'plugins'
+  flexForm: 'FILE:EXT:test_plugins/Configuration/FlexForms/List.xml'

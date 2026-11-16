@@ -59,10 +59,7 @@ class PluginConfigurationParser
     {
         $config = Yaml::parse($yamlContent);
 
-        // Validate required sections
-        if (!isset($config['plugin'])) {
-            throw new \RuntimeException('Plugin configuration must contain a "plugin" section', 7068134753);
-        }
+        $this->validate($config);
 
         // Create anonymous class implementing the required interfaces
         return new class ($config) implements PluginConfigurationInterface, PluginRegistrationInterface {
@@ -164,5 +161,36 @@ class PluginConfigurationParser
                 return $this->flexForm;
             }
         };
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    protected function validate(mixed $config): void
+    {
+        if (!is_array($config) || !isset($config['plugin'])) {
+            throw new \RuntimeException('Plugin configuration must contain a "plugin" section', 7068134753);
+        }
+        if (!is_array($config['plugin'])) {
+            throw new \RuntimeException('The "plugin" section must be a map', 1763200001);
+        }
+        foreach (['extensionName', 'name'] as $key) {
+            if (!is_string($config['plugin'][$key] ?? null) || trim($config['plugin'][$key]) === '') {
+                throw new \RuntimeException(sprintf('"plugin.%s" must be a non-empty string', $key), 1763200002);
+            }
+        }
+        foreach (['type'] as $key) {
+            if (isset($config['plugin'][$key]) && !is_string($config['plugin'][$key])) {
+                throw new \RuntimeException(sprintf('"plugin.%s" must be a string', $key), 1763200003);
+            }
+        }
+        foreach (['controllerActions', 'nonCacheableControllerActions'] as $key) {
+            if (isset($config['plugin'][$key]) && !is_array($config['plugin'][$key])) {
+                throw new \RuntimeException(sprintf('"plugin.%s" must be a map of controller => actions', $key), 1763200004);
+            }
+        }
+        if (isset($config['registration']) && !is_array($config['registration'])) {
+            throw new \RuntimeException('The "registration" section must be a map', 1763200005);
+        }
     }
 }

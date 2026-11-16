@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  DWenzel\T3extensionTools\TestPlugins\:
+    resource: '../Classes/*'
+
+  DWenzel\T3extensionTools\TestPlugins\Plugin\PhpListPlugin:
+    tags:
+      - name: 't3extensionTools.pluginConfiguration'
+      - name: 't3extensionTools.pluginRegistration'

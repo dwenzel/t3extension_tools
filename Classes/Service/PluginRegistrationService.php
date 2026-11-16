@@ -3,8 +3,6 @@
 namespace DWenzel\T3extensionTools\Service;
 
 use DWenzel\T3extensionTools\Configuration\PluginRegistrationInterface;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /**
  * Class PluginRegistrationService
@@ -15,40 +13,30 @@ class PluginRegistrationService
 {
     use PluginProcessorTrait;
 
+    protected PluginRegistrar $registrar;
+
     /**
-     * Constructor for PluginRegistrationService
-     *
-     * @param iterable<PluginRegistrationInterface> $plugins
+     * @param iterable<PluginRegistrationInterface|class-string> $plugins
      */
     public function __construct(
         protected iterable $plugins,
-    ) {}
+        ?PluginRegistrar $registrar = null,
+    ) {
+        $this->registrar = $registrar ?? new PluginRegistrar();
+    }
 
     /**
      * Register all plugins.
      * This method is used in EXT:t3extension_tools/Configuration/TCA/Overrides/tt_content.php
      * You must not call it in your extension.
-     *
      * For each plugin a class implementing the PluginRegistrationInterface must exist
      */
     public function registerPlugins(): void
     {
         $this->processPlugins(
             $this->plugins,
-            function ($plugin) {
-                $pluginSignature = ExtensionUtility::registerPlugin(
-                    $plugin->getExtensionName(),
-                    $plugin->getPluginName(),
-                    $plugin->getPluginTitle(),
-                    $plugin->getPluginIcon(),
-                    $plugin->getPluginGroup(),
-                    $plugin->getPluginDescription(),
-                );
-
-                if (!empty($flexForm = $plugin->getFlexForm())) {
-                    ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;Configuration,pi_flexform,', $pluginSignature, 'after:subheader');
-                    ExtensionManagementUtility::addPiFlexFormValue('*', $flexForm, $pluginSignature);
-                }
+            function (PluginRegistrationInterface $plugin): void {
+                $this->registrar->register($plugin);
             },
             PluginRegistrationInterface::class
         );

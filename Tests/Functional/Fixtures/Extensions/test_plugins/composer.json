@@ -1,0 +1,19 @@
+{
+    "name": "dwenzel/t3extension-tools-test-plugins",
+    "description": "Fixture extension for functional tests of plugin registration",
+    "license": "GPL-2.0-or-later",
+    "type": "typo3-cms-extension",
+    "require": {
+        "dwenzel/t3extension-tools": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "DWenzel\\T3extensionTools\\TestPlugins\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "test_plugins"
+        }
+    }
+}

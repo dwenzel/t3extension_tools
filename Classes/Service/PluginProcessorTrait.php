@@ -21,13 +21,24 @@ namespace DWenzel\T3extensionTools\Service;
 trait PluginProcessorTrait
 {
     /**
+     * Calls the callback for each plugin implementing the interface.
+     * Plugins are the objects collected by the service container
+     * (tagged services). Class names are still accepted and instantiated
+     * without constructor arguments.
+     *
      * @param iterable<class-string|object> $plugins
      */
     private function processPlugins(iterable $plugins, callable $callback, string $interface): void
     {
-        foreach ($plugins as $pluginClass) {
-            if (in_array($interface, class_implements($pluginClass), true)) {
-                $callback(new $pluginClass());
+        foreach ($plugins as $plugin) {
+            if (is_string($plugin)) {
+                if (!class_exists($plugin) || !is_subclass_of($plugin, $interface)) {
+                    continue;
+                }
+                $plugin = new $plugin();
+            }
+            if ($plugin instanceof $interface) {
+                $callback($plugin);
             }
         }
     }
