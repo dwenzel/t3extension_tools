@@ -13,8 +13,8 @@ The repository follows a trunk-based model, like
 
 * `main` is the default branch. It holds the newest major version and supports
   the newest TYPO3 versions.
-* `main` is protected. Changes are integrated only through pull requests, after
-  the automated checks have passed.
+* Only maintainers can push or merge to `main`. By convention, changes go
+  through pull requests and are merged after the automated checks have passed.
 * There are no `develop`, `master` or `release/*` branches. The former `develop`
   branch is kept as the tag `archive/develop`.
 
@@ -33,7 +33,7 @@ support/{major}.x        e.g. support/6.x
   pull requests.
 * Releases from a support branch continue the version line of that branch
   (e.g. 6.2.0 -> 6.2.1 on `support/6.x`).
-* Support branches are protected like `main`.
+* Support branches follow the same convention as `main`.
 
 ### Feature branches
 
@@ -79,15 +79,17 @@ under `archive/` (for example `archive/develop`).
    [Running tests locally](#running-tests-locally)).
 5. Open a pull request into the target branch and reference the issue
    (`Closes #12`).
-6. The pull request is merged after the checks have passed and it has been
-   reviewed.
+6. By convention, a maintainer merges the pull request after the checks have
+   passed and it has been reviewed.
 7. Delete the feature branch after merging.
 
 ## Commit messages
 
 Commit messages are short and start with one of these tags:
 
-`[FEATURE]` `[TASK]` `[BUGFIX]` `[DOC]` `[CI]` `[SECURITY]` `[RELEASE]`
+`[FEATURE]` `[TASK]` `[BUGFIX]` `[DOC]` `[CI]` `[SECURITY]` `[RELEASE]` `[WIP]` `[DRAFT]`
+
+`[WIP]` and `[DRAFT]` commits are not merged into `main` or a support branch.
 
 Example: `[BUGFIX] DeleteLogs: validate input, age by modification time`
 
@@ -140,8 +142,8 @@ a generic text.
    * after a major or minor release from `main`, sets the branch alias in
      `composer.json` to the next minor version (e.g. `7.2.x-dev`),
    * updates the requirements in `README.md` if they changed.
-2. After the pull request has been merged and the checks on the branch have
-   passed, tag the merge commit:
+2. Merge the release pull request with a merge commit. After the checks on the
+   branch have passed, tag the merge commit:
    ```bash
    git tag 7.1.0 <merge-commit> && git push origin 7.1.0
    ```

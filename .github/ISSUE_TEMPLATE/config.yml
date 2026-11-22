@@ -3,6 +3,3 @@ contact_links:
   - name: Documentation
     url: https://github.com/dwenzel/t3extension_tools/blob/main/README.md
     about: Check the documentation for usage examples and guides
-  - name: Discussions
-    url: https://github.com/dwenzel/t3extension_tools/discussions
-    about: Ask questions and discuss ideas with the community

@@ -6,10 +6,11 @@ This chapter summarises it.
 
 ## Branching model
 
-* `main` is the default branch and holds the newest major version. It is
-  protected; changes are merged only through pull requests.
+* `main` is the default branch and holds the newest major version. Only
+  maintainers can push or merge to it. By convention, changes go through pull
+  requests and are merged after the checks have passed.
 * Older major versions get `support/{major}.x` branches (e.g. `support/6.x`) if
-  a fix is needed for them.
+  a fix is needed for them. They follow the same convention as `main`.
 * All work happens in feature branches named after the issue:
   `feature/{issue-number}-{title-in-kebab-case}`.
 * There are no `develop` or `master` branches. The former `develop` branch is
@@ -22,8 +23,8 @@ This chapter summarises it.
 3. Make the change, including tests.
 4. Run `composer lint && composer sca:php && composer test`.
 5. Open a pull request and reference the issue (`Closes #12`).
-6. The pull request is merged after the checks have passed and it has been
-   reviewed.
+6. By convention, a maintainer merges the pull request after the checks have
+   passed and it has been reviewed.
 
 Commit messages start with one of the tags `[FEATURE]` `[TASK]` `[BUGFIX]`
 `[DOC]` `[CI]` `[SECURITY]` `[RELEASE]`. Breaking changes are prefixed with
@@ -35,7 +36,8 @@ written in the release pull request.
 1. A release pull request (`[RELEASE] Release of t3extension_tools x.y.z`) adds
    the version block to `ChangeLog` and sets the version in `composer.json`
    (`extra.typo3/cms.version`) and `ext_emconf.php`.
-2. After merging, the merge commit is tagged with `x.y.z` (no prefix).
+2. The release pull request is merged with a merge commit, and the merge
+   commit is tagged with `x.y.z` (no prefix).
 3. The tag starts `release.yml` (GitHub release, Packagist) and
    `publish-ter.yml` (TER upload, needs the secret `TYPO3_API_TOKEN`). Both
    check that the tag matches the versions in `composer.json` and
