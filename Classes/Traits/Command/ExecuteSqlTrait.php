@@ -3,6 +3,7 @@
 namespace DWenzel\T3extensionTools\Traits\Command;
 
 use Doctrine\DBAL\Exception as DbalException;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -28,25 +29,36 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Executes the SQL file SQL_FILE_PATH on a TYPO3 database connection.
  *
- * The statements are executed one by one through Doctrine DBAL. No database
- * client binary is needed. Format of the SQL file: every statement ends with
- * a semicolon at the end of a line; lines starting with '#' or '--' and
- * C-style comment blocks are skipped. Client commands like DELIMITER or
- * SOURCE are not supported. Execution stops at the first failing statement;
- * statements executed before it are not rolled back.
+ * The file is read when the command runs. A missing or unreadable file ends
+ * the command with an error. The statements are executed one by one through
+ * Doctrine DBAL; no database client binary is needed. Execution stops at the
+ * first failing statement; statements executed before it are not rolled back.
+ *
+ * Supported SQL (see splitSqlStatements()):
+ * - statements are separated by ';' outside of quotes and comments, also
+ *   several statements on one line
+ * - '...' and "..." (doubled quotes; backslash escapes on MySQL/MariaDB
+ *   connections) and `...` are skipped when looking for ';'
+ * - comments: '#' and '-- ' up to the end of the line, '/* ... *\/' anywhere;
+ *   MySQL executable comments and optimizer hints ('/*! ... *\/',
+ *   '/*+ ... *\/') are kept
+ * - not supported: client commands of the mysql CLI (DELIMITER, SOURCE, \G,
+ *   ...), therefore no procedures or triggers with custom delimiters, and
+ *   PostgreSQL dollar-quoted strings ($$ ... $$)
  */
 trait ExecuteSqlTrait
 {
     use InitializeTrait;
 
+    /**
+     * Content of the SQL file. Filled in execute(); a value assigned earlier
+     * is overwritten.
+     */
     protected string $sqlToExecute = '';
 
     public function __construct(
         ?string $name = null
     ) {
-        $this->sqlToExecute = (string)file_get_contents(
-            GeneralUtility::getFileAbsFileName(self::SQL_FILE_PATH)
-        );
         parent::__construct($name);
     }
 
@@ -62,9 +74,20 @@ trait ExecuteSqlTrait
             return 1_641_390_076;
         }
 
+        $sql = $this->readSqlFile($this->getSqlFilePath());
+        if ($sql === null) {
+            $this->io->error(sprintf(
+                'The SQL file "%s" does not exist or is not readable.',
+                $this->getSqlFilePath()
+            ));
+            return 1_795_339_730;
+        }
+        $this->sqlToExecute = $sql;
+
         try {
             $connection = $connectionPool->getConnectionByName($connectionName);
-            foreach ($this->splitSqlStatements($this->sqlToExecute) as $statement) {
+            $backslashEscapes = $connection->getDatabasePlatform() instanceof AbstractMySQLPlatform;
+            foreach ($this->splitSqlStatements($this->sqlToExecute, $backslashEscapes) as $statement) {
                 $connection->executeStatement($statement);
             }
         } catch (DbalException $exception) {
@@ -77,43 +100,126 @@ trait ExecuteSqlTrait
     }
 
     /**
-     * Splits SQL into single statements: a statement ends with a semicolon
-     * at the end of a line. Comment lines are skipped.
+     * Path of the SQL file, absolute or 'EXT:' notation.
+     */
+    protected function getSqlFilePath(): string
+    {
+        return static::SQL_FILE_PATH;
+    }
+
+    /**
+     * Returns the content of the file or null if it is missing or not readable.
+     */
+    protected function readSqlFile(string $path): ?string
+    {
+        $absolutePath = $path === '' ? '' : GeneralUtility::getFileAbsFileName($path);
+        if ($absolutePath === '' || !is_file($absolutePath) || !is_readable($absolutePath)) {
+            return null;
+        }
+        $content = @file_get_contents($absolutePath);
+
+        return $content === false ? null : $content;
+    }
+
+    /**
+     * Splits SQL into single statements.
+     *
+     * A statement ends with ';' outside of quotes and comments. Quoted strings
+     * and identifiers ('...', "...", `...`) are copied unchanged; a quote is
+     * escaped by doubling it and, if $backslashEscapes is true (MySQL/MariaDB),
+     * by a backslash inside '...' and "...". Comments ('#' and '-- ' up to the
+     * end of the line, '/* ... *\/') are removed, except MySQL executable
+     * comments and optimizer hints ('/*! ... *\/', '/*+ ... *\/'). Empty
+     * statements are skipped.
      *
      * @return list<string>
      */
-    protected function splitSqlStatements(string $sql): array
+    protected function splitSqlStatements(string $sql, bool $backslashEscapes = true): array
     {
         $statements = [];
         $current = '';
-        $isInComment = false;
-        foreach (preg_split('/\R/', $sql) ?: [] as $line) {
-            $line = trim($line);
-            if ($isInComment) {
-                $isInComment = !str_ends_with($line, '*/');
-                continue;
+        $length = strlen($sql);
+        $position = 0;
+        while ($position < $length) {
+            $plainLength = strcspn($sql, ";'\"`#-/", $position);
+            $current .= substr($sql, $position, $plainLength);
+            $position += $plainLength;
+            if ($position >= $length) {
+                break;
             }
-            if ($line === '' || str_starts_with($line, '#') || str_starts_with($line, '--')) {
-                continue;
-            }
-            if (str_starts_with($line, '/*')) {
-                $isInComment = !str_ends_with($line, '*/');
-                continue;
-            }
-            $current .= ($current === '' ? '' : ' ') . $line;
-            if (str_ends_with($line, ';')) {
-                $statement = trim(rtrim($current, ';'));
-                if ($statement !== '') {
-                    $statements[] = $statement;
-                }
+
+            $char = $sql[$position];
+            $next = $sql[$position + 1] ?? '';
+            if ($char === ';') {
+                $statements = $this->addSqlStatement($statements, $current);
                 $current = '';
+                $position++;
+            } elseif ($char === "'" || $char === '"' || $char === '`') {
+                $end = $this->findEndOfQuotedSql($sql, $position, $backslashEscapes && $char !== '`');
+                $current .= substr($sql, $position, $end - $position);
+                $position = $end;
+            } elseif ($char === '#' || ($char === '-' && $next === '-' && $this->isSqlWhitespaceOrEnd($sql[$position + 2] ?? ''))) {
+                // line comment: keep the line break
+                $endOfLine = strpos($sql, "\n", $position);
+                $position = $endOfLine === false ? $length : $endOfLine;
+            } elseif ($char === '/' && $next === '*') {
+                $endOfComment = strpos($sql, '*/', $position + 2);
+                $end = $endOfComment === false ? $length : $endOfComment + 2;
+                $marker = $sql[$position + 2] ?? '';
+                $current .= ($marker === '!' || $marker === '+') ? substr($sql, $position, $end - $position) : ' ';
+                $position = $end;
+            } else {
+                $current .= $char;
+                $position++;
             }
         }
-        $statement = trim($current);
+
+        return $this->addSqlStatement($statements, $current);
+    }
+
+    /**
+     * @param list<string> $statements
+     * @return list<string>
+     */
+    private function addSqlStatement(array $statements, string $statement): array
+    {
+        $statement = trim($statement);
         if ($statement !== '') {
             $statements[] = $statement;
         }
 
         return $statements;
+    }
+
+    /**
+     * Returns the position after the closing quote, or the length of $sql if
+     * the quote is not closed.
+     */
+    private function findEndOfQuotedSql(string $sql, int $start, bool $backslashEscapes): int
+    {
+        $quote = $sql[$start];
+        $length = strlen($sql);
+        $position = $start + 1;
+        while ($position < $length) {
+            $char = $sql[$position];
+            if ($backslashEscapes && $char === '\\') {
+                $position += 2;
+                continue;
+            }
+            if ($char === $quote) {
+                if (($sql[$position + 1] ?? '') !== $quote) {
+                    return $position + 1;
+                }
+                $position++;
+            }
+            $position++;
+        }
+
+        return $length;
+    }
+
+    private function isSqlWhitespaceOrEnd(string $char): bool
+    {
+        return $char === '' || ctype_space($char) || ctype_cntrl($char);
     }
 }
