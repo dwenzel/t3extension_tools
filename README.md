@@ -127,11 +127,11 @@ ddev composer install
 ddev composer test
 ```
 
-Without DDEV only the unit tests run (the functional tests need a database):
+Without DDEV the tests run with a local PHP (the functional tests use SQLite):
 
 ```bash
-# Run unit tests
-composer test:unit
+# Run unit and functional tests
+composer test
 
 # Run specific test
 phpunit -c Tests/Build/UnitTests.xml --filter TestName
@@ -159,14 +159,15 @@ composer sca:php
 * [Interfaces and Traits](docs/Interfaces.md) - Complete interface documentation
 * [Upgrade from 6.x to 7.x](docs/UpgradeTo7.md) - no typo3-console, `ExecuteSqlTrait` uses Doctrine DBAL
 * [Upgrade from 5.x to 6.x](docs/UpgradeTo6.md) - typo3-console 9 only
+* [Contributing](CONTRIBUTING.md) - branching model, workflow and releases
 * [CLAUDE.md](CLAUDE.md) - AI assistant development guide
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Run quality checks: `composer lint && composer test`
-4. Submit a pull request
+Work goes to `main` through pull requests from feature branches
+(`feature/{issue}-{name}`). Older major versions get `support/{major}.x`
+branches if needed. See [CONTRIBUTING.md](CONTRIBUTING.md) for the branching
+model, commit tags, the release steps and how to run the tests locally.
 
 ## License
 

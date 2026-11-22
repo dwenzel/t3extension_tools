@@ -10,4 +10,5 @@ pages:
     - Interfaces: Interfaces.md
     - Upgrade to 7.x: UpgradeTo7.md
     - Upgrade to 6.x: UpgradeTo6.md
+    - Contributing: Contributing.md
 theme: readthedocs

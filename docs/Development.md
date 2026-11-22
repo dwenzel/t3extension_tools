@@ -377,34 +377,9 @@ class MySettings implements SettingsInterface
 
 ## Contributing Guidelines
 
-### Development Workflow
-
-1. **Fork Repository**
-   - Create personal fork
-   - Clone to local environment
-
-2. **Create Feature Branch**
-   ```bash
-   git checkout -b feature/my-feature
-   ```
-
-3. **Development Process**
-   - Write tests first (TDD approach)
-   - Implement feature
-   - Ensure all quality checks pass
-   - Update documentation
-
-4. **Quality Assurance**
-   ```bash
-   composer lint
-   composer test
-   composer sca:php
-   ```
-
-5. **Submit Pull Request**
-   - Clear description of changes
-   - Reference related issues
-   - Include test coverage information
+The branching model, the workflow for changes, commit tags and the release
+steps are described in [CONTRIBUTING.md](https://github.com/dwenzel/t3extension_tools/blob/main/CONTRIBUTING.md)
+and summarised in the [Contributing](Contributing.md) chapter.
 
 ### Code Standards
 
@@ -414,28 +389,6 @@ class MySettings implements SettingsInterface
 - **Strict Types**: Always declare `declare(strict_types=1);`
 - **Type Declarations**: Use for all parameters and return values
 - **Documentation**: PHPDoc for public methods
-
-#### Commit Messages
-```
-type(scope): description
-
-[optional body]
-
-[optional footer]
-```
-
-**Types**: feat, fix, docs, style, refactor, test, chore
-
-**Example**:
-```
-feat(command): add support for custom arguments
-
-- Implement InputArgumentInterface extension
-- Add trait for common argument functionality
-- Include comprehensive test coverage
-
-Closes #123
-```
 
 ### Testing Requirements
 
