@@ -263,7 +263,7 @@ jobs:
 
 ```bash
 # 1. Start development
-git checkout -b feature/my-feature
+git checkout -b feature/12-my-feature main
 
 # 2. During development
 composer fix:php          # Fix formatting issues
@@ -275,8 +275,8 @@ composer test             # Ensure tests pass
 
 # 4. Commit and push
 git add .
-git commit -m "feat: add new feature"
-git push origin feature/my-feature
+git commit -m "[FEATURE] Add new feature"
+git push origin feature/12-my-feature
 ```
 
 #### Code Review Checklist

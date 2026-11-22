@@ -106,3 +106,10 @@ This extension is designed to be used as a dependency in other TYPO3 extensions:
 - GPL-2.0-or-later license headers required on all files
 - PHP 8.3+ features encouraged (strict types, return types, etc.)
 - 4-space indentation for PHP, 2-space for TypoScript/YAML
+
+## Contributing
+- See `CONTRIBUTING.md` for branching model, commit tags and release steps
+- Branches: `main` (default), `support/{major}.x` for older major versions, `feature/{issue}-{name}` for all work
+- Pull requests target `main` (or a support branch); there are no `master` or `develop` branches
+- Commit tags: `[FEATURE]` `[TASK]` `[BUGFIX]` `[DOC]` `[CI]` `[SECURITY]` `[RELEASE]`, `[!!!]` prefix for breaking changes
+- `ChangeLog` is written in the release pull request; keep its format, `release.yml` and `publish-ter.yml` parse it
