@@ -58,7 +58,7 @@
       },
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "extension-key": "t3extension_tools",
-      "version": "6.2.0",
+      "version": "7.0.0",
       "web-dir": ".Build/Web"
     }
   },
