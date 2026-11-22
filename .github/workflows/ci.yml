@@ -2,9 +2,9 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ master, develop, feature/** ]
+    branches: [ main, 'feature/**', 'support/**' ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ main, 'support/**' ]
 
 env:
   COMPOSER_CACHE_FILES_DIR: ~/.composer/cache/files

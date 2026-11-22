@@ -2,9 +2,9 @@ name: Static Analysis
 
 on:
   push:
-    branches: [ main, master, develop, 'feature/**' ]
+    branches: [ main, 'feature/**', 'support/**' ]
   pull_request:
-    branches: [ main, master, develop, 'feature/**' ]
+    branches: [ main, 'support/**' ]
 
 jobs:
   phpstan:
