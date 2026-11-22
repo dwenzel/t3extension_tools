@@ -6,9 +6,9 @@ This chapter summarises it.
 
 ## Branching model
 
-* `main` is the default branch and holds the newest major version. Only
-  maintainers can push or merge to it. By convention, changes go through pull
-  requests and are merged after the checks have passed.
+* `main` is the default branch and holds the newest major version. Changes go
+  through pull requests; direct pushes, force-pushes and deleting the branch
+  are blocked. Maintainers merge pull requests after the checks have passed.
 * Older major versions get `support/{major}.x` branches (e.g. `support/6.x`) if
   a fix is needed for them. They follow the same convention as `main`.
 * All work happens in feature branches named after the issue:
