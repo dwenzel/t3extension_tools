@@ -15,6 +15,7 @@ namespace DWenzel\T3extensionTools\Tests\Functional\Command;
 use DWenzel\T3extensionTools\Command\Argument\ExampleArgument;
 use DWenzel\T3extensionTools\Command\ExampleCommand;
 use DWenzel\T3extensionTools\Command\Option\ExampleOption;
+use DWenzel\T3extensionTools\Tests\Functional\Fixtures\Command\MissingSqlFileCommand;
 use DWenzel\T3extensionTools\Tests\Functional\Fixtures\Command\SqlFileCommand;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -88,11 +89,22 @@ class ExampleCommandTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function constructorDoesNotReadSqlFile(): void
+    public function commandWithMissingSqlFileIsConstructedWithoutErrorAndReportsTheFile(): void
     {
-        $command = new SqlFileCommand(self::FIXTURE_PATH . 'does-not-exist.sql');
+        set_error_handler(static function (int $level, string $message): never {
+            throw new \ErrorException($message, 0, $level);
+        });
+        try {
+            $command = new MissingSqlFileCommand();
+        } finally {
+            restore_error_handler();
+        }
+        $output = $this->createStreamOutput();
 
-        self::assertTrue($command->getDefinition()->hasOption(ExampleCommand::OPTION_CONNECTION));
+        $exitCode = $command->run(new ArrayInput([]), $output);
+
+        self::assertSame(self::EXIT_SQL_FILE_NOT_READABLE, $exitCode);
+        self::assertStringContainsString('does-not-exist.sql', $this->readOutput($output));
     }
 
     /**

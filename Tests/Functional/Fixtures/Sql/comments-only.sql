@@ -1,3 +1,3 @@
-# nothing but comments;
+--nothing but comments;
 -- nothing to execute;
 /* still nothing; */

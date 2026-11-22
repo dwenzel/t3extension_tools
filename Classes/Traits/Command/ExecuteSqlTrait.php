@@ -37,14 +37,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Supported SQL (see splitSqlStatements()):
  * - statements are separated by ';' outside of quotes and comments, also
  *   several statements on one line
- * - '...' and "..." (doubled quotes; backslash escapes on MySQL/MariaDB
- *   connections) and `...` are skipped when looking for ';'
- * - comments: '#' and '-- ' up to the end of the line, '/* ... *\/' anywhere;
- *   MySQL executable comments and optimizer hints ('/*! ... *\/',
- *   '/*+ ... *\/') are kept
+ * - '...', "..." and `...` are skipped when looking for ';'; a quote inside is
+ *   escaped by doubling it, on MySQL/MariaDB connections also by a backslash
+ *   (not in `...`)
+ * - comments up to the end of the line: on MySQL/MariaDB connections '#',
+ *   and '--' followed by whitespace, a control character or the end of the
+ *   input, or at the start of a line; on other connections '--'
+ * - '/* ... *\/' comments anywhere; MySQL executable comments and optimizer
+ *   hints ('/*! ... *\/', '/*+ ... *\/') are kept
  * - not supported: client commands of the mysql CLI (DELIMITER, SOURCE, \G,
- *   ...), therefore no procedures or triggers with custom delimiters, and
- *   PostgreSQL dollar-quoted strings ($$ ... $$)
+ *   ...), therefore no procedures or triggers with custom delimiters;
+ *   PostgreSQL dollar-quoted strings ($$ ... $$) and E'...' strings; the
+ *   MySQL SQL mode NO_BACKSLASH_ESCAPES
  */
 trait ExecuteSqlTrait
 {
@@ -86,8 +90,8 @@ trait ExecuteSqlTrait
 
         try {
             $connection = $connectionPool->getConnectionByName($connectionName);
-            $backslashEscapes = $connection->getDatabasePlatform() instanceof AbstractMySQLPlatform;
-            foreach ($this->splitSqlStatements($this->sqlToExecute, $backslashEscapes) as $statement) {
+            $mysqlSyntax = $connection->getDatabasePlatform() instanceof AbstractMySQLPlatform;
+            foreach ($this->splitSqlStatements($this->sqlToExecute, $mysqlSyntax) as $statement) {
                 $connection->executeStatement($statement);
             }
         } catch (DbalException $exception) {
@@ -126,15 +130,25 @@ trait ExecuteSqlTrait
      *
      * A statement ends with ';' outside of quotes and comments. Quoted strings
      * and identifiers ('...', "...", `...`) are copied unchanged; a quote is
-     * escaped by doubling it and, if $backslashEscapes is true (MySQL/MariaDB),
-     * by a backslash inside '...' and "...". Comments ('#' and '-- ' up to the
-     * end of the line, '/* ... *\/') are removed, except MySQL executable
-     * comments and optimizer hints ('/*! ... *\/', '/*+ ... *\/'). Empty
-     * statements are skipped.
+     * escaped by doubling it.
+     *
+     * With $mysqlSyntax (MySQL/MariaDB):
+     * - a backslash escapes the next character inside '...' and "..."
+     * - '#' starts a comment up to the end of the line
+     * - '--' starts a comment up to the end of the line if it is followed by
+     *   whitespace, a control character or the end of the input, or if it is
+     *   at the start of a line (e.g. a line of dashes)
+     *
+     * Without $mysqlSyntax, '--' always starts a comment up to the end of the
+     * line and '#' is an ordinary character.
+     *
+     * '/* ... *\/' comments are removed, except MySQL executable comments and
+     * optimizer hints ('/*! ... *\/', '/*+ ... *\/'). Empty statements are
+     * skipped.
      *
      * @return list<string>
      */
-    protected function splitSqlStatements(string $sql, bool $backslashEscapes = true): array
+    protected function splitSqlStatements(string $sql, bool $mysqlSyntax = true): array
     {
         $statements = [];
         $current = '';
@@ -155,18 +169,23 @@ trait ExecuteSqlTrait
                 $current = '';
                 $position++;
             } elseif ($char === "'" || $char === '"' || $char === '`') {
-                $end = $this->findEndOfQuotedSql($sql, $position, $backslashEscapes && $char !== '`');
+                $end = $this->findEndOfQuotedSql($sql, $position, $mysqlSyntax && $char !== '`');
                 $current .= substr($sql, $position, $end - $position);
                 $position = $end;
-            } elseif ($char === '#' || ($char === '-' && $next === '-' && $this->isSqlWhitespaceOrEnd($sql[$position + 2] ?? ''))) {
+            } elseif ($this->isSqlLineCommentStart($sql, $position, $mysqlSyntax)) {
                 // line comment: keep the line break
                 $endOfLine = strpos($sql, "\n", $position);
                 $position = $endOfLine === false ? $length : $endOfLine;
             } elseif ($char === '/' && $next === '*') {
-                $endOfComment = strpos($sql, '*/', $position + 2);
-                $end = $endOfComment === false ? $length : $endOfComment + 2;
                 $marker = $sql[$position + 2] ?? '';
-                $current .= ($marker === '!' || $marker === '+') ? substr($sql, $position, $end - $position) : ' ';
+                if ($marker === '!' || $marker === '+') {
+                    $end = $this->findEndOfExecutableSqlComment($sql, $position, $mysqlSyntax);
+                    $current .= substr($sql, $position, $end - $position);
+                } else {
+                    $endOfComment = strpos($sql, '*/', $position + 2);
+                    $end = $endOfComment === false ? $length : $endOfComment + 2;
+                    $current .= ' ';
+                }
                 $position = $end;
             } else {
                 $current .= $char;
@@ -218,8 +237,53 @@ trait ExecuteSqlTrait
         return $length;
     }
 
-    private function isSqlWhitespaceOrEnd(string $char): bool
+    /**
+     * Returns the position after the end of a MySQL executable comment or
+     * optimizer hint. Quotes inside are skipped, as the database parses the
+     * content as SQL.
+     */
+    private function findEndOfExecutableSqlComment(string $sql, int $start, bool $mysqlSyntax): int
     {
-        return $char === '' || ctype_space($char) || ctype_cntrl($char);
+        $length = strlen($sql);
+        $position = $start + 3;
+        while ($position < $length) {
+            $position += strcspn($sql, "'\"`*", $position);
+            if ($position >= $length) {
+                break;
+            }
+            $char = $sql[$position];
+            if ($char === '*') {
+                if (($sql[$position + 1] ?? '') === '/') {
+                    return $position + 2;
+                }
+                $position++;
+                continue;
+            }
+            $position = $this->findEndOfQuotedSql($sql, $position, $mysqlSyntax && $char !== '`');
+        }
+
+        return $length;
+    }
+
+    private function isSqlLineCommentStart(string $sql, int $position, bool $mysqlSyntax): bool
+    {
+        $char = $sql[$position];
+        if ($char === '#') {
+            return $mysqlSyntax;
+        }
+        if ($char !== '-' || ($sql[$position + 1] ?? '') !== '-') {
+            return false;
+        }
+        if (!$mysqlSyntax) {
+            return true;
+        }
+        $following = $sql[$position + 2] ?? '';
+        if ($following === '' || ctype_space($following) || ctype_cntrl($following)) {
+            return true;
+        }
+        $lineStart = strrpos(substr($sql, 0, $position), "\n");
+        $lineStart = $lineStart === false ? 0 : $lineStart + 1;
+
+        return trim(substr($sql, $lineStart, $position - $lineStart)) === '';
     }
 }

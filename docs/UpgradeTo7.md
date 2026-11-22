@@ -39,7 +39,7 @@ In 6.x, `ExecuteSqlTrait` created the console's `MysqlCommand`, which started th
 | Reading the SQL file | In the constructor, on every instantiation; a missing file caused a PHP warning or error | In `execute()`, after the connection check |
 | Protected property `$sqlToExecute` | Filled in the constructor | Filled in `execute()`; a value assigned earlier is overwritten |
 | New protected methods | - | `getSqlFilePath()` (returns `static::SQL_FILE_PATH`), `readSqlFile()` |
-| Protected method `splitSqlStatements()` | - | `splitSqlStatements(string $sql, bool $backslashEscapes = true)` |
+| Protected method `splitSqlStatements()` | - | `splitSqlStatements(string $sql, bool $mysqlSyntax = true)` |
 | Command names `t3extension-tools:example`, `t3extension-tools:delete-logs` | Available | Unchanged |
 
 ### Format of the SQL file
@@ -52,14 +52,21 @@ The trait splits the file into statements itself:
   marker inside them does not end the statement. A quote inside is escaped by
   doubling it; on MySQL and MariaDB connections also by a backslash (not inside
   `` `...` ``).
-* `#` and `-- ` (two dashes followed by a space, tab or line break) start a
-  comment up to the end of the line, also after a statement. `/* ... */`
-  comments are removed anywhere. MySQL executable comments and optimizer hints
-  (`/*! ... */`, `/*+ ... */`) are kept and sent to the database.
+* Comments up to the end of the line, also after a statement:
+  * MySQL and MariaDB: `#`, and `--` followed by whitespace, a control
+    character or the end of the input. `--` at the start of a line (after
+    optional whitespace) is a comment as well, e.g. a line of dashes.
+    Otherwise `1--1` stays an expression, as in MySQL.
+  * Other platforms: `--` always. `#` is an ordinary character (e.g. the
+    PostgreSQL operators `#` and `#>>`), so do not use `#` comments there.
+* `/* ... */` comments are removed anywhere. MySQL executable comments and
+  optimizer hints (`/*! ... */`, `/*+ ... */`) are kept and sent to the
+  database.
 * Client commands of the `mysql` CLI (`DELIMITER`, `SOURCE`, `\G`, ...) are not
   supported, so stored procedures or triggers with custom delimiters cannot be
-  created this way. PostgreSQL dollar-quoted strings (`$$ ... $$`) are not
-  supported either.
+  created this way. Also not supported: PostgreSQL dollar-quoted strings
+  (`$$ ... $$`) and escape strings (`E'...'`), and the MySQL SQL mode
+  `NO_BACKSLASH_ESCAPES`. A `;` inside them may split the statement.
 * A missing or unreadable file ends the command with exit code `1_795_339_730`
   and an error message.
 * Execution stops at the first failing statement. Statements executed before it
@@ -71,6 +78,8 @@ The trait splits the file into statements itself:
   `CONSOLE_SCOPE_DATABASE_IMPORT`, has to be removed.
 - Code that assigns `$sqlToExecute` (e.g. in a constructor) has no effect any
   more; override `getSqlFilePath()` or `readSqlFile()` instead.
+- SQL files for connections other than MySQL/MariaDB need `--` instead of `#`
+  comments.
 - SQL files using client commands need another way to run, e.g. your own command
   that calls the `mysql` client, or the console's `database:import`.
 - Error messages of `ERROR_MISSING_CONNECTION` in your command may still mention
