@@ -31,6 +31,8 @@ In 6.x, `ExecuteSqlTrait` created the console's `MysqlCommand`, which started th
 | Trait constant `CONSOLE_SCOPE_DATABASE_IMPORT` | Selected console `commandOptions` | Removed |
 | Console `commandOptions` (`EXTCONF/typo3_console/commandOptions`) | Applied to the `mysql` call | Not applied |
 | Constant `DEFAULT_MYSQL_ARGUMENTS` | Passed to the `mysql` call | Not read any more; removed from `ExampleCommand` |
+| Public constant `ExampleCommand::CONNECTION_TYPE_MYSQL` | Driver check for the connection | Removed |
+| Constant `ExampleCommand::ERROR_MISSING_CONNECTION` | `No suitable MySQL connection found.` | `No database connection with this name found.` |
 | Exit code `1_641_390_076` | No suitable connection | Connection name is not configured in TYPO3 |
 | Exit code `1_641_390_086` | SQL execution failed | Unchanged; the database error message is printed as well |
 | Exit code `0` (success) | Returned | Unchanged |
@@ -85,8 +87,9 @@ Check them if you use the affected classes.
   container. Before, they were instantiated again with `new`, which failed for
   classes with constructor arguments.
 * YAML plugin files are validated: `plugin.extensionName` and `plugin.name` must
-  be non-empty strings; `plugin`, `registration`, `controllerActions` and
-  `nonCacheableControllerActions` must be maps. Invalid files are skipped (and
+  be non-empty strings; `plugin.type`, if set, must be a string; `plugin`,
+  `registration`, `controllerActions` and `nonCacheableControllerActions` must
+  be maps. Invalid files are skipped (and
   logged if a logger is injected) instead of aborting the TCA build.
 
 ### Command `t3extension-tools:delete-logs`
@@ -97,8 +100,16 @@ Check them if you use the affected classes.
 * A directory that does not exist returns `1` (`Command::FAILURE`).
 * A file that cannot be deleted is reported; the command continues with the
   other files and returns `1` at the end.
-* Without a date prefix in the pattern, the age of a file is taken from its
-  modification time instead of the inode change time.
+* A pattern expects a date prefix if it starts with `^[0-9]{4}-[0-9]{2}-[0-9]{2}`
+  right after the delimiter. Any delimiter is accepted and no `_` after the date
+  is required (before: only `/^[0-9]{4}-[0-9]{2}-[0-9]{2}_`).
+* If the pattern expects a date prefix but a file name does not start with a
+  valid date, the modification time is used instead of throwing an exception.
+* Without a date prefix, the age of a file is taken from its modification time
+  instead of the inode change time.
+* Only files (and links to files) are considered; directories and other entries
+  are skipped. Files are deleted by their path (`getPathname()`) instead of
+  `getRealPath()`, so a symbolic link is deleted itself, not its target.
 * `DeleteLogs::DEFAULT_NAME` is `t3extension-tools:delete-logs` (was
   `t3extension-tools:delete-logs:delete-logs`). The registered command name is
   unchanged.
