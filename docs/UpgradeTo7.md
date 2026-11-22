@@ -56,7 +56,10 @@ The trait splits the file into statements itself:
   * MySQL and MariaDB: `#`, and `--` followed by whitespace, a control
     character or the end of the input. `--` at the start of a line (after
     optional whitespace) is a comment as well, e.g. a line of dashes.
-    Otherwise `1--1` stays an expression, as in MySQL.
+    Otherwise `1--1` stays an expression, as in MySQL. The line-start rule
+    applies anywhere in the file, also inside a statement: in
+    `SELECT 1\n--1;` the second line is removed as a comment, while the
+    `mysql` client would send `SELECT 1 --1`. This is a documented limit.
   * Other platforms: `--` always. `#` is an ordinary character (e.g. the
     PostgreSQL operators `#` and `#>>`), so do not use `#` comments there.
 * `/* ... */` comments are removed anywhere. MySQL executable comments and
@@ -66,11 +69,16 @@ The trait splits the file into statements itself:
   supported, so stored procedures or triggers with custom delimiters cannot be
   created this way. Also not supported: PostgreSQL dollar-quoted strings
   (`$$ ... $$`) and escape strings (`E'...'`), and the MySQL SQL mode
-  `NO_BACKSLASH_ESCAPES`. A `;` inside them may split the statement.
+  `NO_BACKSLASH_ESCAPES`. Statements containing them may be split or merged
+  wrongly.
 * A missing or unreadable file ends the command with exit code `1_795_339_730`
   and an error message.
 * Execution stops at the first failing statement. Statements executed before it
   are not rolled back (as before with the `mysql` client).
+
+The exit codes `1_641_390_076`, `1_641_390_086` and `1_795_339_730` are the
+values returned by the command, e.g. by `Command::run()`. A process exit status
+is limited to 0-255, so a shell sees them modulo 256: `252`, `6` and `210`.
 
 ### Check your own code
 
