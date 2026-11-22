@@ -42,6 +42,7 @@ class ExtensionConfigurationTest extends TestCase
         $iconRegistryMock = $this->createMock(IconRegistry::class);
         $iconRegistryMock->expects($this->never())
             ->method('registerIcon');
+        GeneralUtility::setSingletonInstance(IconRegistry::class, $iconRegistryMock);
 
         // Create a test class extending ExtensionConfiguration
         $testClass = new class extends ExtensionConfiguration {
@@ -88,7 +89,7 @@ class ExtensionConfigurationTest extends TestCase
     {
         $this->expectUserDeprecationMessage(
             'DWenzel\\T3extensionTools\\Configuration\\ExtensionConfiguration::registerIcons() is deprecated'
-            . ' since t3extension_tools 6.2 and will be removed in 7.0. Register icons in Configuration/Icons.php instead.'
+            . ' since t3extension_tools 6.2 and will be removed in 8.0. Register icons in Configuration/Icons.php instead.'
         );
 
         $testClass = new class extends ExtensionConfiguration {};

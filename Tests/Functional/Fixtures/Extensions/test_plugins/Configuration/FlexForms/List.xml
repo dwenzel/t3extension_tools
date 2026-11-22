@@ -1,0 +1,18 @@
+<T3DataStructure>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <sheetTitle>Settings</sheetTitle>
+                <type>array</type>
+                <el>
+                    <settings.limit>
+                        <label>Limit</label>
+                        <config>
+                            <type>number</type>
+                        </config>
+                    </settings.limit>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

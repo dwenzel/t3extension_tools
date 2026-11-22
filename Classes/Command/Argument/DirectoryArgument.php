@@ -3,7 +3,7 @@
 namespace DWenzel\T3extensionTools\Command\Argument;
 
 use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
@@ -27,7 +27,7 @@ class DirectoryArgument implements InputArgumentInterface
 
     public const NAME = 'directory';
     public const HELP = 'Provide a directory path for files to delete.';
-    public const MODE = InputOption::VALUE_REQUIRED;
+    public const MODE = InputArgument::OPTIONAL;
     public const DESCRIPTION = 'directory path for log files';
     public const SHORTCUT = 'd';
     public const DEFAULT = 'var/log';

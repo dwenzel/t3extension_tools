@@ -34,7 +34,7 @@ class ExtensionConfiguration
      * [
      *  <identifier> = <pathToIcon>
      * ]
-     * @deprecated since 6.2, will be removed in 7.0. Register icons in Configuration/Icons.php instead.
+     * @deprecated since 6.2, will be removed in 8.0. Register icons in Configuration/Icons.php instead.
      */
     protected const BITMAP_ICONS_TO_REGISTER = [];
 
@@ -43,7 +43,7 @@ class ExtensionConfiguration
      * [
      *  <identifier> = <pathToIcon>
      * ]
-     * @deprecated since 6.2, will be removed in 7.0. Register icons in Configuration/Icons.php instead.
+     * @deprecated since 6.2, will be removed in 8.0. Register icons in Configuration/Icons.php instead.
      */
     protected const SVG_ICONS_TO_REGISTER = [];
 
@@ -61,12 +61,12 @@ class ExtensionConfiguration
      * Icons must be configured in ExtensionConfiguration
      * constants BITMAP_ICONS_TO_REGISTER and SVG_ICONS_TO_REGISTER
      * @throws InvalidConfigurationException
-     * @deprecated since 6.2, will be removed in 7.0. Register icons in Configuration/Icons.php instead.
+     * @deprecated since 6.2, will be removed in 8.0. Register icons in Configuration/Icons.php instead.
      */
     public static function registerIcons(): void
     {
         trigger_error(
-            self::class . '::registerIcons() is deprecated since t3extension_tools 6.2 and will be removed in 7.0.'
+            self::class . '::registerIcons() is deprecated since t3extension_tools 6.2 and will be removed in 8.0.'
             . ' Register icons in Configuration/Icons.php instead.',
             E_USER_DEPRECATED
         );
@@ -85,7 +85,7 @@ class ExtensionConfiguration
      * @param array<string, string> $icons
      * @param string $iconProviderClass
      * @throws InvalidConfigurationException
-     * @deprecated since 6.2, will be removed in 7.0. Register icons in Configuration/Icons.php instead.
+     * @deprecated since 6.2, will be removed in 8.0. Register icons in Configuration/Icons.php instead.
      */
     protected static function registerIconsWithProvider(array $icons, string $iconProviderClass): void
     {

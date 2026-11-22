@@ -22,25 +22,37 @@ use Symfony\Component\Console\Command\Command;
  ***************************************************************/
 
 /**
- * Class Status
- * This class provides wrapper methods for constants of the Command::class
- * which are not defined in those versions of the symfony package used in TYPO3 9
- * Use those static methods to get a correct status code instead.
+ * Wrapper methods for the status constants of Symfony's Command class,
+ * which were missing in the Symfony versions used by TYPO3 9.
+ *
+ * @deprecated since 7.0, will be removed in 8.0. Use Command::SUCCESS, Command::FAILURE and Command::INVALID.
  */
 class Status implements StatusAwareInterface
 {
     public static function success(): int
     {
-        return defined(Command::class . 'Command::class' . '::SUCCESS') ? Command::SUCCESS : self::SUCCESS;
+        self::triggerDeprecation('success');
+        return Command::SUCCESS;
     }
 
     public static function failure(): int
     {
-        return defined(Command::class . 'Command::class' . '::FAILURE') ? Command::FAILURE : self::FAILURE;
+        self::triggerDeprecation('failure');
+        return Command::FAILURE;
     }
 
     public static function invalid(): int
     {
-        return defined(Command::class . 'Command::class' . '::INVALID') ? Command::INVALID : self::INVALID;
+        self::triggerDeprecation('invalid');
+        return Command::INVALID;
+    }
+
+    private static function triggerDeprecation(string $method): void
+    {
+        trigger_error(
+            self::class . '::' . $method . '() is deprecated since t3extension_tools 7.0 and will be removed in 8.0.'
+            . ' Use ' . Command::class . '::' . strtoupper($method) . ' instead.',
+            E_USER_DEPRECATED
+        );
     }
 }

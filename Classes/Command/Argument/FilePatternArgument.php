@@ -3,7 +3,7 @@
 namespace DWenzel\T3extensionTools\Command\Argument;
 
 use DWenzel\T3extensionTools\Traits\Command\Argument\InputArgumentTrait;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 /***************************************************************
  *  Copyright notice
@@ -41,7 +41,7 @@ class FilePatternArgument implements InputArgumentInterface
 
     public const NAME = 'pattern';
     public const HELP = 'Provide a pattern for files to delete. Pattern must not contain the path.';
-    public const MODE = InputOption::VALUE_REQUIRED;
+    public const MODE = InputArgument::OPTIONAL;
     public const DESCRIPTION = 'pattern for log file';
     public const SHORTCUT = 'p';
     public const DEFAULT = null;
