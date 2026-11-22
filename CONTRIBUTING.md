@@ -13,8 +13,9 @@ The repository follows a trunk-based model, like
 
 * `main` is the default branch. It holds the newest major version and supports
   the newest TYPO3 versions.
-* Only maintainers can push or merge to `main`. By convention, changes go
-  through pull requests and are merged after the automated checks have passed.
+* Changes to `main` go through pull requests; direct pushes, force-pushes and
+  deleting the branch are blocked. Maintainers merge pull requests after the
+  automated checks have passed.
 * There are no `develop`, `master` or `release/*` branches. The former `develop`
   branch is kept as the tag `archive/develop`.
 
